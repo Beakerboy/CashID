@@ -513,4 +513,6 @@
 			}
 		}
 	}
+
+	$cashid = new CashID();
 ?>
