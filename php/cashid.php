@@ -207,7 +207,7 @@
 			$nonce = rand(100000000, 999999999);
 
 			// Check if the nonce is already used, and regenerate until it does not exist.
-			while(acpu_exists("cashid_nonce_{$requestParameters['nonce']}"))
+			while(apcu_exists("cashid_nonce_{$requestParameters['nonce']}"))
 			{
 				// generate a random nonce.
 				$nonce = rand(100000000, 999999999);
@@ -247,8 +247,8 @@
 			$request_uri = "cashid:{$this->domain}{$this->path}?" . implode($parameters, '&');
 
 			// Store the request and nonce in local cache.
-			@acpu_store("cashid_request_{$nonce}", $request_uri);
-			@acpu_store("cashid_nonce_{$nonce}", $nonce);
+			@apcu_store("cashid_request_{$nonce}", $request_uri);
+			@apcu_store("cashid_nonce_{$nonce}", $nonce);
 
 			// Return the request URI to indicate success.
 			return $request_uri;
@@ -428,8 +428,8 @@
 													}
 													else
 													{
-														// Try to load the request from the acpu object cache.
-														$requestReference = acpu_fetch("cashid_request_{$requestParameters['nonce']}");
+														// Try to load the request from the apcu object cache.
+														$requestReference = apcu_fetch("cashid_request_{$requestParameters['nonce']}");
 
 														// Validate that the request was issued by this service provider.
 														if(!$user_initiated_request and ($requestReference === false))
@@ -467,10 +467,10 @@
 																		$responseObject['data'] = (isset($parseParameters['data']) ? $parseParameters['data'] : '');
 
 																		// Store the response object in local cache.
-																		@acpu_store("cashid_response_{$requestParameters['nonce']}", $responseObject);
+																		@apcu_store("cashid_response_{$requestParameters['nonce']}", $responseObject);
 																		
 																		// Store the confirmation object in local cache.
-																		@acpu_store("cashid_confirmation_{$requestParameters['nonce']}", $this->statusConfirmation);
+																		@apcu_store("cashid_confirmation_{$requestParameters['nonce']}", $this->statusConfirmation);
 
 																		// Return the parsed response.
 																		return $responseObject;
