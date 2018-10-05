@@ -482,7 +482,7 @@
 			// Sanity check if headers have already been sent.
 			if(headers_sent())
 			{
-				die('Cannot send request confirmation: other data has already been transmitted.');
+				throw new Exception('cashid->confirm_request was called after data had been transmitted to the client, which prevents setting the required headers.');
 			}
 			else
 			{
