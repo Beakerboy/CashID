@@ -35,7 +35,7 @@ private $rpc_portnumber = 8332;
 ```PHP
 <?php
     // Include the CashID support library for PHP.
-    require_once('libs/cashid.php');
+    require_once('lib/cashid.php');
 
     // Create a minimal request
     $requestURI = $cashid->create_request();
@@ -53,10 +53,10 @@ private $rpc_portnumber = 8332;
 ```PHP
 <?php
     // Include the CashID support library for PHP.
-    require_once('libs/cashid.php');
+    require_once('lib/cashid.php');
 
     // Parse the request.
-    $request = $cashid->validate()
+    $request = $cashid->validate_request()
 
     // Validate the request.
     if($request !== false)
