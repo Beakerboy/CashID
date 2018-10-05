@@ -21,7 +21,7 @@
 
 		// Location of a bitcoind RCP service.
 		private $rpc_scheme = 'http://';
-		private $rpc_hostname = 'localhost';
+		private $rpc_hostname = '127.0.0.1';
 		private $rpc_portnumber = 8332;
 
 		// Functional URL and request counter.
@@ -119,22 +119,22 @@
 				[
 					'method' => 'POST',
 					'header' => 'Content-type: application/json',
-					'content' => json_encode($request_object),
+					'content' => json_encode($rpc_request),
 					'ignore_errors' => true
 				]
 			];
 
 			// Create a connection with the RCP host.
-			$stream_context = @stream_context_create($rpc_request);
+			$stream_context = stream_context_create($stream_request);
 
 			// Send the request and store the full response.
-			$rpc_response = @file_get_contents($this->rpc_url, false, $stream_context);
+			$rpc_response = file_get_contents($this->rpc_url, false, $stream_context);
 
 			// Validate if the request was completed
 			if($rpc_response === false)
 			{
 				// Store error description
-				$this->rpc_error = 'Unable to compete RPC request.';
+				$this->rpc_error = 'Unable to complete RPC request.';
 
 				// Return NULL to indicate that an error was encountered.
 				return NULL;
@@ -247,7 +247,7 @@
 			$request_uri = "cashid:{$this->domain}{$this->path}?" . implode($parameters, '&');
 
 			// Store the request and nonce in local cache.
-			@apcu_store("cashid_request_{$nonce}", $request_uri);
+			@apcu_store("cashid_request_{$nonce}", [ 'available' => true, 'expires' => time() + (60 * 15) ]);
 			@apcu_store("cashid_nonce_{$nonce}", $nonce);
 
 			// Return the request URI to indicate success.
@@ -303,199 +303,177 @@
 			$request_parts = [];
 
 			// Parse the request URI.
-			@preg_match($regexp_patterns['request'], $request_uri, $request_parts);
-			@preg_match($regexp_patterns['parameters'], $request_parts['parameters'], $request_parts['parameters']);
-			@preg_match($regexp_patterns['metadata'], $request_parts['parameters']['required'], $request_parts['parameters']['required']);
-			@preg_match($regexp_patterns['metadata'], $request_parts['parameters']['optional'], $request_parts['parameters']['optional']);
+			@preg_match($this->regexp_patterns['request'], $request_uri, $request_parts);
+			@preg_match($this->regexp_patterns['parameters'], $request_parts['parameters'], $request_parts['parameters']);
+			@preg_match($this->regexp_patterns['metadata'], $request_parts['parameters']['required'], $request_parts['parameters']['required']);
+			@preg_match($this->regexp_patterns['metadata'], $request_parts['parameters']['optional'], $request_parts['parameters']['optional']);
 
 			return $request_parts;
 		}
 
-		// 
-		private function invalidate_request($status_code, $status_message = "")
-		{
-			// Update internal status object.
-			$this->statusConfirmation =
-			[
-				'status' => $status_code,
-				'message' => $status_message
-			];
-		}
-		
 		//
 		public function validate_request()
 		{
-			// Validate that the response was received as POST request.
-			if(!isset($_SERVER['REQUEST_METHOD']) or $_SERVER['REQUEST_METHOD'] != 'POST')
+			try
 			{
-				$this->invalidate_request(self::STATUS_MALFORMED_RESPONSE, "Unsupported request method.");
-			}
-			else
-			{
+				// Validate that the response was received as POST request.
+				if(!isset($_SERVER['REQUEST_METHOD']) or $_SERVER['REQUEST_METHOD'] != 'POST')
+				{
+					throw new Exception("Unsupported request method.", self::STATUS_MALFORMED_RESPONSE);
+				}
+
 				// Attempt to decode the response data.
 				$responseObject = json_decode(@file_get_contents("php://input"), true);
 
 				// Validate that the response is JSON encoded.
 				if($responseObject === null)
 				{
-					$this->invalidate_request(self::STATUS_MALFORMED_RESPONSE, "Response data is not a valid JSON object.");
+					throw new Exception("Response data is not a valid JSON object.", self::STATUS_MALFORMED_RESPONSE);
 				}
-				else
+
+				// Validate if the required field 'request' exists.
+				if(!isset($responseObject['request']))
 				{
-					// Validate if the required field 'request' exists.
-					if(!isset($responseObject['request']))
-					{
-						$this->invalidate_request(self::STATUS_MALFORMED_RESPONSE, "Response data is missing required 'request' property.");
-					}
-					else
-					{
-						// Validate if the required field 'address' exists.
-						if(!isset($responseObject['address']))
-						{
-							$this->invalidate_request(self::STATUS_MALFORMED_RESPONSE, "Response data is missing required 'adress' property.");
-						}
-						else
-						{
-							// Validate if the required field 'signature' exists.
-							if(!isset($responseObject['signature']))
-							{
-								$this->invalidate_request(self::STATUS_MALFORMED_RESPONSE, "Response data is missing required 'signature' property.");
-							}
-							else
-							{
-								// Initialize empty structures
-								$requestParts = [];
-								$requestParameters = [];
-								$requestRequired = [];
-								$requestOptional = [];
-
-								// Parse the request URI.
-								$parseRequest = @preg_match($regexp_patterns['request'], $responseObject['request'], $requestParts);
-								$parseParameters = @preg_match($regexp_patterns['parameters'], $requestParts['parameters'], $requestParameters);
-								$parseRequired = @preg_match($regexp_patterns['metadata'], $requestParameters['required'], $requestRequired);
-								$parseOptional = @preg_match($regexp_patterns['metadata'], $requestParameters['optional'], $requestOptional);
-
-								// Validate overall structure.
-								if($parseRequest === false)
-								{
-									$this->invalidate_request(self::STATUS_INTERNAL_ERROR, "Internal server error, could not evaluate request structure.");
-								}
-								else if($parseRequest == 0)
-								{
-									$this->invalidate_request(self::STATUS_MALFORMED_RESPONSE, "Request URI is invalid.");
-								}
-								else
-								{
-									// Validate the request scheme.
-									if($requestParts['scheme'] != 'cashid:')
-									{
-										$this->invalidate_request(self::STATUS_MALFORMED_RESPONSE, "Request scheme '{$requestParts['scheme']}' is invalid, should be 'cashid:'.");
-								}
-									else
-									{
-										if($requestParts['domain'] != $this->domain)
-										{
-											$this->invalidate_request(self::STATUS_MALFORMED_RESPONSE, "Request scheme '{$requestParts['domain']}' is invalid, this service is '{$this->domain}'.");
-										}
-										else
-										{
-											// Validate the parameter structure
-											if($parseParameters === false)
-											{
-												$this->invalidate_request(self::STATUS_INTERNAL_ERROR, "Internal server error, could not evaluate request parameters.");
-											}
-											else if($parseParameters == 0)
-											{
-												$this->invalidate_request(self::STATUS_MALFORMED_RESPONSE, "Request parameters are invalid.");
-											}
-											else
-											{
-												// Validate the existance of a nonce.
-												if(!isset($requestParameters['nonce']))
-												{
-													$this->invalidate_request(self::STATUS_MALFORMED_RESPONSE, "Request parameter 'nonce' is missing.");
-												}
-												else
-												{
-													// Locally store if the request action is a user-initiated action.
-													$user_initiated_request = isset($this->user_actions[$requestParameters['action']]);
-
-													// Locally store values to compare with nonce timestamp to validate recency.
-													// NOTE: current time is set to 1 minute in the future to allow for minor clock drift.
-													$recent_time = (time() - (60 * 60 * 15));
-													$current_time = (time() + (60 * 1 * 1));
-
-													// Validate if a user initiated request is a recent and valid timestamp...
-													if($user_initiated_request and (($requestParameters['nonce'] < $recent_time) or ($requestParameters['nonce'] > $current_time)))
-													{
-														$this->invalidate_request(self::STATUS_MALFORMED_RESPONSE, "Request nonce for user initated action is not a valid and recent timestamp.");
-													}
-													else
-													{
-														// Try to load the request from the apcu object cache.
-														$requestReference = apcu_fetch("cashid_request_{$requestParameters['nonce']}");
-
-														// Validate that the request was issued by this service provider.
-														if(!$user_initiated_request and ($requestReference === false))
-														{
-															$this->invalidate_request(self::STATUS_NONCE_INVALID, "The request nonce was not issued by this service.");
-														}
-														else
-														{
-															// Validate if the request is available
-															if(!$user_initiated_request and ($requestReference->available === false))
-															{
-																$this->invalidate_request(self::STATUS_NONCE_CONSUMED, "The request nonce was not issued by this service.");
-															}
-															else
-															{
-																// Validate if the request has expired.
-																if(!$user_initiated_request and ($requestReference->expiration < time()))
-																{
-																	$this->invalidate_request(self::STATUS_NONCE_EXPIRED, "The request has expired and is no longer available.");
-																}
-																else
-																{
-																	// Send the request parts to bitcoind for signature verification.
-																	$verificationStatus = $this->verify_message($responseObject['address'], $responseObject['signature'], $responseObject['request']);
-
-																	// Validate the signature.
-																	if($verificationStatus !== true)
-																	{
-																		$this->invalidate_request(self::STATUS_INVALID_SIGNATURE, "Signature is verifcation failed: {$this->rpc_error}");
-																	}
-																	else
-																	{
-																		// Add the action and data parameters to the response structure.
-																		$responseObject['action'] = (isset($parseParameters['action']) ? $parseParameters['action'] : 'auth');
-																		$responseObject['data'] = (isset($parseParameters['data']) ? $parseParameters['data'] : '');
-
-																		// Store the response object in local cache.
-																		@apcu_store("cashid_response_{$requestParameters['nonce']}", $responseObject);
-																		
-																		// Store the confirmation object in local cache.
-																		@apcu_store("cashid_confirmation_{$requestParameters['nonce']}", $this->statusConfirmation);
-
-																		// Return the parsed response.
-																		return $responseObject;
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
+					throw new Exception("Response data is missing required 'request' property.", self::STATUS_MALFORMED_RESPONSE);
 				}
-			}
 
-			// Return false to indicate error.
-			return false;
+				// Validate if the required field 'address' exists.
+				if(!isset($responseObject['address']))
+				{
+					throw new Exception("Response data is missing required 'adress' property.", self::STATUS_MALFORMED_RESPONSE);
+				}
+
+				// Validate if the required field 'signature' exists.
+				if(!isset($responseObject['signature']))
+				{
+					throw new Exception("Response data is missing required 'signature' property.", self::STATUS_MALFORMED_RESPONSE);
+				}
+
+				// Initialize empty structures
+				$requestParts = [];
+				$requestParameters = [];
+				$requestRequired = [];
+				$requestOptional = [];
+
+				// Parse the request URI.
+				$parseRequest = @preg_match($this->regexp_patterns['request'], $responseObject['request'], $requestParts);
+				$parseParameters = @preg_match($this->regexp_patterns['parameters'], $requestParts['parameters'], $requestParameters);
+				$parseRequired = @preg_match($this->regexp_patterns['metadata'], $requestParameters['required'], $requestRequired);
+				$parseOptional = @preg_match($this->regexp_patterns['metadata'], $requestParameters['optional'], $requestOptional);
+
+				// Validate overall structure.
+				if($parseRequest === false)
+				{
+					throw new Exception("Internal server error, could not evaluate request structure.", self::STATUS_INTERNAL_ERROR);
+				}
+				else if($parseRequest == 0)
+				{
+					throw new Exception("Request URI is invalid.", self::STATUS_MALFORMED_RESPONSE);
+				}
+
+				// Validate the request scheme.
+				if($requestParts['scheme'] != 'cashid:')
+				{
+					throw new Exception("Request scheme '{$requestParts['scheme']}' is invalid, should be 'cashid:'.", self::STATUS_MALFORMED_RESPONSE);
+				}
+
+				// Validate the request domain.
+				if($requestParts['domain'] != $this->domain)
+				{
+					throw new Exception("Request scheme '{$requestParts['domain']}' is invalid, this service is '{$this->domain}'.", self::STATUS_MALFORMED_RESPONSE);
+				}
+
+				// Validate the parameter structure
+				if($parseParameters === false)
+				{
+					throw new Exception("Internal server error, could not evaluate request parameters.", self::STATUS_INTERNAL_ERROR);
+				}
+				else if($parseParameters == 0)
+				{
+					throw new Exception("Request parameters are invalid.", self::STATUS_MALFORMED_RESPONSE);
+				}
+
+				// Validate the existance of a nonce.
+				if(!isset($requestParameters['nonce']))
+				{
+					throw new Exception("Request parameter 'nonce' is missing.", self::STATUS_MALFORMED_RESPONSE);
+				}
+
+				// Locally store if the request action is a user-initiated action.
+				$user_initiated_request = isset($this->user_actions[$requestParameters['action']]);
+
+				// Locally store values to compare with nonce timestamp to validate recency.
+				// NOTE: current time is set to 1 minute in the future to allow for minor clock drift.
+				$recent_time = (time() - (60 * 60 * 15));
+				$current_time = (time() + (60 * 1 * 1));
+
+				// Validate if a user initiated request is a recent and valid timestamp...
+				if($user_initiated_request and (($requestParameters['nonce'] < $recent_time) or ($requestParameters['nonce'] > $current_time)))
+				{
+					throw new Exception("Request nonce for user initated action is not a valid and recent timestamp.", self::STATUS_MALFORMED_RESPONSE);
+				}
+
+				// Try to load the request from the apcu object cache.
+				$requestReference = apcu_fetch("cashid_request_{$requestParameters['nonce']}");
+
+				// Validate that the request was issued by this service provider.
+				if(!$user_initiated_request and ($requestReference === false))
+				{
+					throw new Exception("The request nonce was not issued by this service.", self::STATUS_NONCE_INVALID);
+				}
+
+				// Validate if the request is available
+				if(!$user_initiated_request and ($requestReference['available'] === false))
+				{
+					throw new Exception("The request nonce was not issued by this service.", self::STATUS_NONCE_CONSUMED);
+				}
+
+				// Validate if the request has expired.
+				if(!$user_initiated_request and ($requestReference['expires'] < time()))
+				{
+					throw new Exception("The request has expired and is no longer available.", self::STATUS_NONCE_EXPIRED);
+				}
+
+				// Send the request parts to bitcoind for signature verification.
+				$verificationStatus = $this->verifymessage($responseObject['address'], $responseObject['signature'], $responseObject['request']);
+
+				// Validate the signature.
+				if($verificationStatus !== true)
+				{
+					throw new Exception("Signature verification failed: {$this->rpc_error}", self::STATUS_INVALID_SIGNATURE);
+				}
+
+				// Store the response object in local cache.
+				if(!apcu_store("cashid_response_{$requestParameters['nonce']}", $responseObject))
+				{
+					throw new Exception("Internal server error, could not store response object.", self::STATUS_INTERNAL_ERROR);
+				}
+
+				// Store the confirmation object in local cache.
+				if(!apcu_store("cashid_confirmation_{$requestParameters['nonce']}", $this->statusConfirmation))
+				{
+					throw new Exception("Internal server error, could not store confirmation object.", self::STATUS_INTERNAL_ERROR);
+				}
+
+				// Add the action and data parameters to the response structure.
+				$responseObject['action'] = (isset($parseParameters['action']) ? $parseParameters['action'] : 'auth');
+				$responseObject['data'] = (isset($parseParameters['data']) ? $parseParameters['data'] : '');
+
+				// Return the parsed response.
+				return $responseObject;
+			}
+			catch(Exception $e)
+			{
+				// Update internal status object.
+				$this->statusConfirmation =
+				[
+					'status' => $e->getCode(),
+					'message' => $e->getMessage()
+				];
+
+				// Return false to indicate error.
+				return false;
+			}
 		}
 
 		//
