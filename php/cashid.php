@@ -255,7 +255,7 @@
 		}
 
 		//
-		private encode_request_metadata($metadata)
+		private function encode_request_metadata($metadata)
 		{
 			// Initialize an empty metadata string.
 			$metadata_string = "";
