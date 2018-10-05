@@ -447,6 +447,10 @@
 																	}
 																	else
 																	{
+																		// Add the action and data parameters to the response structure.
+																		$responseObject['action'] = (isset($parseParameters['action']) ? $parseParameters['action'] : 'auth');
+																		$responseObject['data'] = (isset($parseParameters['data']) ? $parseParameters['data'] : '');
+
 																		// Store the response object in local cache.
 																		@acpu_store("cashid_response_{$requestParameters['nonce']}", $responseObject);
 																		
