@@ -399,7 +399,7 @@
 												else
 												{
 													// Locally store if the request action is a user-initiated action.
-													$user_initiated_request = isset($this->user_actions[$requestParameters['action']);
+													$user_initiated_request = isset($this->user_actions[$requestParameters['action']]);
 
 													// Locally store values to compare with nonce timestamp to validate recency.
 													// NOTE: current time is set to 1 minute in the future to allow for minor clock drift.
