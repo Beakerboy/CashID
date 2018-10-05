@@ -273,7 +273,7 @@
 				foreach($metadata_fields as $field_name => $field_code)
 				{
 					// If this field was requested..
-					if(isset($metadata[$metadata_type][$field_name])
+					if(isset($metadata[$metadata_type][$field_name]))
 					{
 						// .. add it to the metadata part.
 						$metadata_part .= $field_code;
