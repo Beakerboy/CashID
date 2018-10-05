@@ -9,7 +9,7 @@
 
 ### Configuration
 
-Set the domain and path to your CashID controller that manages responses.
+Edit the cashid.php file and set the domain and path to your CashID controller that manages responses.
 
 ```PHP
 // Location for a CashID response manager.
@@ -35,7 +35,7 @@ private $rpc_portnumber = 8332;
 ```PHP
 <?php
     // Include the CashID support library for PHP.
-    include('libs/cashid.php');
+    require_once('libs/cashid.php');
 
     // Create a minimal request
     $requestURI = $cashid->create_request();
@@ -53,7 +53,7 @@ private $rpc_portnumber = 8332;
 ```PHP
 <?php
     // Include the CashID support library for PHP.
-    include('libs/cashid.php');
+    require_once('libs/cashid.php');
 
     // Parse the request.
     $request = $cashid->validate()
