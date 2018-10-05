@@ -207,7 +207,7 @@
 			$nonce = rand(100000000, 999999999);
 
 			// Check if the nonce is already used, and regenerate until it does not exist.
-			while(apcu_exists("cashid_nonce_{$requestParameters['nonce']}"))
+			while(apcu_exists("cashid_nonce_{$nonce}"))
 			{
 				// generate a random nonce.
 				$nonce = rand(100000000, 999999999);
@@ -219,29 +219,29 @@
 			// If a specific action was requested, add it to the parameter list.
 			if($action)
 			{
-				$parameters['a'] = $action;
+				$parameters['a'] = "a={$action}";
 			}
 
 			// If specific data was requested, add it to the parameter list.
 			if($data)
 			{
-				$parameters['d'] = $data;
+				$parameters['d'] = "d={$data}";
 			}
 
 			// If required metadata was requested, add them to the parameter list.
 			if(isset($metadata['required']))
 			{
-				$parameters['r'] = $this->encode_request_metadata($metadata['required']);
+				$parameters['r'] = "r=" . $this->encode_request_metadata($metadata['required']);
 			}
 
 			// If optional metadata was requested, add them to the parameter list.
 			if(isset($metadata['optional']))
 			{
-				$parameters['o'] = $this->encode_request_metadata($metadata['optional']);
+				$parameters['o'] = "o=" . $this->encode_request_metadata($metadata['optional']);
 			}
 
 			// Append the nonce to the parameter list.
-			$parameters['x'] = $nonce;
+			$parameters['x'] = "x={$nonce}";
 
 			// Form the request URI from the configured values.
 			$request_uri = "cashid:{$this->domain}{$this->path}?" . implode($parameters, '&');
@@ -269,22 +269,26 @@
 				// Initialize an empty metadata part string.
 				$metadata_part = "";
 
-				// Iterate over each field of this metadata type.
-				foreach($metadata_fields as $field_name => $field_code)
+				//
+				if(isset($metadata[$metadata_type]))
 				{
-					// If this field was requested..
-					if(isset($metadata[$metadata_type][$field_name]))
+					// Iterate over each field of this metadata type.
+					foreach($metadata_fields as $field_name => $field_code)
 					{
-						// .. add it to the metadata part.
-						$metadata_part .= $field_code;
+						// If this field was requested..
+						if(in_array($field_name, $metadata[$metadata_type]))
+						{
+							// .. add it to the metadata part.
+							$metadata_part .= $field_code;
+						}
 					}
-				}
 
-				// If, after checking for requested metadata of this type, some matches were found..
-				if($metadata_part !== "")
-				{
-					// Add the letter and numbers matching the requested metadata to the metadata string.
-					$metadata_string .= "{$metadata_letter}{$metadata_parts[$metadata_letter]}";
+					// If, after checking for requested metadata of this type, some matches were found..
+					if($metadata_part !== "")
+					{
+						// Add the letter and numbers matching the requested metadata to the metadata string.
+						$metadata_string .= "{$metadata_letter}{$metadata_part}";
+					}
 				}
 			}
 
