@@ -63,5 +63,8 @@ private $rpc_portnumber = 8332;
     {
         // Perform the $request['action'] using $request['data'] and $request['metadata'].
     }
+
+    // Send the request confirmation.
+    $cashid->confirm_request();
 ?>
 ```
