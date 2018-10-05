@@ -203,55 +203,65 @@
 		//
 		public function create_request($action = "", $data = "", $metadata = [])
 		{
-			// generate a random nonce.
-			$nonce = rand(100000000, 999999999);
-
-			// Check if the nonce is already used, and regenerate until it does not exist.
-			while(apcu_exists("cashid_nonce_{$nonce}"))
+			try
 			{
 				// generate a random nonce.
 				$nonce = rand(100000000, 999999999);
+
+				// Check if the nonce is already used, and regenerate until it does not exist.
+				while(apcu_exists("cashid_request_{$nonce}"))
+				{
+					// generate a random nonce.
+					$nonce = rand(100000000, 999999999);
+				}
+
+				// Initialize an empty parameter list.
+				$parameters = [];
+
+				// If a specific action was requested, add it to the parameter list.
+				if($action)
+				{
+					$parameters['a'] = "a={$action}";
+				}
+
+				// If specific data was requested, add it to the parameter list.
+				if($data)
+				{
+					$parameters['d'] = "d={$data}";
+				}
+
+				// If required metadata was requested, add them to the parameter list.
+				if(isset($metadata['required']))
+				{
+					$parameters['r'] = "r=" . $this->encode_request_metadata($metadata['required']);
+				}
+
+				// If optional metadata was requested, add them to the parameter list.
+				if(isset($metadata['optional']))
+				{
+					$parameters['o'] = "o=" . $this->encode_request_metadata($metadata['optional']);
+				}
+
+				// Append the nonce to the parameter list.
+				$parameters['x'] = "x={$nonce}";
+
+				// Form the request URI from the configured values.
+				$request_uri = "cashid:{$this->domain}{$this->path}?" . implode($parameters, '&');
+
+				// Store the request and nonce in local cache.
+				if(!apcu_store("cashid_request_{$nonce}", [ 'available' => true, 'expires' => time() + (60 * 15) ]))
+				{
+					throw new Exception("Failed to store request metadata in APCu.");
+				}
+
+				// Return the request URI to indicate success.
+				return $request_uri;
 			}
-
-			// Initialize an empty parameter list.
-			$parameters = [];
-
-			// If a specific action was requested, add it to the parameter list.
-			if($action)
+			catch(Exception $e)
 			{
-				$parameters['a'] = "a={$action}";
+				// Return false to indicate error.
+				return false;
 			}
-
-			// If specific data was requested, add it to the parameter list.
-			if($data)
-			{
-				$parameters['d'] = "d={$data}";
-			}
-
-			// If required metadata was requested, add them to the parameter list.
-			if(isset($metadata['required']))
-			{
-				$parameters['r'] = "r=" . $this->encode_request_metadata($metadata['required']);
-			}
-
-			// If optional metadata was requested, add them to the parameter list.
-			if(isset($metadata['optional']))
-			{
-				$parameters['o'] = "o=" . $this->encode_request_metadata($metadata['optional']);
-			}
-
-			// Append the nonce to the parameter list.
-			$parameters['x'] = "x={$nonce}";
-
-			// Form the request URI from the configured values.
-			$request_uri = "cashid:{$this->domain}{$this->path}?" . implode($parameters, '&');
-
-			// Store the request and nonce in local cache.
-			@apcu_store("cashid_request_{$nonce}", [ 'available' => true, 'expires' => time() + (60 * 15) ]);
-			@apcu_store("cashid_nonce_{$nonce}", $nonce);
-
-			// Return the request URI to indicate success.
-			return $request_uri;
 		}
 
 		//
