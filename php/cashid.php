@@ -291,7 +291,22 @@
 			// Return the filled in metadata string.
 			return $metadata_string;
 		}
-		
+
+		//
+		public function parse_request($request_uri)
+		{
+			// Initialize empty structure
+			$request_parts = [];
+
+			// Parse the request URI.
+			@preg_match($regexp_patterns['request'], $request_uri, $request_parts);
+			@preg_match($regexp_patterns['parameters'], $request_parts['parameters'], $request_parts['parameters']);
+			@preg_match($regexp_patterns['metadata'], $request_parts['parameters']['required'], $request_parts['parameters']['required']);
+			@preg_match($regexp_patterns['metadata'], $request_parts['parameters']['optional'], $request_parts['parameters']['optional']);
+
+			return $request_parts;
+		}
+
 		// 
 		private function invalidate_request($status_code, $status_message = "")
 		{
@@ -351,10 +366,10 @@
 								$requestOptional = [];
 
 								// Parse the request URI.
-								$parseRequest = @preg_match($regexps['request'], $responseObject['request'], $requestParts);
-								$parseParameters = @preg_match($regexps['parameters'], $requestParts['parameters'], $requestParameters);
-								$parseRequired = @preg_match($regexps['metadata'], $requestParameters['required'], $requestRequired);
-								$parseOptional = @preg_match($regexps['metadata'], $requestParameters['optional'], $requestOptional);
+								$parseRequest = @preg_match($regexp_patterns['request'], $responseObject['request'], $requestParts);
+								$parseParameters = @preg_match($regexp_patterns['parameters'], $requestParts['parameters'], $requestParameters);
+								$parseRequired = @preg_match($regexp_patterns['metadata'], $requestParameters['required'], $requestRequired);
+								$parseOptional = @preg_match($regexp_patterns['metadata'], $requestParameters['optional'], $requestOptional);
 
 								// Validate overall structure.
 								if($parseRequest === false)
