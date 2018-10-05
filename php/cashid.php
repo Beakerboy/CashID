@@ -85,7 +85,7 @@
 				'phone' => 4,
 				'postal' => 5
 			]
-		]
+		];
 
 		//
 		function __construct()
