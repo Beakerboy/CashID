@@ -12,22 +12,22 @@
 Edit the cashid.php file and set the domain and path to your CashID controller that manages responses.
 
 ```PHP
-// Location for a CashID response manager.
-private $domain = 'demo.cashid.info';
-private $path = "/api/parse.php";
+// Location pointing to a CashID response manager.
+const SERVICE_DOMAIN = 'demo.cashid.info';
+const SERVICE_PATH = "/api/parse.php";
 ```
 
 Set the RPC username, password and location of your Bitcoin full node
 
 ```PHP
 // Credentials that grant access to a bitcoind RPC connection.
-private $rpc_username = 'uvzOQgLc4VujgDfVpNsfujqasVjVQHhB';
-private $rpc_password = '1Znrf7KClQjJ3AhxDwr7vkFZpwW0ZGUJ';
+const RPC_USERNAME = 'uvzOQgLc4VujgDfVpNsfujqasVjVQHhB';
+const RPC_PASSWORD = '1Znrf7KClQjJ3AhxDwr7vkFZpwW0ZGUJ';
 
 // Location of a bitcoind RCP service.
-private $rpc_scheme = 'http://';
-private $rpc_hostname = 'localhost';
-private $rpc_portnumber = 8332;
+const RPC_SCHEME = 'http://';
+const RPC_HOST = '127.0.0.1';
+const RPC_PORT = 8332;
 ```
 
 ### Create CashID request
