@@ -1,10 +1,19 @@
 <?php
-	//
+	// Declare a unique namespace to avoid naming collisions.
 	namespace CashID;
 
-	// Create an internal exception type which lets us catch our own exceptions 
-	// while still passing on system exceptions that we didn't handle.
-	class InternalException extends \Exception {}
+	// Location pointing to a CashID response manager.
+	const CASHID_DOMAIN = 'demo.cashid.info';
+	const CASHID_PATH = "/api/parse.php";
+
+	// Credentials that grant access to a bitcoind RPC connection.
+	const RPC_USERNAME = 'uvzOQgLc4VujgDfVpNsfujqasVjVQHhB';
+	const RCP_PASSWORD = '1Znrf7KClQjJ3AhxDwr7vkFZpwW0ZGUJ';
+
+	// Location of a bitcoind RCP service.
+	const RPC_SCHEME = 'http://';
+	const RPC_HOST = '127.0.0.1';
+	const RPC_PORT = 8332;
 
 	/**
 	 * Simple CashID support library that can:
@@ -16,30 +25,10 @@
 	 * - PHP support for PECL APCu
 	 * - BitcoinD node with RPC support
 	 **/
-	class CashID
+	class CashID extends JSONRPC
 	{
-		// Location for a CashID response manager.
-		private $domain = 'demo.cashid.info';
-		private $path = "/api/parse.php";
-
-		// Credentials that grant access to a bitcoind RPC connection.
-		private $rpc_username = 'uvzOQgLc4VujgDfVpNsfujqasVjVQHhB';
-		private $rpc_password = '1Znrf7KClQjJ3AhxDwr7vkFZpwW0ZGUJ';
-
-		// Location of a bitcoind RCP service.
-		private $rpc_scheme = 'http://';
-		private $rpc_hostname = '127.0.0.1';
-		private $rpc_portnumber = 8332;
-
-		// Functional URL and request counter.
-		private $rpc_url;
-		private $rpc_request_id = 1;
-
-		// Storage for errors caused by RPC calls.
-		private  $rpc_error = '';
-
 		// Storage for a status confirmation message.
-		private $statusConfirmation;
+		private static $statusConfirmation;
 
 		// Define regular expressions to parse request data.
 		const REGEXP_REQUEST = "/(?P<scheme>cashid:)(?:[\/]{2})?(?P<domain>[^\/]+)(?P<path>\/[^\?]+)(?P<parameters>\?.+)/";
@@ -115,95 +104,6 @@
 		];
 
 		//
-		function __construct()
-		{
-			// Form the RPC URL from the configured settings.
-			$this->rpc_url = "{$this->rpc_scheme}{$this->rpc_username}:{$this->rpc_password}@{$this->rpc_hostname}:{$this->rpc_portnumber}";
-		}
-
-		// Convert missing functions to RPC calls.
-		function __call($function, $arguments)
-		{
-			// Remove array keys to simplify argument list?
-			$rpc_arguments = array_values($arguments);
-
-			// Convert underscores to spaces, and force lowercase in function names.
-			$rpc_function = str_replace('_', '', strtolower($function));
-
-			// Set up an RPC request.
-			$rpc_request = 
-			[
-				'jsonrpc' => '2.0',
-				'id' => $this->rpc_request_id++,
-				'method' => $rpc_function,
-				'params' => $rpc_arguments
-			];
-
-			// Set up a stream request.
-			$stream_request = 
-			[
-				'http' =>
-				[
-					'method' => 'POST',
-					'header' => 'Content-type: application/json',
-					'content' => json_encode($rpc_request),
-					'ignore_errors' => true
-				]
-			];
-
-			// Create a connection with the RCP host.
-			$stream_context = stream_context_create($stream_request);
-
-			// Send the request and store the full response.
-			$rpc_response = file_get_contents($this->rpc_url, false, $stream_context);
-
-			// Validate if the request was completed
-			if($rpc_response === false)
-			{
-				// Store error description
-				$this->rpc_error = 'Unable to complete RPC request.';
-
-				// Return NULL to indicate that an error was encountered.
-				return NULL;
-			}
-			else
-			{
-				// Attempt to decode the RCP response
-				$object = @json_decode($rpc_response, true);
-
-				// Validate if the RPC response is a valid JSON string.
-				if($object === NULL)
-				{
-					// Store error description
-					$this->rpc_error = 'Reply from RPC host was not a valid JSON string.';
-
-					// Return NULL to indicate that an error was encountered.
-					return NULL;
-				}
-				else
-				{
-					// Check if the response contains any errors.
-					if($object['error'])
-					{
-						// Store the response error message.
-						$this->rpc_error = $object['error']['message'];
-
-						// Return NULL to indicate that an error was encountered.
-						return NULL;
-					}
-					else
-					{
-						// Clear any previous error descriptions.
-						$this->rpc_error = '';
-
-						// Return the RPC response data.
-						return $object['result'];
-					}
-				}
-			}
-		}
-
-		//
 		public function create_request($action = "", $data = "", $metadata = [])
 		{
 			try
@@ -236,20 +136,20 @@
 				// If required metadata was requested, add them to the parameter list.
 				if(isset($metadata['required']))
 				{
-					$parameters['r'] = "r=" . $this->encode_request_metadata($metadata['required']);
+					$parameters['r'] = "r=" . self::$encode_request_metadata($metadata['required']);
 				}
 
 				// If optional metadata was requested, add them to the parameter list.
 				if(isset($metadata['optional']))
 				{
-					$parameters['o'] = "o=" . $this->encode_request_metadata($metadata['optional']);
+					$parameters['o'] = "o=" . self::$encode_request_metadata($metadata['optional']);
 				}
 
 				// Append the nonce to the parameter list.
 				$parameters['x'] = "x={$nonce}";
 
 				// Form the request URI from the configured values.
-				$request_uri = "cashid:{$this->domain}{$this->path}?" . implode($parameters, '&');
+				$request_uri = "cashid:" . CASHID_DOMAIN . CASHID_PATH . "?" . implode($parameters, '&');
 
 				// Store the request and nonce in local cache.
 				if(!apcu_store("cashid_request_{$nonce}", [ 'available' => true, 'expires' => time() + (60 * 15) ]))
@@ -328,7 +228,7 @@
 		public function validate_request()
 		{
 			// Initalized an assumed successful status.
-			$this->statusConfirmation =
+			self::$statusConfirmation =
 			[
 				'status' => self::STATUS_CODES['SUCCESSFUL'],
 				'message' => ''
@@ -398,9 +298,9 @@
 				}
 
 				// Validate the request domain.
-				if($requestParts['domain'] != $this->domain)
+				if($requestParts['domain'] != CASHID_DOMAIN)
 				{
-					throw new InternalException("Request scheme '{$requestParts['domain']}' is invalid, this service is '{$this->domain}'.", self::STATUS_CODES['MALFORMED_RESPONSE']);
+					throw new InternalException("Request scheme '{$requestParts['domain']}' is invalid, this service is '" . CASHID_DOMAIN . "'.", self::STATUS_CODES['MALFORMED_RESPONSE']);
 				}
 
 				// Validate the parameter structure
@@ -455,12 +355,12 @@
 				}
 
 				// Send the request parts to bitcoind for signature verification.
-				$verificationStatus = $this->verifymessage($responseObject['address'], $responseObject['signature'], $responseObject['request']);
+				$verificationStatus = self::$verifymessage($responseObject['address'], $responseObject['signature'], $responseObject['request']);
 
 				// Validate the signature.
 				if($verificationStatus !== true)
 				{
-					throw new InternalException("Signature verification failed: {$this->rpc_error}", self::STATUS_CODES['INVALID_SIGNATURE']);
+					throw new InternalException("Signature verification failed: {self::$rpc_error}", self::STATUS_CODES['INVALID_SIGNATURE']);
 				}
 
 				// Store the response object in local cache.
@@ -470,7 +370,7 @@
 				}
 
 				// Store the confirmation object in local cache.
-				if(!apcu_store("cashid_confirmation_{$requestParameters['nonce']}", $this->statusConfirmation))
+				if(!apcu_store("cashid_confirmation_{$requestParameters['nonce']}", self::$statusConfirmation))
 				{
 					throw new InternalException("Internal server error, could not store confirmation object.", self::STATUS_CODES['INTERNAL_ERROR']);
 				}
@@ -485,7 +385,7 @@
 			catch(InternalException $exception)
 			{
 				// Update internal status object.
-				$this->statusConfirmation =
+				self::$statusConfirmation =
 				[
 					'status' => $exception->getCode(),
 					'message' => $exception->getMessage()
@@ -506,7 +406,7 @@
 			}
 
 			// Sanity check if validation has not yet been done.
-			if(!isset($this->statusConfirmation['status']))
+			if(!isset(self::$statusConfirmation['status']))
 			{
 				throw new \Exception('cashid->confirm_request was called before validate_request so there is no confirmation to transmit to the client.');
 			}
@@ -516,9 +416,109 @@
 			header('Cache-Control: no-cache');
 
 			// send the response confirmation back to the identity manager.
-			echo json_encode($this->statusConfirmation);
+			echo json_encode(self::$statusConfirmation);
 		}
 	}
 
+	//
+	class JSONRPC
+	{
+		// Request counter
+		private static $rpc_request_id = 1;
+
+		// Storage for errors caused by RPC calls.
+		private static $rpc_error = null;
+
+		// Convert missing functions to RPC calls.
+		public function __call($function, $arguments)
+		{
+			// Remove array keys to simplify argument list?
+			$rpc_arguments = array_values($arguments);
+
+			// Convert underscores to spaces, and force lowercase in function names.
+			$rpc_function = str_replace('_', '', strtolower($function));
+
+			// Form the RCP URL to which we can send the request.
+			$rpc_url = RPC_SCHEME . RPC_USERNAME . ":" . RPC_PASSWORD . "@" . RPC_HOST . ":" . RPC_PORT;
+
+			// Set up an RPC request.
+			$rpc_request = 
+			[
+				'jsonrpc' => '2.0',
+				'id' => self::$rpc_request_id++,
+				'method' => $rpc_function,
+				'params' => $rpc_arguments
+			];
+
+			// Set up a stream request.
+			$stream_request = 
+			[
+				'http' =>
+				[
+					'method' => 'POST',
+					'header' => 'Content-type: application/json',
+					'content' => json_encode($rpc_request),
+					'ignore_errors' => true
+				]
+			];
+
+			// Create a connection with the RCP host.
+			$stream_context = stream_context_create($stream_request);
+
+			// Send the request and store the full response.
+			$rpc_response = file_get_contents($rpc_url, false, $stream_context);
+
+			// Validate if the request was completed
+			if($rpc_response === false)
+			{
+				// Store error description
+				self::$rpc_error = 'Unable to complete RPC request.';
+
+				// Return NULL to indicate that an error was encountered.
+				return NULL;
+			}
+			else
+			{
+				// Attempt to decode the RCP response
+				$object = @json_decode($rpc_response, true);
+
+				// Validate if the RPC response is a valid JSON string.
+				if($object === NULL)
+				{
+					// Store error description
+					self::$rpc_error = 'Reply from RPC host was not a valid JSON string.';
+
+					// Return NULL to indicate that an error was encountered.
+					return NULL;
+				}
+				else
+				{
+					// Check if the response contains any errors.
+					if($object['error'])
+					{
+						// Store the response error message.
+						self::$rpc_error = $object['error']['message'];
+
+						// Return NULL to indicate that an error was encountered.
+						return NULL;
+					}
+					else
+					{
+						// Clear any previous error descriptions.
+						self::$rpc_error = '';
+
+						// Return the RPC response data.
+						return $object['result'];
+					}
+				}
+			}
+		}
+	}
+
+	// Create an internal exception type which lets us catch our own exceptions 
+	// while still passing on system exceptions that we didn't handle.
+	class InternalException extends \Exception {}
+
+	// Create an instance of the class to retain compatibility with previous versions.
 	$cashid = new CashID();
 ?>
