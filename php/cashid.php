@@ -49,34 +49,38 @@
 		[
 			'SUCCESSFUL' => 0,
 
-			'MALFORMED_RESPONSE' => 1,
-			'MALFORMED_REQUEST' => 2,
-			'MALFORMED_ADDRESS' => 3,
-			'MALFORMED_SIGNATURE' => 4,
-			'MALFORMED_METADATA' => 5,
-			'NONCE_INVALID' => 6,
-			'NONCE_EXPIRED' => 7,
-			'NONCE_CONSUMED' => 8,
-			'INVALID_SIGNATURE' => 9,
-			'ADDRESS_DENIED' => 10,
-			'ADDRESS_REVOKED' => 11,
-			'METADATA_MISSING' => 12,
-			'METADATA_INVALID' => 13,
-			'ACTION_NOT_IMPLEMENTED' => 14,
-			'ACTION_UNAVAILABLE' => 15,
-			'ACTION_DENIED' => 16,
+			'REQUEST_BROKEN' => 100,
+			'REQUEST_MISSING_SCHEME' => 111,
+			'REQUEST_MISSING_DOMAIN' => 112,
+			'REQUEST_MISSING_NONCE' => 113,
+			'REQUEST_MALFORMED_SCHEME' => 121,
+			'REQUEST_MALFORMED_DOMAIN' => 122,
+			'REQUEST_INVALID_DOMAIN' => 131,
+			'REQUEST_INVALID_NONCE' => 132,
+			'REQUEST_ALTERED' => 141,
+			'REQUEST_EXPIRED' => 142,
+			'REQUEST_CONSUMED' => 143,
 
-			'INVALID_METHOD' => 89,
-			'INVALID_SCHEME' => 90,
-			'INVALID_DOMAIN' => 91,
+			'RESPONSE_BROKEN' => 200,
+			'RESPONSE_MISSING_REQUEST' => 211,
+			'RESPONSE_MISSING_ADDRESS' => 212,
+			'RESPONSE_MISSING_SIGNATURE' => 213,
+			'RESPONSE_MISSING_METADATA' => 214,
+			'RESPONSE_MALFORMED_ADDRESS' => 221,
+			'RESPONSE_MALFORMED_SIGNATURE' => 222,
+			'RESPONSE_MALFORMED_METADATA' => 223,
+			'RESPONSE_INVALID_METHOD' => 231,
+			'RESPONSE_INVALID_ADDRESS' => 232,
+			'RESPONSE_INVALID_SIGNATURE' => 233,
+			'RESPONSE_INVALID_METADATA' => 234,
 
-			'MISSING_REQUEST' => 95,
-			'MISSING_ADDRESS' => 96,
-			'MISSING_SIGNATURE' => 96,
-			'MISSING_NONCE' => 97,
-
-			'REQUEST_MODIFIED' => 98,
-			'INTERNAL_ERROR' => 99,
+			'SERVICE_BROKEN' => 300,
+			'SERVICE_ADDRESS_DENIED' => 311,
+			'SERVICE_ADDRESS_REVOKED' => 312,
+			'SERVICE_ACTION_DENIED' => 321,
+			'SERVICE_ACTION_UNAVAILABLE' => 322,
+			'SERVICE_ACTION_NOT_IMPLEMENTED' => 323,
+			'SERVICE_INTERNAL_ERROR' => 331
 		];
 
 		//
@@ -255,7 +259,7 @@
 				// Validate that the response was received as POST request.
 				if(!isset($_SERVER['REQUEST_METHOD']) or $_SERVER['REQUEST_METHOD'] != 'POST')
 				{
-					throw new InternalException("Unsupported request method.", self::STATUS_CODES['INVALID_METHOD']);
+					throw new InternalException("Unsupported request method.", self::STATUS_CODES['RESPONSE_INVALID_METHOD']);
 				}
 
 				// Attempt to decode the response data.
@@ -264,25 +268,25 @@
 				// Validate that the response is JSON encoded.
 				if($responseObject === null)
 				{
-					throw new InternalException("Response data is not a valid JSON object.", self::STATUS_CODES['MALFORMED_RESPONSE']);
+					throw new InternalException("Response data is not a valid JSON object.", self::STATUS_CODES['RESPONSE_BROKEN']);
 				}
 
 				// Validate if the required field 'request' exists.
 				if(!isset($responseObject['request']))
 				{
-					throw new InternalException("Response data is missing required 'request' property.", self::STATUS_CODES['MISSING_REQUEST']);
+					throw new InternalException("Response data is missing required 'request' property.", self::STATUS_CODES['RESPONSE_MISSING_REQUEST']);
 				}
 
 				// Validate if the required field 'address' exists.
 				if(!isset($responseObject['address']))
 				{
-					throw new InternalException("Response data is missing required 'adress' property.", self::STATUS_CODES['MISSING_ADDRESS']);
+					throw new InternalException("Response data is missing required 'adress' property.", self::STATUS_CODES['RESPONSE_MISSING_ADDRESS']);
 				}
 
 				// Validate if the required field 'signature' exists.
 				if(!isset($responseObject['signature']))
 				{
-					throw new InternalException("Response data is missing required 'signature' property.", self::STATUS_CODES['MISSING_SIGNATURE']);
+					throw new InternalException("Response data is missing required 'signature' property.", self::STATUS_CODES['RESPONSE_MISSING_SIGNATURE']);
 				}
 
 				// Parse the request.
@@ -291,39 +295,41 @@
 				// Validate overall structure.
 				if($parsedRequest === false)
 				{
-					throw new InternalException("Internal server error, could not evaluate request structure.", self::STATUS_CODES['INTERNAL_ERROR']);
+					throw new InternalException("Internal server error, could not evaluate request structure.", self::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
 				}
 				else if($parsedRequest == 0)
 				{
-					throw new InternalException("Request URI is invalid.", self::STATUS_CODES['MALFORMED_REQUEST']);
+					throw new InternalException("Request URI is invalid.", self::STATUS_CODES['REQUEST_BROKEN']);
 				}
 
 				// Validate the request scheme.
 				if($parsedRequest['scheme'] != 'cashid:')
 				{
-					throw new InternalException("Request scheme '{$parsedRequest['scheme']}' is invalid, should be 'cashid:'.", self::STATUS_CODES['INVALID_SCHEME']);
+					throw new InternalException("Request scheme '{$parsedRequest['scheme']}' is invalid, should be 'cashid:'.", self::STATUS_CODES['REQUEST_MALFORMED_SCHEME']);
 				}
+
+				// TODO: Validate the domain structure.
 
 				// Validate the request domain.
 				if($parsedRequest['domain'] != SERVICE_DOMAIN)
 				{
-					throw new InternalException("Request domain '{$parsedRequest['domain']}' is invalid, this service uses '" . SERVICE_DOMAIN . "'.", self::STATUS_CODES['INVALID_DOMAIN']);
+					throw new InternalException("Request domain '{$parsedRequest['domain']}' is invalid, this service uses '" . SERVICE_DOMAIN . "'.", self::STATUS_CODES['REQUEST_INVALID_DOMAIN']);
 				}
 
 				// Validate the parameter structure
 				if($parsedRequest['parameters'] === false)
 				{
-					throw new InternalException("Internal server error, could not evaluate request parameters.", self::STATUS_CODES['INTERNAL_ERROR']);
+					throw new InternalException("Internal server error, could not evaluate request parameters.", self::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
 				}
 				else if($parsedRequest['parameters'] == 0)
 				{
-					throw new InternalException("Request parameters are invalid.", self::STATUS_CODES['MALFORMED_REQUEST']);
+					throw new InternalException("Request parameters are invalid.", self::STATUS_CODES['REQUEST_BROKEN']);
 				}
 
 				// Validate the existance of a nonce.
 				if(!isset($parsedRequest['parameters']['nonce']))
 				{
-					throw new InternalException("Request parameter 'nonce' is missing.", self::STATUS_CODES['MISSING_NONCE']);
+					throw new InternalException("Request parameter 'nonce' is missing.", self::STATUS_CODES['REQUEST_MISSING_NONCE']);
 				}
 
 				// Locally store if the request action is a user-initiated action.
@@ -334,10 +340,12 @@
 				$recent_time = (time() - (60 * 60 * 15));
 				$current_time = (time() + (60 * 1 * 1));
 
+				// TODO: Separate MALFORMED (valid timestamp) from INVALID (not recent) for timestamp.
+
 				// Validate if a user initiated request is a recent and valid timestamp...
 				if($user_initiated_request and (($parsedRequest['parameters']['nonce'] < $recent_time) or ($parsedRequest['parameters']['nonce'] > $current_time)))
 				{
-					throw new InternalException("Request nonce for user initated action is not a valid and recent timestamp.", self::STATUS_CODES['NONCE_INVALID']);
+					throw new InternalException("Request nonce for user initated action is not a valid and recent timestamp.", self::STATUS_CODES['REQUEST_INVALID_NONCE']);
 				}
 
 				// Try to load the request from the apcu object cache.
@@ -346,7 +354,7 @@
 				// Validate that the request was issued by this service provider.
 				if(!$user_initiated_request and ($requestReference === false))
 				{
-					throw new InternalException("The request nonce was not issued by this service.", self::STATUS_CODES['NONCE_INVALID']);
+					throw new InternalException("The request nonce was not issued by this service.", self::STATUS_CODES['REQUEST_INVALID_NONCE']);
 				}
 
 				// Validate if the request is available
@@ -358,13 +366,13 @@
 				// Validate if the request has expired.
 				if(!$user_initiated_request and ($requestReference['expires'] < time()))
 				{
-					throw new InternalException("The request has expired and is no longer available.", self::STATUS_CODES['NONCE_EXPIRED']);
+					throw new InternalException("The request has expired and is no longer available.", self::STATUS_CODES['REQUEST_EXPIRED']);
 				}
 
 				// Validate that the request has not been tampered with.
 				if(!$user_initiated_request and ($requestReference['request'] != $responseObject['request']))
 				{
-					throw new InternalException("The response does not match the request parameters.", self::STATUS_CODES['REQUEST_MODIFIED']);
+					throw new InternalException("The response does not match the request parameters.", self::STATUS_CODES['REQUEST_ALTERED']);
 				}
 
 				// Send the request parts to bitcoind for signature verification.
@@ -373,7 +381,7 @@
 				// Validate the signature.
 				if($verificationStatus !== true)
 				{
-					throw new InternalException("Signature verification failed: {self::$rpc_error}", self::STATUS_CODES['INVALID_SIGNATURE']);
+					throw new InternalException("Signature verification failed: {self::$rpc_error}", self::STATUS_CODES['RESPONSE_INVALID_SIGNATURE']);
 				}
 
 				// Initialize an empty list of missing metadata.
@@ -393,7 +401,7 @@
 				// Validate if there was missing metadata.
 				if(count($missing_fields) >= 1)
 				{
-					throw new InternalException("The required metadata field(s) '" . implode(', ', $missing_fields) . "' was not provided.", self::STATUS_CODES['METADATA_MISSING']);
+					throw new InternalException("The required metadata field(s) '" . implode(', ', $missing_fields) . "' was not provided.", self::STATUS_CODES['RESPONSE_MISSING_METADATA']);
 				}
 
 				// Loop over the supplied metadata fields.
@@ -402,26 +410,26 @@
 					// Validate if the supplied metadata was requested
 					if(!isset($parsedRequest['parameters']['required'][$metadata_name]) and !isset($parsedRequest['parameters']['optional'][$metadata_name]))
 					{
-						throw new InternalException("The metadata field '{$metadata_name}' was not part of the request.", self::STATUS_CODES['METADATA_INVALID']);
+						throw new InternalException("The metadata field '{$metadata_name}' was not part of the request.", self::STATUS_CODES['RESPONSE_INVALID_METADATA']);
 					}
 
 					// Validate if the supplied value is empty.
 					if($metadata_value == "" or $metadata_value === null)
 					{
-						throw new InternalException("The metadata field '{$metadata_name}' did not contain any value.", self::STATUS_CODES['METADATA_INVALID']);
+						throw new InternalException("The metadata field '{$metadata_name}' did not contain any value.", self::STATUS_CODES['RESPONSE_MALFORMED_METADATA']);
 					}
 				}
 
 				// Store the response object in local cache.
 				if(!apcu_store("cashid_response_{$parsedRequest['parameters']['nonce']}", $responseObject))
 				{
-					throw new InternalException("Internal server error, could not store response object.", self::STATUS_CODES['INTERNAL_ERROR']);
+					throw new InternalException("Internal server error, could not store response object.", self::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
 				}
 
 				// Store the confirmation object in local cache.
 				if(!apcu_store("cashid_confirmation_{$parsedRequest['parameters']['nonce']}", self::$statusConfirmation))
 				{
-					throw new InternalException("Internal server error, could not store confirmation object.", self::STATUS_CODES['INTERNAL_ERROR']);
+					throw new InternalException("Internal server error, could not store confirmation object.", self::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
 				}
 
 				// Add the action and data parameters to the response structure.
