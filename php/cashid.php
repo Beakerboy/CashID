@@ -244,6 +244,16 @@
 			return $request_parts;
 		}
 
+		// Invalidate the current request with a custom code and message.
+		public function invalidate_request($status_code, $status_message)
+		{
+			self::$statusConfirmation =
+			[
+				'status' => $status_code,
+				'message' => $status_message
+			];
+		}
+
 		//
 		public function validate_request()
 		{
