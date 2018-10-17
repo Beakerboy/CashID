@@ -117,7 +117,14 @@
 			]
 		];
 
-		//
+		/**
+		* Creates a request
+		*
+		* @param {String} action - Name of the action the user authenticates to perform
+		* @param {String} data - Data relevant to the requested action
+		* @param {Array} metadata - Array with requested and optional metadata
+		* @returns {string} returns the request URI
+		**/
 		public function create_request($action = "", $data = "", $metadata = [])
 		{
 			try
@@ -181,7 +188,12 @@
 			}
 		}
 
-		//
+		/**
+		* Creates a metadata request string part from a metadata array
+		*
+		* @param {Array} metadata - Array with requested and optional metadata
+		* @returns {string} returns the request metadata part
+		**/
 		private function encode_request_metadata($metadata)
 		{
 			// Initialize an empty metadata string.
@@ -223,7 +235,12 @@
 			return $metadata_string;
 		}
 
-		//
+		/**
+		* Parses a request string and returns a request array.
+		*
+		* @param {String} request_url - the full request URI to parse
+		* @returns {Array} returns a request array populated based on the request_url string
+		**/
 		public function parse_request($request_uri)
 		{
 			// Initialize empty structure
@@ -244,7 +261,12 @@
 			return $request_parts;
 		}
 
-		// Invalidate the current request with a custom code and message.
+		/**
+		* Invalidates the current request with a custom code and message.
+		*
+		* @param {String} status_code - numerical number for the status code.
+		* @param {String} status_message - textual description of the status.
+		**/
 		public function invalidate_request($status_code, $status_message)
 		{
 			self::$statusConfirmation =
@@ -254,7 +276,9 @@
 			];
 		}
 
-		//
+		/**
+		* Validates the current request and updates the internal confirmation message.
+		**/
 		public function validate_request()
 		{
 			// Initalized an assumed successful status.
@@ -463,7 +487,9 @@
 			}
 		}
 
-		//
+		/**
+		* Sends the internal confirmation to the identity manager.
+		**/
 		public function confirm_request()
 		{
 			// Sanity check if headers have already been sent.
