@@ -8,6 +8,7 @@ install:
   - composer install
 
 before_script:
+  - pecl instal apcu_bc
   - phpenv config-add install/travis-7.2.ini
 
 script: 
