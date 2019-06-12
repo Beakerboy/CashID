@@ -1,182 +1,165 @@
 <?php
-	// Declare a unique namespace to avoid naming collisions.
-	namespace CashID;
+// Declare a unique namespace to avoid naming collisions.
+namespace CashID;
 
-	// Location pointing to a CashID response manager.
-	const SERVICE_DOMAIN = 'demo.cashid.info';
-	const SERVICE_PATH = "/api/parse.php";
+// Location pointing to a CashID response manager.
+const SERVICE_DOMAIN = 'demo.cashid.info';
+const SERVICE_PATH = "/api/parse.php";
 
-	// Credentials that grant access to a bitcoind RPC connection.
-	const RPC_USERNAME = 'uvzOQgLc4VujgDfVpNsfujqasVjVQHhB';
-	const RPC_PASSWORD = '1Znrf7KClQjJ3AhxDwr7vkFZpwW0ZGUJ';
+// Credentials that grant access to a bitcoind RPC connection.
+const RPC_USERNAME = 'uvzOQgLc4VujgDfVpNsfujqasVjVQHhB';
+const RPC_PASSWORD = '1Znrf7KClQjJ3AhxDwr7vkFZpwW0ZGUJ';
 
-	// Location of a bitcoind RCP service.
-	const RPC_SCHEME = 'http://';
-	const RPC_HOST = '127.0.0.1';
-	const RPC_PORT = 8332;
+// Location of a bitcoind RCP service.
+const RPC_SCHEME = 'http://';
+const RPC_HOST = '127.0.0.1';
+const RPC_PORT = 8332;
 
-	/**
-	 * Simple CashID support library that can:
-	 * - Issue requests
-	 * - Verify requests
-	 * - Send status confirmations
-	 *
-	 * Requirements for this library to function:
-	 * - PHP support for PECL APCu
-	 * - BitcoinD node with RPC support
-	 **/
-	class CashID extends JSONRPC
-	{
-		// Storage for a status confirmation message.
-		private static $statusConfirmation;
+/**
+ * Simple CashID support library that can:
+ * - Issue requests
+ * - Verify requests
+ * - Send status confirmations
+ *
+ * Requirements for this library to function:
+ * - PHP support for PECL APCu
+ * - BitcoinD node with RPC support
+ **/
+class CashID extends JSONRPC
+{
+    // Storage for a status confirmation message.
+    private static $statusConfirmation;
 
-		// Define regular expressions to parse request data.
-		const REGEXP_REQUEST = "/(?P<scheme>cashid:)(?:[\/]{2})?(?P<domain>[^\/]+)(?P<path>\/[^\?]+)(?P<parameters>\?.+)/";
-		const REGEXP_PARAMETERS = "/(?:(?:[\?\&]a=)(?P<action>[^\&]+))?(?:(?:[\?\&]d=)(?P<data>[^\&]+))?(?:(?:[\?\&]r=)(?P<required>[^\&]+))?(?:(?:[\?\&]o=)(?P<optional>[^\&]+))?(?:(?:[\?\&]x=)(?P<nonce>[^\&]+))?/";
-		const REGEXP_METADATA = "/(i(?P<identification>(?![1-9]+))?(?P<name>1)?(?P<family>2)?(?P<nickname>3)?(?P<age>4)?(?P<gender>5)?(?P<birthdate>6)?(?P<picture>8)?(?P<national>9)?)?(p(?P<position>(?![1-9]+))?(?P<country>1)?(?P<state>2)?(?P<city>3)?(?P<streetname>4)?(?P<streetnumber>5)?(?P<residence>6)?(?P<coordinate>9)?)?(c(?P<contact>(?![1-9]+))?(?P<email>1)?(?P<instant>2)?(?P<social>3)?(?P<mobilephone>4)?(?P<homephone>5)?(?P<workphone>6)?(?P<postlabel>9)?)?/";
+    // Define regular expressions to parse request data.
+    const REGEXP_REQUEST = "/(?P<scheme>cashid:)(?:[\/]{2})?(?P<domain>[^\/]+)(?P<path>\/[^\?]+)(?P<parameters>\?.+)/";
+    const REGEXP_PARAMETERS = "/(?:(?:[\?\&]a=)(?P<action>[^\&]+))?(?:(?:[\?\&]d=)(?P<data>[^\&]+))?(?:(?:[\?\&]r=)(?P<required>[^\&]+))?(?:(?:[\?\&]o=)(?P<optional>[^\&]+))?(?:(?:[\?\&]x=)(?P<nonce>[^\&]+))?/";
+    const REGEXP_METADATA = "/(i(?P<identification>(?![1-9]+))?(?P<name>1)?(?P<family>2)?(?P<nickname>3)?(?P<age>4)?(?P<gender>5)?(?P<birthdate>6)?(?P<picture>8)?(?P<national>9)?)?(p(?P<position>(?![1-9]+))?(?P<country>1)?(?P<state>2)?(?P<city>3)?(?P<streetname>4)?(?P<streetnumber>5)?(?P<residence>6)?(?P<coordinate>9)?)?(c(?P<contact>(?![1-9]+))?(?P<email>1)?(?P<instant>2)?(?P<social>3)?(?P<mobilephone>4)?(?P<homephone>5)?(?P<workphone>6)?(?P<postlabel>9)?)?/";
 		
-		// List of actions that required a valid and recent timestamp as their nonce, instead of a nonce issued by us.
-		const USER_ACTIONS =
-		[
-			'delete',
-			'logout',
-			'revoke',
-			'update'
-		];
+    // List of actions that required a valid and recent timestamp as their nonce, instead of a nonce issued by us.
+    const USER_ACTIONS = [
+        'delete',
+        'logout',
+        'revoke',
+        'update',
+    ];
 
-		// List of CashID status codes.
-		const STATUS_CODES = 
-		[
-			'SUCCESSFUL' => 0,
+    // List of CashID status codes.
+    const STATUS_CODES = [
+        'SUCCESSFUL' => 0,
+        'REQUEST_BROKEN' => 100,
+        'REQUEST_MISSING_SCHEME' => 111,
+        'REQUEST_MISSING_DOMAIN' => 112,
+        'REQUEST_MISSING_NONCE' => 113,
+        'REQUEST_MALFORMED_SCHEME' => 121,
+        'REQUEST_MALFORMED_DOMAIN' => 122,
+        'REQUEST_INVALID_DOMAIN' => 131,
+        'REQUEST_INVALID_NONCE' => 132,
+        'REQUEST_ALTERED' => 141,
+        'REQUEST_EXPIRED' => 142,
+        'REQUEST_CONSUMED' => 143,
+        'RESPONSE_BROKEN' => 200,
+        'RESPONSE_MISSING_REQUEST' => 211,
+        'RESPONSE_MISSING_ADDRESS' => 212,
+        'RESPONSE_MISSING_SIGNATURE' => 213,
+        'RESPONSE_MISSING_METADATA' => 214,
+        'RESPONSE_MALFORMED_ADDRESS' => 221,
+        'RESPONSE_MALFORMED_SIGNATURE' => 222,
+        'RESPONSE_MALFORMED_METADATA' => 223,
+        'RESPONSE_INVALID_METHOD' => 231,
+        'RESPONSE_INVALID_ADDRESS' => 232,
+        'RESPONSE_INVALID_SIGNATURE' => 233,
+        'RESPONSE_INVALID_METADATA' => 234,
 
-			'REQUEST_BROKEN' => 100,
-			'REQUEST_MISSING_SCHEME' => 111,
-			'REQUEST_MISSING_DOMAIN' => 112,
-			'REQUEST_MISSING_NONCE' => 113,
-			'REQUEST_MALFORMED_SCHEME' => 121,
-			'REQUEST_MALFORMED_DOMAIN' => 122,
-			'REQUEST_INVALID_DOMAIN' => 131,
-			'REQUEST_INVALID_NONCE' => 132,
-			'REQUEST_ALTERED' => 141,
-			'REQUEST_EXPIRED' => 142,
-			'REQUEST_CONSUMED' => 143,
+        'SERVICE_BROKEN' => 300,
+        'SERVICE_ADDRESS_DENIED' => 311,
+        'SERVICE_ADDRESS_REVOKED' => 312,
+        'SERVICE_ACTION_DENIED' => 321,
+        'SERVICE_ACTION_UNAVAILABLE' => 322,
+        'SERVICE_ACTION_NOT_IMPLEMENTED' => 323,
+        'SERVICE_INTERNAL_ERROR' => 331
+    ];
 
-			'RESPONSE_BROKEN' => 200,
-			'RESPONSE_MISSING_REQUEST' => 211,
-			'RESPONSE_MISSING_ADDRESS' => 212,
-			'RESPONSE_MISSING_SIGNATURE' => 213,
-			'RESPONSE_MISSING_METADATA' => 214,
-			'RESPONSE_MALFORMED_ADDRESS' => 221,
-			'RESPONSE_MALFORMED_SIGNATURE' => 222,
-			'RESPONSE_MALFORMED_METADATA' => 223,
-			'RESPONSE_INVALID_METHOD' => 231,
-			'RESPONSE_INVALID_ADDRESS' => 232,
-			'RESPONSE_INVALID_SIGNATURE' => 233,
-			'RESPONSE_INVALID_METADATA' => 234,
+    const METADATA_NAMES = [
+        'identity' => [
+            'name' => 1,
+            'family' => 2,
+            'nickname' => 3,
+            'age' => 4,
+            'gender' => 5,
+            'birthdate' => 6,
+            'picture' => 8,
+            'national' => 9
+        ],
+        'position' => [
+            'country' => 1,
+            'state' => 2,
+            'city' => 3,
+            'streetname' => 4,
+            'streetnumber' => 5,
+            'residence' => 6,
+            'coordinates' => 9,
+        ],
+        'contact' => [
+            'email' => 1,
+            'instant' => 2,
+            'social' => 3,
+            'phone' => 4,
+            'postal' => 5
+        ],
+    ];
 
-			'SERVICE_BROKEN' => 300,
-			'SERVICE_ADDRESS_DENIED' => 311,
-			'SERVICE_ADDRESS_REVOKED' => 312,
-			'SERVICE_ACTION_DENIED' => 321,
-			'SERVICE_ACTION_UNAVAILABLE' => 322,
-			'SERVICE_ACTION_NOT_IMPLEMENTED' => 323,
-			'SERVICE_INTERNAL_ERROR' => 331
-		];
+    /**
+     * Creates a request
+     *
+     * @param {String} action - Name of the action the user authenticates to perform
+     * @param {String} data - Data relevant to the requested action
+     * @param {Array} metadata - Array with requested and optional metadata
+     * @returns {string} returns the request URI
+     **/
+    public function create_request($action = "", $data = "", $metadata = []) {
+        try {
+            // generate a random nonce.
+            $nonce = rand(100000000, 999999999);
 
-		//
-		const METADATA_NAMES =
-		[
-			'identity' =>
-			[
-				'name' => 1,
-				'family' => 2,
-				'nickname' => 3,
-				'age' => 4,
-				'gender' => 5,
-				'birthdate' => 6,
-				'picture' => 8,
-				'national' => 9
-			],
-			'position' =>
-			[
-				'country' => 1,
-				'state' => 2,
-				'city' => 3,
-				'streetname' => 4,
-				'streetnumber' => 5,
-				'residence' => 6,
-				'coordinates' => 9,
-			],
-			'contact' =>
-			[
-				'email' => 1,
-				'instant' => 2,
-				'social' => 3,
-				'phone' => 4,
-				'postal' => 5
-			]
-		];
+            // Check if the nonce is already used, and regenerate until it does not exist.
+            while(apcu_exists("cashid_request_{$nonce}")) {
+                // generate a random nonce.
+                $nonce = rand(100000000, 999999999);
+            }
 
-		/**
-		* Creates a request
-		*
-		* @param {String} action - Name of the action the user authenticates to perform
-		* @param {String} data - Data relevant to the requested action
-		* @param {Array} metadata - Array with requested and optional metadata
-		* @returns {string} returns the request URI
-		**/
-		public function create_request($action = "", $data = "", $metadata = [])
-		{
-			try
-			{
-				// generate a random nonce.
-				$nonce = rand(100000000, 999999999);
+            // Initialize an empty parameter list.
+            $parameters = [];
 
-				// Check if the nonce is already used, and regenerate until it does not exist.
-				while(apcu_exists("cashid_request_{$nonce}"))
-				{
-					// generate a random nonce.
-					$nonce = rand(100000000, 999999999);
-				}
+            // If a specific action was requested, add it to the parameter list.
+            if($action) {
+                $parameters['a'] = "a={$action}";
+            }
 
-				// Initialize an empty parameter list.
-				$parameters = [];
+            // If specific data was requested, add it to the parameter list.
+            if($data) {
+                $parameters['d'] = "d={$data}";
+            }
 
-				// If a specific action was requested, add it to the parameter list.
-				if($action)
-				{
-					$parameters['a'] = "a={$action}";
-				}
+            // If required metadata was requested, add them to the parameter list.
+            if(isset($metadata['required'])) {
+                $parameters['r'] = "r=" . self::encode_request_metadata($metadata['required']);
+            }
 
-				// If specific data was requested, add it to the parameter list.
-				if($data)
-				{
-					$parameters['d'] = "d={$data}";
-				}
+            // If optional metadata was requested, add them to the parameter list.
+            if(isset($metadata['optional'])) {
+                $parameters['o'] = "o=" . self::encode_request_metadata($metadata['optional']);
+            }
 
-				// If required metadata was requested, add them to the parameter list.
-				if(isset($metadata['required']))
-				{
-					$parameters['r'] = "r=" . self::encode_request_metadata($metadata['required']);
-				}
+            // Append the nonce to the parameter list.
+            $parameters['x'] = "x={$nonce}";
 
-				// If optional metadata was requested, add them to the parameter list.
-				if(isset($metadata['optional']))
-				{
-					$parameters['o'] = "o=" . self::encode_request_metadata($metadata['optional']);
-				}
+            // Form the request URI from the configured values.
+            $request_uri = "cashid:" . SERVICE_DOMAIN . SERVICE_PATH . "?" . implode($parameters, '&');
 
-				// Append the nonce to the parameter list.
-				$parameters['x'] = "x={$nonce}";
-
-				// Form the request URI from the configured values.
-				$request_uri = "cashid:" . SERVICE_DOMAIN . SERVICE_PATH . "?" . implode($parameters, '&');
-
-				// Store the request and nonce in local cache.
-				if(!apcu_store("cashid_request_{$nonce}", [ 'available' => true, 'request' => $request_uri, 'expires' => time() + (60 * 15) ]))
-				{
-					throw new InternalException("Failed to store request metadata in APCu.");
-				}
+            // Store the request and nonce in local cache.
+            if(!apcu_store("cashid_request_{$nonce}", [ 'available' => true, 'request' => $request_uri, 'expires' => time() + (60 * 15) ])) {
+                throw new InternalException("Failed to store request metadata in APCu.");
+            }
 
 				// Return the request URI to indicate success.
 				return $request_uri;
