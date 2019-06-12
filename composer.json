@@ -3,7 +3,6 @@
   "type": "library",
   "description": "CashID library for PHP",
   "keywords": ["bitcoin", "authentication"],
-  "homepage": "",
   "require": {
     "php": ">=5.4.0"
   },
@@ -21,8 +20,6 @@
   "authors": [
     {
       "name": "Jonathan Silverblood",
-      "email": "",
-      "homepage": "",
       "role": "Lead developer"
     },
     {
