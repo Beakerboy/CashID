@@ -224,35 +224,35 @@ class CashID extends JSONRPC
         // Initialize empty structure
         $request_parts = [];
 
-         // Parse the request URI.
-         @preg_match(self::REGEXP_REQUEST, $request_uri, $request_parts);
-         @preg_match(self::REGEXP_PARAMETERS, $request_parts['parameters'], $request_parts['parameters']);
-         @preg_match(self::REGEXP_METADATA, $request_parts['parameters']['required'], $request_parts['parameters']['required']);
-         @preg_match(self::REGEXP_METADATA, $request_parts['parameters']['optional'], $request_parts['parameters']['optional']);
+        // Parse the request URI.
+        @preg_match(self::REGEXP_REQUEST, $request_uri, $request_parts);
+        @preg_match(self::REGEXP_PARAMETERS, $request_parts['parameters'], $request_parts['parameters']);
+        @preg_match(self::REGEXP_METADATA, $request_parts['parameters']['required'], $request_parts['parameters']['required']);
+        @preg_match(self::REGEXP_METADATA, $request_parts['parameters']['optional'], $request_parts['parameters']['optional']);
 
-         // TODO: Make this pretty. It removes the numeric index that preg_match makes despite named group matching.
-         foreach ($request_parts as $key => $value) {
-             if (is_int($key)) {
-                 unset($request_parts[$key]);
-             }
-         }
-         foreach ($request_parts['parameters'] as $key => $value) {
-             if (is_int($key)) {
-                 unset($request_parts['parameters'][$key]);
-             }
-         }
-         foreach ($request_parts['parameters']['required'] as $key => $value) {
-             if (is_int($key)) {
-                 unset($request_parts['parameters']['required'][$key]);
-             }
-         }
-         foreach ($request_parts['parameters']['optional'] as $key => $value) {
-             if (is_int($key)) {
-                 unset($request_parts['parameters']['optional'][$key]);
-             }
-         }
+        // TODO: Make this pretty. It removes the numeric index that preg_match makes despite named group matching.
+        foreach ($request_parts as $key => $value) {
+            if (is_int($key)) {
+                unset($request_parts[$key]);
+            }
+        }
+        foreach ($request_parts['parameters'] as $key => $value) {
+            if (is_int($key)) {
+                unset($request_parts['parameters'][$key]);
+            }
+        }
+        foreach ($request_parts['parameters']['required'] as $key => $value) {
+            if (is_int($key)) {
+                unset($request_parts['parameters']['required'][$key]);
+            }
+        }
+        foreach ($request_parts['parameters']['optional'] as $key => $value) {
+            if (is_int($key)) {
+                unset($request_parts['parameters']['optional'][$key]);
+            }
+        }
 
-         return $request_parts;
+        return $request_parts;
     }
 
     /**
