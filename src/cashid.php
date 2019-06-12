@@ -116,7 +116,8 @@ class CashID extends JSONRPC
      * @param {Array} metadata - Array with requested and optional metadata
      * @returns {string} returns the request URI
      **/
-    public function createRequest($action = "", $data = "", $metadata = []) {
+    public function createRequest($action = "", $data = "", $metadata = [])
+    {
         try {
             // generate a random nonce.
             $nonce = rand(100000000, 999999999);
@@ -176,7 +177,8 @@ class CashID extends JSONRPC
      * @param {Array} metadata - Array with requested and optional metadata
      * @returns {string} returns the request metadata part
      **/
-    private function encode_request_metadata($metadata) {
+    private function encode_request_metadata($metadata)
+    {
         // Initialize an empty metadata string.
         $metadata_string = "";
 
@@ -217,7 +219,8 @@ class CashID extends JSONRPC
      * @param {String} request_url - the full request URI to parse
      * @returns {Array} returns a request array populated based on the request_url string
      **/
-    public function ParseRequest($request_uri) {
+    public function ParseRequest($request_uri)
+    {
         // Initialize empty structure
         $request_parts = [];
 
@@ -258,7 +261,8 @@ class CashID extends JSONRPC
      * @param {String} status_code - numerical number for the status code.
      * @param {String} status_message - textual description of the status.
      **/
-    public function InvalidateRequest($status_code, $status_message) {
+    public function InvalidateRequest($status_code, $status_message)
+    {
         self::$statusConfirmation = [
             'status' => $status_code,
             'message' => $status_message
@@ -268,7 +272,8 @@ class CashID extends JSONRPC
     /**
      * Validates the current request and updates the internal confirmation message.
      **/
-    public function validateRequest() {
+    public function validateRequest()
+    {
         // Initalized an assumed successful status.
         self::$statusConfirmation = [
             'status' => self::STATUS_CODES['SUCCESSFUL'],
@@ -466,7 +471,8 @@ class CashID extends JSONRPC
     /**
      * Sends the internal confirmation to the identity manager.
      **/
-    public function confirmRequest() {
+    public function confirmRequest()
+    {
         // Sanity check if headers have already been sent.
         if(headers_sent()) {
             throw new \Exception('cashid->confirm_request was called after data had been transmitted to the client, which prevents setting the required headers.');
@@ -486,29 +492,29 @@ class CashID extends JSONRPC
     }
 }
 
-	//
-	class JSONRPC
-	{
-		// Request counter
-		private static $rpc_request_id = 1;
+//
+class JSONRPC
+{
+    // Request counter
+    private static $rpc_request_id = 1;
 
-		// Storage for errors caused by RPC calls.
-		private static $rpc_error = null;
+    // Storage for errors caused by RPC calls.
+    private static $rpc_error = null;
 
-		// Convert missing functions to RPC calls.
-		public function __call($function, $arguments)
-		{
-			// Remove array keys to simplify argument list?
-			$rpc_arguments = array_values($arguments);
+    // Convert missing functions to RPC calls.
+    public function __call($function, $arguments)
+    {
+        // Remove array keys to simplify argument list?
+        $rpc_arguments = array_values($arguments);
 
-			// Convert underscores to spaces, and force lowercase in function names.
-			$rpc_function = str_replace('_', '', strtolower($function));
+        // Convert underscores to spaces, and force lowercase in function names.
+        $rpc_function = str_replace('_', '', strtolower($function));
 
-			// Form the RCP URL to which we can send the request.
-			$rpc_url = RPC_SCHEME . RPC_USERNAME . ":" . RPC_PASSWORD . "@" . RPC_HOST . ":" . RPC_PORT;
+        // Form the RCP URL to which we can send the request.
+        $rpc_url = RPC_SCHEME . RPC_USERNAME . ":" . RPC_PASSWORD . "@" . RPC_HOST . ":" . RPC_PORT;
 
-			// Set up an RPC request.
-			$rpc_request = 
+        // Set up an RPC request.
+        $rpc_request = 
 			[
 				'jsonrpc' => '2.0',
 				'id' => self::$rpc_request_id++,
