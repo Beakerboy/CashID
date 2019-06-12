@@ -42,6 +42,7 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
                 "data" => "15366-4133-6141-9638",
                 "optional" => ["position" => ["streetname"]],
                 "required" => ["contact" => ["social"]],
+            ],
         ];
         $this->assertEquals($expected_array, $request_parts);
     }
