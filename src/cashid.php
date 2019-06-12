@@ -123,7 +123,7 @@ class CashID extends JSONRPC
             $nonce = rand(100000000, 999999999);
 
             // Check if the nonce is already used, and regenerate until it does not exist.
-            while(apcu_exists("cashid_request_{$nonce}")) {
+            while (apcu_exists("cashid_request_{$nonce}")) {
                 // generate a random nonce.
                 $nonce = rand(100000000, 999999999);
             }
@@ -132,22 +132,22 @@ class CashID extends JSONRPC
             $parameters = [];
 
             // If a specific action was requested, add it to the parameter list.
-            if($action) {
+            if ($action) {
                 $parameters['a'] = "a={$action}";
             }
 
             // If specific data was requested, add it to the parameter list.
-            if($data) {
+            if ($data) {
                 $parameters['d'] = "d={$data}";
             }
 
             // If required metadata was requested, add them to the parameter list.
-            if(isset($metadata['required'])) {
+            if (isset($metadata['required'])) {
                 $parameters['r'] = "r=" . self::encode_request_metadata($metadata['required']);
             }
 
             // If optional metadata was requested, add them to the parameter list.
-            if(isset($metadata['optional'])) {
+            if (isset($metadata['optional'])) {
                 $parameters['o'] = "o=" . self::encode_request_metadata($metadata['optional']);
             }
 
@@ -158,14 +158,14 @@ class CashID extends JSONRPC
             $request_uri = "cashid:" . SERVICE_DOMAIN . SERVICE_PATH . "?" . implode($parameters, '&');
 
             // Store the request and nonce in local cache.
-            if(!apcu_store("cashid_request_{$nonce}", [ 'available' => true, 'request' => $request_uri, 'expires' => time() + (60 * 15) ])) {
+            if (!apcu_store("cashid_request_{$nonce}", [ 'available' => true, 'request' => $request_uri, 'expires' => time() + (60 * 15) ])) {
                 throw new InternalException("Failed to store request metadata in APCu.");
             }
 
             // Return the request URI to indicate success.
             return $request_uri;
         }
-        catch(InternalException $exception) {
+        catch (InternalException $exception) {
             // Return false to indicate error.
             return false;
         }
@@ -177,7 +177,7 @@ class CashID extends JSONRPC
      * @param {Array} metadata - Array with requested and optional metadata
      * @returns {string} returns the request metadata part
      **/
-    private function encode_request_metadata($metadata)
+    private function encodeRequestMetadata($metadata)
     {
         // Initialize an empty metadata string.
         $metadata_string = "";
@@ -219,7 +219,7 @@ class CashID extends JSONRPC
      * @param {String} request_url - the full request URI to parse
      * @returns {Array} returns a request array populated based on the request_url string
      **/
-    public function ParseRequest($request_uri)
+    public function parseRequest($request_uri)
     {
         // Initialize empty structure
         $request_parts = [];
@@ -261,7 +261,7 @@ class CashID extends JSONRPC
      * @param {String} status_code - numerical number for the status code.
      * @param {String} status_message - textual description of the status.
      **/
-    public function InvalidateRequest($status_code, $status_message)
+    public function invalidateRequest($status_code, $status_message)
     {
         self::$statusConfirmation = [
             'status' => $status_code,
