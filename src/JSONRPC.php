@@ -39,27 +39,27 @@ class JSONRPC
         // Send the request and store the full response.
         $rpc_response = file_get_contents($rpc_url, false, $stream_context);
         // Validate if the request was completed
-        if($rpc_response === false) {
+        if ($rpc_response === false) {
             // Store error description
             self::$rpc_error = 'Unable to complete RPC request.';
-            // Return NULL to indicate that an error was encountered.
-            return NULL;
+            // Return null to indicate that an error was encountered.
+            return null;
         } else {
             // Attempt to decode the RCP response
             $object = @json_decode($rpc_response, true);
             // Validate if the RPC response is a valid JSON string.
-            if($object === NULL) {
+            if ($object === null) {
                 // Store error description
                 self::$rpc_error = 'Reply from RPC host was not a valid JSON string.';
-                // Return NULL to indicate that an error was encountered.
-                return NULL;
+                // Return null to indicate that an error was encountered.
+                return null;
             } else {
                 // Check if the response contains any errors.
                 if($object['error']) {
                     // Store the response error message.
                     self::$rpc_error = $object['error']['message'];
-                    // Return NULL to indicate that an error was encountered.
-                    return NULL;
+                    // Return null to indicate that an error was encountered.
+                    return null;
                 } else {
                     // Clear any previous error descriptions.
                     self::$rpc_error = '';
