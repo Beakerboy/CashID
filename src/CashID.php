@@ -24,7 +24,7 @@ const RPC_PORT = 8332;
  * Requirements for this library to function:
  * - PHP support for PECL APCu
  * - BitcoinD node with RPC support
- **/
+ */
 class CashID extends JSONRPC
 {
     // Storage for a status confirmation message.
@@ -114,8 +114,8 @@ class CashID extends JSONRPC
      * @param {String} action - Name of the action the user authenticates to perform
      * @param {String} data - Data relevant to the requested action
      * @param {Array} metadata - Array with requested and optional metadata
-     * @returns {string} returns the request URI
-     **/
+     * @return {string} returns the request URI
+     */
     public function createRequest($action = "", $data = "", $metadata = [])
     {
         try {
@@ -175,7 +175,7 @@ class CashID extends JSONRPC
      *
      * @param {Array} metadata - Array with requested and optional metadata
      * @returns {string} returns the request metadata part
-     **/
+     */
     private function encodeRequestMetadata($metadata)
     {
         // Initialize an empty metadata string.
@@ -216,8 +216,8 @@ class CashID extends JSONRPC
      * Parses a request string and returns a request array.
      *
      * @param {String} request_url - the full request URI to parse
-     * @returns {Array} returns a request array populated based on the request_url string
-     **/
+     * @return {Array} returns a request array populated based on the request_url string
+     */
     public function parseRequest($request_uri)
     {
         // Initialize empty structure
@@ -259,7 +259,7 @@ class CashID extends JSONRPC
      *
      * @param {String} status_code - numerical number for the status code.
      * @param {String} status_message - textual description of the status.
-     **/
+     */
     public function invalidateRequest($status_code, $status_message)
     {
         self::$statusConfirmation = [
@@ -448,7 +448,7 @@ class CashID extends JSONRPC
 
     /**
      * Sends the internal confirmation to the identity manager.
-     **/
+     */
     public function confirmRequest()
     {
         // Sanity check if headers have already been sent.
