@@ -434,7 +434,7 @@ class CashID extends JSONRPC
 
             // Return the parsed response.
             return $responseObject;
-        } catch(InternalException $exception) {
+        } catch (InternalException $exception) {
             // Update internal status object.
             self::$statusConfirmation = [
                 'status' => $exception->getCode(),
@@ -452,16 +452,16 @@ class CashID extends JSONRPC
     public function confirmRequest()
     {
         // Sanity check if headers have already been sent.
-        if(headers_sent()) {
+        if (headers_sent()) {
             throw new \Exception('cashid->confirm_request was called after data had been transmitted to the client, which prevents setting the required headers.');
         }
 
         // Sanity check if validation has not yet been done.
-        if(!isset(self::$statusConfirmation['status'])) {
+        if (!isset(self::$statusConfirmation['status'])) {
             throw new \Exception('cashid->confirm_request was called before validate_request so there is no confirmation to transmit to the client.');
         }
-			
-	// Configure confirmation message type.
+		
+        // Configure confirmation message type.
         header('Content-type: application/json; charset=utf-8');
         header('Cache-Control: no-cache');
 
