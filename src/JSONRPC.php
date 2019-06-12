@@ -55,7 +55,7 @@ class JSONRPC
                 return null;
             } else {
                 // Check if the response contains any errors.
-                if($object['error']) {
+                if ($object['error']) {
                     // Store the response error message.
                     self::$rpc_error = $object['error']['message'];
                     // Return null to indicate that an error was encountered.
