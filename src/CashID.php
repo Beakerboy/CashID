@@ -174,7 +174,7 @@ class CashID extends JSONRPC
      * Creates a metadata request string part from a metadata array
      *
      * @param {Array} metadata - Array with requested and optional metadata
-     * @returns {string} returns the request metadata part
+     * @return {string} returns the request metadata part
      */
     private function encodeRequestMetadata($metadata)
     {
