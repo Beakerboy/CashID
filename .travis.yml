@@ -8,7 +8,7 @@ install:
   - composer install
 
 before_script:
-- pecl install apcu
+  - pecl install apcu
 
 script: 
   - mkdir -p build/logs
