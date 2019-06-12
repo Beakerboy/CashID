@@ -398,24 +398,24 @@ class CashID extends JSONRPC
 	            // Store it in the list of missing fields.
                     $missing_fields[$metadata_name] = $metadata_name;
                 }
-             }
+            }
 
-             // Validate if there was missing metadata.
-             if (count($missing_fields) >= 1) {
-                 throw new InternalException("The required metadata field(s) '" . implode(', ', $missing_fields) . "' was not provided.", self::STATUS_CODES['RESPONSE_MISSING_METADATA']);
-             }
+            // Validate if there was missing metadata.
+            if (count($missing_fields) >= 1) {
+                throw new InternalException("The required metadata field(s) '" . implode(', ', $missing_fields) . "' was not provided.", self::STATUS_CODES['RESPONSE_MISSING_METADATA']);
+            }
 
-             // Loop over the supplied metadata fields.
-             foreach ($responseObject['metadata'] as $metadata_name => $metadata_value) {
-                 // Validate if the supplied metadata was requested
-                 if (!isset($parsedRequest['parameters']['required'][$metadata_name]) and !isset($parsedRequest['parameters']['optional'][$metadata_name])) {
-                     throw new InternalException("The metadata field '{$metadata_name}' was not part of the request.", self::STATUS_CODES['RESPONSE_INVALID_METADATA']);
-                 }
+            // Loop over the supplied metadata fields.
+            foreach ($responseObject['metadata'] as $metadata_name => $metadata_value) {
+                // Validate if the supplied metadata was requested
+                if (!isset($parsedRequest['parameters']['required'][$metadata_name]) and !isset($parsedRequest['parameters']['optional'][$metadata_name])) {
+                    throw new InternalException("The metadata field '{$metadata_name}' was not part of the request.", self::STATUS_CODES['RESPONSE_INVALID_METADATA']);
+                }
 
-	         // Validate if the supplied value is empty.
-	         if($metadata_value == "" or $metadata_value === null) {
-                     throw new InternalException("The metadata field '{$metadata_name}' did not contain any value.", self::STATUS_CODES['RESPONSE_MALFORMED_METADATA']);
-                 }
+	        // Validate if the supplied value is empty.
+	        if($metadata_value == "" or $metadata_value === null) {
+                    throw new InternalException("The metadata field '{$metadata_name}' did not contain any value.", self::STATUS_CODES['RESPONSE_MALFORMED_METADATA']);
+                }
             }
 
             // Store the response object in local cache.
