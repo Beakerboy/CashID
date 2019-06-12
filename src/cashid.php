@@ -34,7 +34,7 @@ class CashID extends JSONRPC
     const REGEXP_REQUEST = "/(?P<scheme>cashid:)(?:[\/]{2})?(?P<domain>[^\/]+)(?P<path>\/[^\?]+)(?P<parameters>\?.+)/";
     const REGEXP_PARAMETERS = "/(?:(?:[\?\&]a=)(?P<action>[^\&]+))?(?:(?:[\?\&]d=)(?P<data>[^\&]+))?(?:(?:[\?\&]r=)(?P<required>[^\&]+))?(?:(?:[\?\&]o=)(?P<optional>[^\&]+))?(?:(?:[\?\&]x=)(?P<nonce>[^\&]+))?/";
     const REGEXP_METADATA = "/(i(?P<identification>(?![1-9]+))?(?P<name>1)?(?P<family>2)?(?P<nickname>3)?(?P<age>4)?(?P<gender>5)?(?P<birthdate>6)?(?P<picture>8)?(?P<national>9)?)?(p(?P<position>(?![1-9]+))?(?P<country>1)?(?P<state>2)?(?P<city>3)?(?P<streetname>4)?(?P<streetnumber>5)?(?P<residence>6)?(?P<coordinate>9)?)?(c(?P<contact>(?![1-9]+))?(?P<email>1)?(?P<instant>2)?(?P<social>3)?(?P<mobilephone>4)?(?P<homephone>5)?(?P<workphone>6)?(?P<postlabel>9)?)?/";
-		
+
     // List of actions that required a valid and recent timestamp as their nonce, instead of a nonce issued by us.
     const USER_ACTIONS = [
         'delete',
@@ -116,7 +116,7 @@ class CashID extends JSONRPC
      * @param {Array} metadata - Array with requested and optional metadata
      * @returns {string} returns the request URI
      **/
-    public function create_request($action = "", $data = "", $metadata = []) {
+    public function createRequest($action = "", $data = "", $metadata = []) {
         try {
             // generate a random nonce.
             $nonce = rand(100000000, 999999999);
@@ -161,150 +161,148 @@ class CashID extends JSONRPC
                 throw new InternalException("Failed to store request metadata in APCu.");
             }
 
-				// Return the request URI to indicate success.
-				return $request_uri;
-			}
-			catch(InternalException $exception)
-			{
-				// Return false to indicate error.
-				return false;
-			}
-		}
+            // Return the request URI to indicate success.
+            return $request_uri;
+        }
+        catch(InternalException $exception) {
+            // Return false to indicate error.
+            return false;
+        }
+    }
 
-		/**
-		* Creates a metadata request string part from a metadata array
-		*
-		* @param {Array} metadata - Array with requested and optional metadata
-		* @returns {string} returns the request metadata part
-		**/
-		private function encode_request_metadata($metadata)
-		{
-			// Initialize an empty metadata string.
-			$metadata_string = "";
+    /**
+     * Creates a metadata request string part from a metadata array
+     *
+     * @param {Array} metadata - Array with requested and optional metadata
+     * @returns {string} returns the request metadata part
+     **/
+    private function encode_request_metadata($metadata) {
+        // Initialize an empty metadata string.
+        $metadata_string = "";
 
-			// Iterate over the available metadata names.
-			foreach(self::METADATA_NAMES as $metadata_type => $metadata_fields)
-			{
-				// Store the first letter of the metadata type.
-				$metadata_letter = substr($metadata_type, 0, 1);
+        // Iterate over the available metadata names.
+        foreach(self::METADATA_NAMES as $metadata_type => $metadata_fields) {
+            // Store the first letter of the metadata type.
+            $metadata_letter = substr($metadata_type, 0, 1);
 
-				// Initialize an empty metadata part string.
-				$metadata_part = "";
+            // Initialize an empty metadata part string.
+            $metadata_part = "";
 
-				//
-				if(isset($metadata[$metadata_type]))
-				{
-					// Iterate over each field of this metadata type.
-					foreach($metadata_fields as $field_name => $field_code)
-					{
-						// If this field was requested..
-						if(in_array($field_name, $metadata[$metadata_type]))
-						{
-							// .. add it to the metadata part.
-							$metadata_part .= $field_code;
-						}
-					}
+            //
+            if(isset($metadata[$metadata_type])) {
+                // Iterate over each field of this metadata type.
+                foreach($metadata_fields as $field_name => $field_code) {
+                    // If this field was requested..
+                    if(in_array($field_name, $metadata[$metadata_type])) {
+                        // .. add it to the metadata part.
+                        $metadata_part .= $field_code;
+                    }
+                }
 
-					// If, after checking for requested metadata of this type, some matches were found..
-					if($metadata_part !== "")
-					{
-						// Add the letter and numbers matching the requested metadata to the metadata string.
-						$metadata_string .= "{$metadata_letter}{$metadata_part}";
-					}
-				}
-			}
+                // If, after checking for requested metadata of this type, some matches were found..
+                if($metadata_part !== "") {
+                    // Add the letter and numbers matching the requested metadata to the metadata string.
+                    $metadata_string .= "{$metadata_letter}{$metadata_part}";
+                }
+            }
+        }
 
-			// Return the filled in metadata string.
-			return $metadata_string;
-		}
+        // Return the filled in metadata string.
+        return $metadata_string;
+    }
 
-		/**
-		* Parses a request string and returns a request array.
-		*
-		* @param {String} request_url - the full request URI to parse
-		* @returns {Array} returns a request array populated based on the request_url string
-		**/
-		public function parse_request($request_uri)
-		{
-			// Initialize empty structure
-			$request_parts = [];
+    /**
+     * Parses a request string and returns a request array.
+     *
+     * @param {String} request_url - the full request URI to parse
+     * @returns {Array} returns a request array populated based on the request_url string
+     **/
+    public function ParseRequest($request_uri) {
+        // Initialize empty structure
+        $request_parts = [];
 
-			// Parse the request URI.
-			@preg_match(self::REGEXP_REQUEST, $request_uri, $request_parts);
-			@preg_match(self::REGEXP_PARAMETERS, $request_parts['parameters'], $request_parts['parameters']);
-			@preg_match(self::REGEXP_METADATA, $request_parts['parameters']['required'], $request_parts['parameters']['required']);
-			@preg_match(self::REGEXP_METADATA, $request_parts['parameters']['optional'], $request_parts['parameters']['optional']);
+         // Parse the request URI.
+         @preg_match(self::REGEXP_REQUEST, $request_uri, $request_parts);
+         @preg_match(self::REGEXP_PARAMETERS, $request_parts['parameters'], $request_parts['parameters']);
+         @preg_match(self::REGEXP_METADATA, $request_parts['parameters']['required'], $request_parts['parameters']['required']);
+         @preg_match(self::REGEXP_METADATA, $request_parts['parameters']['optional'], $request_parts['parameters']['optional']);
 
-			// TODO: Make this pretty. It removes the numeric index that preg_match makes despite named group matching.
-			foreach($request_parts as $key => $value) { if(is_int($key)) { unset($request_parts[$key]); } }
-			foreach($request_parts['parameters'] as $key => $value) { if(is_int($key)) { unset($request_parts['parameters'][$key]); } }
-			foreach($request_parts['parameters']['required'] as $key => $value) { if(is_int($key)) { unset($request_parts['parameters']['required'][$key]); } }
-			foreach($request_parts['parameters']['optional'] as $key => $value) { if(is_int($key)) { unset($request_parts['parameters']['optional'][$key]); } }
+         // TODO: Make this pretty. It removes the numeric index that preg_match makes despite named group matching.
+         foreach($request_parts as $key => $value) {
+             if(is_int($key)) {
+                 unset($request_parts[$key]);
+             }
+         }
+         foreach($request_parts['parameters'] as $key => $value) {
+             if(is_int($key)) {
+                 unset($request_parts['parameters'][$key]);
+             }
+         }
+         foreach($request_parts['parameters']['required'] as $key => $value) {
+             if(is_int($key)) {
+                 unset($request_parts['parameters']['required'][$key]);
+             }
+         }
+         foreach($request_parts['parameters']['optional'] as $key => $value) {
+             if(is_int($key)) {
+                 unset($request_parts['parameters']['optional'][$key]);
+             }
+         }
 
-			return $request_parts;
-		}
+         return $request_parts;
+    }
 
-		/**
-		* Invalidates the current request with a custom code and message.
-		*
-		* @param {String} status_code - numerical number for the status code.
-		* @param {String} status_message - textual description of the status.
-		**/
-		public function invalidate_request($status_code, $status_message)
-		{
-			self::$statusConfirmation =
-			[
-				'status' => $status_code,
-				'message' => $status_message
-			];
-		}
+    /**
+     * Invalidates the current request with a custom code and message.
+     *
+     * @param {String} status_code - numerical number for the status code.
+     * @param {String} status_message - textual description of the status.
+     **/
+    public function InvalidateRequest($status_code, $status_message) {
+        self::$statusConfirmation = [
+            'status' => $status_code,
+            'message' => $status_message
+        ];
+    }
 
-		/**
-		* Validates the current request and updates the internal confirmation message.
-		**/
-		public function validate_request()
-		{
-			// Initalized an assumed successful status.
-			self::$statusConfirmation =
-			[
-				'status' => self::STATUS_CODES['SUCCESSFUL'],
-				'message' => ''
-			];
+    /**
+     * Validates the current request and updates the internal confirmation message.
+     **/
+    public function validateRequest() {
+        // Initalized an assumed successful status.
+        self::$statusConfirmation = [
+            'status' => self::STATUS_CODES['SUCCESSFUL'],
+            'message' => '',
+        ];
 
-			try
-			{
-				// Validate that the response was received as POST request.
-				if(!isset($_SERVER['REQUEST_METHOD']) or $_SERVER['REQUEST_METHOD'] != 'POST')
-				{
-					throw new InternalException("Unsupported request method.", self::STATUS_CODES['RESPONSE_INVALID_METHOD']);
-				}
+        try {
+            // Validate that the response was received as POST request.
+            if(!isset($_SERVER['REQUEST_METHOD']) or $_SERVER['REQUEST_METHOD'] != 'POST') {
+                throw new InternalException("Unsupported request method.", self::STATUS_CODES['RESPONSE_INVALID_METHOD']);
+            }
 
-				// Attempt to decode the response data.
-				$responseObject = json_decode(@file_get_contents("php://input"), true);
+            // Attempt to decode the response data.
+            $responseObject = json_decode(@file_get_contents("php://input"), true);
 
-				// Validate that the response is JSON encoded.
-				if($responseObject === null)
-				{
-					throw new InternalException("Response data is not a valid JSON object.", self::STATUS_CODES['RESPONSE_BROKEN']);
-				}
+            // Validate that the response is JSON encoded.
+            if($responseObject === null) {
+                throw new InternalException("Response data is not a valid JSON object.", self::STATUS_CODES['RESPONSE_BROKEN']);
+            }
 
-				// Validate if the required field 'request' exists.
-				if(!isset($responseObject['request']))
-				{
-					throw new InternalException("Response data is missing required 'request' property.", self::STATUS_CODES['RESPONSE_MISSING_REQUEST']);
-				}
+            // Validate if the required field 'request' exists.
+            if(!isset($responseObject['request'])) {
+                throw new InternalException("Response data is missing required 'request' property.", self::STATUS_CODES['RESPONSE_MISSING_REQUEST']);
+            }
 
-				// Validate if the required field 'address' exists.
-				if(!isset($responseObject['address']))
-				{
-					throw new InternalException("Response data is missing required 'adress' property.", self::STATUS_CODES['RESPONSE_MISSING_ADDRESS']);
-				}
+            // Validate if the required field 'address' exists.
+            if(!isset($responseObject['address'])) {
+                throw new InternalException("Response data is missing required 'adress' property.", self::STATUS_CODES['RESPONSE_MISSING_ADDRESS']);
+            }
 
-				// Validate if the required field 'signature' exists.
-				if(!isset($responseObject['signature']))
-				{
-					throw new InternalException("Response data is missing required 'signature' property.", self::STATUS_CODES['RESPONSE_MISSING_SIGNATURE']);
-				}
+            // Validate if the required field 'signature' exists.
+            if(!isset($responseObject['signature'])) {
+                throw new InternalException("Response data is missing required 'signature' property.", self::STATUS_CODES['RESPONSE_MISSING_SIGNATURE']);
+            }
 
 				// Parse the request.
 				$parsedRequest = self::parse_request($responseObject['request']);
@@ -430,71 +428,63 @@ class CashID extends JSONRPC
 						throw new InternalException("The metadata field '{$metadata_name}' was not part of the request.", self::STATUS_CODES['RESPONSE_INVALID_METADATA']);
 					}
 
-					// Validate if the supplied value is empty.
-					if($metadata_value == "" or $metadata_value === null)
-					{
-						throw new InternalException("The metadata field '{$metadata_name}' did not contain any value.", self::STATUS_CODES['RESPONSE_MALFORMED_METADATA']);
-					}
-				}
+	        // Validate if the supplied value is empty.
+	        if($metadata_value == "" or $metadata_value === null) {
+                    throw new InternalException("The metadata field '{$metadata_name}' did not contain any value.", self::STATUS_CODES['RESPONSE_MALFORMED_METADATA']);
+                }
+            }
 
-				// Store the response object in local cache.
-				if(!apcu_store("cashid_response_{$parsedRequest['parameters']['nonce']}", $responseObject))
-				{
-					throw new InternalException("Internal server error, could not store response object.", self::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
-				}
+            // Store the response object in local cache.
+            if(!apcu_store("cashid_response_{$parsedRequest['parameters']['nonce']}", $responseObject)) {
+                throw new InternalException("Internal server error, could not store response object.", self::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
+            }
 
-				// Store the confirmation object in local cache.
-				if(!apcu_store("cashid_confirmation_{$parsedRequest['parameters']['nonce']}", self::$statusConfirmation))
-				{
-					throw new InternalException("Internal server error, could not store confirmation object.", self::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
-				}
+            // Store the confirmation object in local cache.
+            if(!apcu_store("cashid_confirmation_{$parsedRequest['parameters']['nonce']}", self::$statusConfirmation)) {
+                throw new InternalException("Internal server error, could not store confirmation object.", self::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
+            }
 
-				// Add the action and data parameters to the response structure.
-				$responseObject['action'] = (isset($parsedRequest['action']) ? $parsedRequest['action'] : 'auth');
-				$responseObject['data'] = (isset($parsedRequest['data']) ? $parsedRequest['data'] : '');
+            // Add the action and data parameters to the response structure.
+            $responseObject['action'] = (isset($parsedRequest['action']) ? $parsedRequest['action'] : 'auth');
+            $responseObject['data'] = (isset($parsedRequest['data']) ? $parsedRequest['data'] : '');
 
-				// Return the parsed response.
-				return $responseObject;
-			}
-			catch(InternalException $exception)
-			{
-				// Update internal status object.
-				self::$statusConfirmation =
-				[
-					'status' => $exception->getCode(),
-					'message' => $exception->getMessage()
-				];
+            // Return the parsed response.
+            return $responseObject;
+        }
+        catch(InternalException $exception) {
+            // Update internal status object.
+            self::$statusConfirmation = [
+                'status' => $exception->getCode(),
+                'message' => $exception->getMessage(),
+            ];
 
-				// Return false to indicate error.
-				return false;
-			}
-		}
+            // Return false to indicate error.
+            return false;
+        }
+    }
 
-		/**
-		* Sends the internal confirmation to the identity manager.
-		**/
-		public function confirm_request()
-		{
-			// Sanity check if headers have already been sent.
-			if(headers_sent())
-			{
-				throw new \Exception('cashid->confirm_request was called after data had been transmitted to the client, which prevents setting the required headers.');
-			}
+    /**
+     * Sends the internal confirmation to the identity manager.
+     **/
+    public function confirmRequest() {
+        // Sanity check if headers have already been sent.
+        if(headers_sent()) {
+            throw new \Exception('cashid->confirm_request was called after data had been transmitted to the client, which prevents setting the required headers.');
+        }
 
-			// Sanity check if validation has not yet been done.
-			if(!isset(self::$statusConfirmation['status']))
-			{
-				throw new \Exception('cashid->confirm_request was called before validate_request so there is no confirmation to transmit to the client.');
-			}
+        // Sanity check if validation has not yet been done.
+        if(!isset(self::$statusConfirmation['status'])) {
+            throw new \Exception('cashid->confirm_request was called before validate_request so there is no confirmation to transmit to the client.');
+        }
 			
-			// Configure confirmation message type.
-			header('Content-type: application/json; charset=utf-8');
-			header('Cache-Control: no-cache');
+	// Configure confirmation message type.
+        header('Content-type: application/json; charset=utf-8');
+        header('Cache-Control: no-cache');
 
-			// send the response confirmation back to the identity manager.
-			echo json_encode(self::$statusConfirmation);
-		}
-	}
+        // send the response confirmation back to the identity manager.
+        echo json_encode(self::$statusConfirmation);
+    }
+}
 
 	//
 	class JSONRPC
