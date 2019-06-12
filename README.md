@@ -1,5 +1,6 @@
 # CashID libraries
-
+[![Build Status](https://travis-ci.org/Beakerboy/CashID.svg?branch=master)](https://travis-ci.org/Beakerboy/CashID)
+[![Coverage Status](https://coveralls.io/repos/github/Beakerboy/CashID/badge.svg?branch=master)](https://coveralls.io/github/Beakerboy/CashID?branch=master)
 ## PHP
 
 ### Dependencies
