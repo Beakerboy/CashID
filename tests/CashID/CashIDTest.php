@@ -25,14 +25,10 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
     {
         $metadata = [
             "optional" => [
-                "position"=> [
-                    "streetname" => "Anywhere St",
-                ],
+                "position"=> ["streetname"],
             ],
             "required" => [
-                "contact"=> [
-                    "social" => "123-45-6789",
-                ],
+                "identity"=> ["social"],
             ],
         ];
         $requestURI = $this->cashid->createRequest("login", "15366-4133-6141-9638", $metadata);
