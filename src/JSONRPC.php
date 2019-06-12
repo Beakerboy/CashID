@@ -1,4 +1,7 @@
 <?php
+
+namespace CashID;
+
 //
 class JSONRPC
 {
