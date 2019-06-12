@@ -143,12 +143,12 @@ class CashID extends JSONRPC
 
             // If required metadata was requested, add them to the parameter list.
             if (isset($metadata['required'])) {
-                $parameters['r'] = "r=" . self::encode_request_metadata($metadata['required']);
+                $parameters['r'] = "r=" . self::encodeRequestMetadata($metadata['required']);
             }
 
             // If optional metadata was requested, add them to the parameter list.
             if (isset($metadata['optional'])) {
-                $parameters['o'] = "o=" . self::encode_request_metadata($metadata['optional']);
+                $parameters['o'] = "o=" . self::encodeRequestMetadata($metadata['optional']);
             }
 
             // Append the nonce to the parameter list.
