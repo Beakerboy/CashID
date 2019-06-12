@@ -28,10 +28,11 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
                 "position"=> ["streetname"],
             ],
             "required" => [
-                "identity"=> ["social"],
+                "contact"=> ["social"],
             ],
         ];
         $requestURI = $this->cashid->createRequest("login", "15366-4133-6141-9638", $metadata);
-        $this->assertEquals("cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&o=p4&r=c3", $requestURI);
+        $this->assertEquals("cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c3&o=p4&x=", substr($requestURI, 0, -10));
+        $this->assertRegExp("^\d{10}$", substr($requestURI, -10));
     }
 }
