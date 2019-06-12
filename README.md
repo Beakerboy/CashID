@@ -9,6 +9,9 @@
 - PECL APCu (https://pecl.php.net/package/APCu)
 - BitcoinD full node with a supported JSON RPC
 
+### Specifications
+- CashID API (https://gitlab.com/cashid/protocol-specification)
+
 ### Configuration
 
 Edit the cashid.php file and set the domain and path to your CashID controller that manages responses.
