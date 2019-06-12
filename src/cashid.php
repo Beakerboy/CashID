@@ -164,8 +164,7 @@ class CashID extends JSONRPC
 
             // Return the request URI to indicate success.
             return $request_uri;
-        }
-        catch (InternalException $exception) {
+        } catch (InternalException $exception) {
             // Return false to indicate error.
             return false;
         }
@@ -372,51 +371,51 @@ class CashID extends JSONRPC
             }
 
             // Validate if the request has expired.
-           if (!$user_initiated_request and ($requestReference['expires'] < time())) {
-               throw new InternalException("The request has expired and is no longer available.", self::STATUS_CODES['REQUEST_EXPIRED']);
-           }
-
-           // Validate that the request has not been tampered with.
-           if (!$user_initiated_request and ($requestReference['request'] != $responseObject['request'])) {
-               throw new InternalException("The response does not match the request parameters.", self::STATUS_CODES['REQUEST_ALTERED']);
-           }
-
-           // Send the request parts to bitcoind for signature verification.
-           $verificationStatus = self::verifymessage($responseObject['address'], $responseObject['signature'], $responseObject['request']);
-
-           // Validate the signature.
-           if ($verificationStatus !== true) {
-               throw new InternalException("Signature verification failed: {self::$rpc_error}", self::STATUS_CODES['RESPONSE_INVALID_SIGNATURE']);
-           }
-
-           // Initialize an empty list of missing metadata.
-           $missing_fields = [];
-
-           // Loop over the required metadata fields.
-           foreach ($parsedRequest['parameters']['required'] as $metadata_name => $metadata_value) {
-               // If the field was required and missing from the response..
-               if (($metadata_value) and (!isset($responseObject['metadata'][$metadata_name]))) {
-	           // Store it in the list of missing fields.
-                   $missing_fields[$metadata_name] = $metadata_name;
-               }
+            if (!$user_initiated_request and ($requestReference['expires'] < time())) {
+                throw new InternalException("The request has expired and is no longer available.", self::STATUS_CODES['REQUEST_EXPIRED']);
             }
 
-            // Validate if there was missing metadata.
-            if (count($missing_fields) >= 1) {
-                throw new InternalException("The required metadata field(s) '" . implode(', ', $missing_fields) . "' was not provided.", self::STATUS_CODES['RESPONSE_MISSING_METADATA']);
+            // Validate that the request has not been tampered with.
+            if (!$user_initiated_request and ($requestReference['request'] != $responseObject['request'])) {
+                throw new InternalException("The response does not match the request parameters.", self::STATUS_CODES['REQUEST_ALTERED']);
             }
 
-            // Loop over the supplied metadata fields.
-            foreach ($responseObject['metadata'] as $metadata_name => $metadata_value) {
-                // Validate if the supplied metadata was requested
-                if (!isset($parsedRequest['parameters']['required'][$metadata_name]) and !isset($parsedRequest['parameters']['optional'][$metadata_name])) {
-                    throw new InternalException("The metadata field '{$metadata_name}' was not part of the request.", self::STATUS_CODES['RESPONSE_INVALID_METADATA']);
-                }
+            // Send the request parts to bitcoind for signature verification.
+            $verificationStatus = self::verifymessage($responseObject['address'], $responseObject['signature'], $responseObject['request']);
 
-	        // Validate if the supplied value is empty.
-	        if($metadata_value == "" or $metadata_value === null) {
-                    throw new InternalException("The metadata field '{$metadata_name}' did not contain any value.", self::STATUS_CODES['RESPONSE_MALFORMED_METADATA']);
+            // Validate the signature.
+            if ($verificationStatus !== true) {
+                throw new InternalException("Signature verification failed: {self::$rpc_error}", self::STATUS_CODES['RESPONSE_INVALID_SIGNATURE']);
+            }
+
+            // Initialize an empty list of missing metadata.
+            $missing_fields = [];
+
+            // Loop over the required metadata fields.
+            foreach ($parsedRequest['parameters']['required'] as $metadata_name => $metadata_value) {
+                // If the field was required and missing from the response..
+                if (($metadata_value) and (!isset($responseObject['metadata'][$metadata_name]))) {
+	            // Store it in the list of missing fields.
+                    $missing_fields[$metadata_name] = $metadata_name;
                 }
+             }
+
+             // Validate if there was missing metadata.
+             if (count($missing_fields) >= 1) {
+                 throw new InternalException("The required metadata field(s) '" . implode(', ', $missing_fields) . "' was not provided.", self::STATUS_CODES['RESPONSE_MISSING_METADATA']);
+             }
+
+             // Loop over the supplied metadata fields.
+             foreach ($responseObject['metadata'] as $metadata_name => $metadata_value) {
+                 // Validate if the supplied metadata was requested
+                 if (!isset($parsedRequest['parameters']['required'][$metadata_name]) and !isset($parsedRequest['parameters']['optional'][$metadata_name])) {
+                     throw new InternalException("The metadata field '{$metadata_name}' was not part of the request.", self::STATUS_CODES['RESPONSE_INVALID_METADATA']);
+                 }
+
+	         // Validate if the supplied value is empty.
+	         if($metadata_value == "" or $metadata_value === null) {
+                     throw new InternalException("The metadata field '{$metadata_name}' did not contain any value.", self::STATUS_CODES['RESPONSE_MALFORMED_METADATA']);
+                 }
             }
 
             // Store the response object in local cache.
@@ -435,8 +434,7 @@ class CashID extends JSONRPC
 
             // Return the parsed response.
             return $responseObject;
-        }
-        catch(InternalException $exception) {
+        } catch(InternalException $exception) {
             // Update internal status object.
             self::$statusConfirmation = [
                 'status' => $exception->getCode(),
