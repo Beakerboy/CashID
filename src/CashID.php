@@ -395,7 +395,7 @@ class CashID extends JSONRPC
             foreach ($parsedRequest['parameters']['required'] as $metadata_name => $metadata_value) {
                 // If the field was required and missing from the response..
                 if (($metadata_value) and (!isset($responseObject['metadata'][$metadata_name]))) {
-	            // Store it in the list of missing fields.
+                    // Store it in the list of missing fields.
                     $missing_fields[$metadata_name] = $metadata_name;
                 }
             }
@@ -412,19 +412,19 @@ class CashID extends JSONRPC
                     throw new InternalException("The metadata field '{$metadata_name}' was not part of the request.", self::STATUS_CODES['RESPONSE_INVALID_METADATA']);
                 }
 
-	        // Validate if the supplied value is empty.
-	        if($metadata_value == "" or $metadata_value === null) {
+                // Validate if the supplied value is empty.
+                if ($metadata_value == "" or $metadata_value === null) {
                     throw new InternalException("The metadata field '{$metadata_name}' did not contain any value.", self::STATUS_CODES['RESPONSE_MALFORMED_METADATA']);
                 }
             }
 
             // Store the response object in local cache.
-            if(!apcu_store("cashid_response_{$parsedRequest['parameters']['nonce']}", $responseObject)) {
+            if (!apcu_store("cashid_response_{$parsedRequest['parameters']['nonce']}", $responseObject)) {
                 throw new InternalException("Internal server error, could not store response object.", self::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
             }
 
             // Store the confirmation object in local cache.
-            if(!apcu_store("cashid_confirmation_{$parsedRequest['parameters']['nonce']}", self::$statusConfirmation)) {
+            if (!apcu_store("cashid_confirmation_{$parsedRequest['parameters']['nonce']}", self::$statusConfirmation)) {
                 throw new InternalException("Internal server error, could not store confirmation object.", self::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
             }
 
@@ -460,7 +460,7 @@ class CashID extends JSONRPC
         if (!isset(self::$statusConfirmation['status'])) {
             throw new \Exception('cashid->confirm_request was called before validate_request so there is no confirmation to transmit to the client.');
         }
-		
+
         // Configure confirmation message type.
         header('Content-type: application/json; charset=utf-8');
         header('Cache-Control: no-cache');
