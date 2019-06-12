@@ -33,7 +33,7 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
         ];
         $requestURI = $this->cashid->createRequest("login", "15366-4133-6141-9638", $metadata);
         $this->assertEquals("cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c3&o=p4&x=", substr($requestURI, 0, -9));
-        $this->assertRegExp("/^\d{9}$/", substr($requestURI, -9));
+        $this->assertRegExp('/^\d{9}$/', substr($requestURI, -9));
         $request_parts = cashid->parseRequest($requestURI);
 
         $expected_array = [
