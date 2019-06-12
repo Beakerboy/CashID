@@ -114,9 +114,9 @@ class CashID extends JSONRPC
      * @param {String} action - Name of the action the user authenticates to perform
      * @param {String} data - Data relevant to the requested action
      * @param {Array} metadata - Array with requested and optional metadata
-     * @return {string} returns the request URI
+     * @return {mixed} returns the request URI or false if error
      */
-    public function createRequest($action = "", $data = "", $metadata = [])
+    public function createRequest(string $action = "", string $data = "", array $metadata = [])
     {
         try {
             // generate a random nonce.
@@ -176,7 +176,7 @@ class CashID extends JSONRPC
      * @param {Array} metadata - Array with requested and optional metadata
      * @return {string} returns the request metadata part
      */
-    private function encodeRequestMetadata($metadata)
+    private function encodeRequestMetadata(array $metadata): string
     {
         // Initialize an empty metadata string.
         $metadata_string = "";
@@ -218,7 +218,7 @@ class CashID extends JSONRPC
      * @param {String} request_url - the full request URI to parse
      * @return {Array} returns a request array populated based on the request_url string
      */
-    public function parseRequest($request_uri)
+    public function parseRequest(string $request_uri): array
     {
         // Initialize empty structure
         $request_parts = [];
@@ -260,7 +260,7 @@ class CashID extends JSONRPC
      * @param {String} status_code - numerical number for the status code.
      * @param {String} status_message - textual description of the status.
      */
-    public function invalidateRequest($status_code, $status_message)
+    public function invalidateRequest(string $status_code, string $status_message)
     {
         self::$statusConfirmation = [
             'status' => $status_code,
@@ -270,7 +270,9 @@ class CashID extends JSONRPC
 
     /**
      * Validates the current request and updates the internal confirmation message.
-     **/
+     *
+     * @return mixed - array or false if error
+     */
     public function validateRequest()
     {
         // Initalized an assumed successful status.
