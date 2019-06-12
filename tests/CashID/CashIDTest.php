@@ -17,4 +17,13 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
     {
         $this->assertInstanceOf(CashID::class, $this->cashid);
     }
+    
+    /**
+     * @testCase Create Request
+     */
+    public function testCreateRequest()
+    {
+        $requestURI = $this->cashid->createRequest();
+        $this->assertNotFalse($requestURI);
+    }
 }
