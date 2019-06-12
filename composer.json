@@ -4,7 +4,7 @@
   "description": "CashID library for PHP",
   "keywords": ["bitcoin", "authentication"],
   "require": {
-    "php": ">=5.4.0"
+    "php": ">=7.0.0"
   },
   "autoload": {
     "psr-4": { "CashID\\": "src/" }
