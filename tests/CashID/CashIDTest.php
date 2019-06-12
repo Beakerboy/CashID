@@ -87,6 +87,6 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
             'path' => '/api/parse.php',
         ];
         $this->assertEquals($expected_array, $request_parts);
-        $this->cashid->invalidateRequest(142,'test');
+        $this->cashid->invalidateRequest(142, 'test');
     }
 }
