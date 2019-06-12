@@ -1,0 +1,34 @@
+{
+  "name": "cashid/cashid-library",
+  "type": "library",
+  "description": "Math Library for PHP. Features desc and regressions; Continuous and discrete probability distributions; Linear algebra with matrices and vectors, Numerical analysis; special mathematical functions; Algebra",
+  "keywords": ["bitcoin", "authentication"],
+  "homepage": "https://github.com/markrogoyski/math-php/",
+  "require": {
+    "php": ">=7.0.0"
+  },
+  "autoload": {
+    "psr-4": { "CashID\\": "src/" }
+  },
+  "require-dev": {
+      "phpunit/phpunit": "6.*",
+      "php-coveralls/php-coveralls": "^2.0",
+      "squizlabs/php_codesniffer": "2.*",
+  },
+  "autoload-dev": {
+    "psr-4": { "CashID\\Tests\\": "tests/" }
+  },
+  "authors": [
+    {
+      "name": "Mark Rogoyski",
+      "email": "mark@rogoyski.com",
+      "homepage": "https://github.com/markrogoyski",
+      "role": "Lead developer"
+    },
+    {
+      "name": "Kevin Nowaczyk",
+      "role": "Contributor"
+    },
+  ],
+  "license": "MIT"
+}
