@@ -7,6 +7,9 @@ php:
 install:
   - composer install
 
+before_script:
+  - phpenv config-add install/travis-7.2.ini
+
 script: 
   - mkdir -p build/logs
   - vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-clover build/logs/clover.xml
