@@ -23,7 +23,16 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreateRequest()
     {
-        $requestURI = $this->cashid->createRequest("login", "15366-4133-6141-9638", ["name" => "Jon"]);
+        $metadata = [
+            "name" => "Jon",
+            "optional" => [
+                "address" => "123 Anywhere",
+            ],
+            "required" => [
+                "country" => "Antarctica",
+            ],
+        ];
+        $requestURI = $this->cashid->createRequest("login", "15366-4133-6141-9638", $metadata);
         $this->assertNotFalse($requestURI);
     }
 }
