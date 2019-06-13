@@ -116,7 +116,7 @@ class CashID
     public function __construct(string $domain, string $path)
     {
         $this->service_domain = $domain;
-        $this->srvice_path = $path;
+        $this->service_path = $path;
     }
     
     /**
