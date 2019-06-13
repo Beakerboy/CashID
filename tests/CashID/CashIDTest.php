@@ -7,7 +7,7 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
-        $this->cashid = new CashID();
+        $this->cashid = new CashID("demo.cashid.info", "/api/parse.php");
     }
 
     /**
