@@ -5,10 +5,11 @@ namespace CashID;
 function rand()
 {
     if (!isset(NonceTest::$randomValues)) {
-        NonceTest::$randomValues = [100000000, 100000001];
+        NonceTest::$randomValues = [100000000];
     }
     $rand = array_shift(NonceTest::$randomValues);
     NonceTest::$randomValues[] = $rand + 1;
+    return $rand;
 }
 
 class NonceTest extends \PHPUnit\Framework\TestCase
