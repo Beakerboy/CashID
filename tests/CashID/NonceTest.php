@@ -19,7 +19,7 @@ class NonceTest extends \PHPUnit\Framework\TestCase
         $nonce1 = substr($request1, -9);
         $nonce2 = substr($request2, -9);
         
-        $this->assertEqual(100000000, $nonce1);
-        $this->assertEqual(100000001, $nonce2);
+        $this->assertEquals(100000000, $nonce1);
+        $this->assertEquals(100000001, $nonce2);
     }
 }
