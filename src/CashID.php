@@ -5,17 +5,17 @@ namespace CashID;
 use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
 
 // Location pointing to a CashID response manager.
-const SERVICE_DOMAIN = 'demo.cashid.info';
-const SERVICE_PATH = "/api/parse.php";
+//const SERVICE_DOMAIN = 'demo.cashid.info';
+//const SERVICE_PATH = "/api/parse.php";
 
 // Credentials that grant access to a bitcoind RPC connection.
-const RPC_USERNAME = 'uvzOQgLc4VujgDfVpNsfujqasVjVQHhB';
-const RPC_PASSWORD = '1Znrf7KClQjJ3AhxDwr7vkFZpwW0ZGUJ';
+//const RPC_USERNAME = 'uvzOQgLc4VujgDfVpNsfujqasVjVQHhB';
+//const RPC_PASSWORD = '1Znrf7KClQjJ3AhxDwr7vkFZpwW0ZGUJ';
 
 // Location of a bitcoind RCP service.
-const RPC_SCHEME = 'http://';
-const RPC_HOST = '127.0.0.1';
-const RPC_PORT = 8332;
+//const RPC_SCHEME = 'http://';
+//const RPC_HOST = '127.0.0.1';
+//const RPC_PORT = 8332;
 
 /**
  * Simple CashID support library that can:
@@ -27,10 +27,13 @@ const RPC_PORT = 8332;
  * - PHP support for PECL APCu
  * - BitcoinD node with RPC support
  */
-class CashID extends JSONRPC
+class CashID
 {
     // Storage for a status confirmation message.
     private static $statusConfirmation;
+    
+    protected $service_domain;
+    protected $service_path;
 
     // Define regular expressions to parse request data.
     const REGEXP_REQUEST = "/(?P<scheme>cashid:)(?:[\/]{2})?(?P<domain>[^\/]+)(?P<path>\/[^\?]+)(?P<parameters>\?.+)/";
@@ -110,6 +113,12 @@ class CashID extends JSONRPC
         ],
     ];
 
+    public function __construct(string $domain, string $path)
+    {
+        $this->service_domain = $domain;
+        $this->srvice_path = $path;
+    }
+    
     /**
      * Creates a request
      *
@@ -157,7 +166,7 @@ class CashID extends JSONRPC
             $parameters['x'] = "x={$nonce}";
 
             // Form the request URI from the configured values.
-            $request_uri = "cashid:" . SERVICE_DOMAIN . SERVICE_PATH . "?" . implode($parameters, '&');
+            $request_uri = "cashid:" . $this->service_domain . $this->service_path . "?" . implode($parameters, '&');
 
             // Store the request and nonce in local cache.
             if (!apcu_store("cashid_request_{$nonce}", [ 'available' => true, 'request' => $request_uri, 'expires' => time() + (60 * 15) ])) {
@@ -313,7 +322,7 @@ class CashID extends JSONRPC
             }
 
             // Parse the request.
-            $parsedRequest = self::parse_request($responseObject['request']);
+            $parsedRequest = self::parseRequest($responseObject['request']);
 
             // Validate overall structure.
             if ($parsedRequest === false) {
@@ -330,7 +339,7 @@ class CashID extends JSONRPC
             // TODO: Validate the domain structure.
 
             // Validate the request domain.
-            if ($parsedRequest['domain'] != SERVICE_DOMAIN) {
+            if ($parsedRequest['domain'] != $this->service_domain) {
                 throw new InternalException("Request domain '{$parsedRequest['domain']}' is invalid, this service uses '" . SERVICE_DOMAIN . "'.", self::STATUS_CODES['REQUEST_INVALID_DOMAIN']);
             }
 
