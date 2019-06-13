@@ -100,14 +100,4 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\Exception::class);
         $this->cashid->confirmRequest();
     }
-    
-    /**
-     * @testCase ConfirmRequestNotVerifiedException
-     */
-    public function testConfirmRequestHeadersSentException()
-    {
-        header('Content-type: application/json; charset=utf-8');
-        $this->expectException(\Exception::class);
-        $this->cashid->confirmRequest();
-    }
 }
