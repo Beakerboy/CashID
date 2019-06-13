@@ -2,15 +2,18 @@
 
 namespace CashID;
 
-function rand() {
+function rand()
+{
     return array_shift(NonceTest::$randomValues);
 }
 
-class NonceTest extends \PHPUnit\Framework\TestCase {
+class NonceTest extends \PHPUnit\Framework\TestCase
+{
     public static $randomValues = array();
-    public function testSomeRandomness() {
-        self::$randomValues = array(100000000,100000000,100000001);
-        $this->cashid = New CashID('me.com','/api/parse.php');
+    public function testSomeRandomness()
+    {
+        self::$randomValues = [100000000, 100000000, 100000001];
+        $this->cashid = new CashID('me.com', '/api/parse.php');
         $request1 = $this->cashid->createRequest();
         $request2 = $this->cashid->createRequest();
         $nonce1 = substr($request1, -9);
