@@ -88,5 +88,26 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
         ];
         $this->assertEquals($expected_array, $request_parts);
         $this->cashid->invalidateRequest(142, 'test');
+        
+        $this->assertFalse($cashid->validateRequest());
+    }
+    
+    /**
+     * @testCase ConfirmRequestNotVerifiedException
+     */
+    public function testConfirmRequestNotVerifiedException()
+    {
+        $this->expectException(Exception::class);
+        $this->cashid->confirmRequest();
+    }
+    
+    /**
+     * @testCase ConfirmRequestNotVerifiedException
+     */
+    public function testConfirmRequestHeadersSentException()
+    {
+        header('Content-type: application/json; charset=utf-8');
+        $this->expectException(Exception::class);
+        $this->cashid->confirmRequest();
     }
 }
