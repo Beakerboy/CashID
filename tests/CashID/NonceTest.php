@@ -6,7 +6,7 @@ function rand() {
     return array_shift(NonceTest::$randomValues);
 }
 
-class NonceTest extends PHPUnit_Framework_TestCase {
+class NonceTest extends PHPUnit\Framework\TestCase {
     public static $randomValues = array();
     public function testSomeRandomness() {
         self::$randomValues = array(100000000,100000000,100000001);
