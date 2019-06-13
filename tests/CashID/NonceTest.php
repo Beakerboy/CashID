@@ -3,7 +3,7 @@
 namespace CashID;
 
 function rand() {
-    return array_shift(RandomTest::$randomValues);
+    return array_shift(NonceTest::$randomValues);
 }
 
 class NonceTest extends PHPUnit_Framework_TestCase {
