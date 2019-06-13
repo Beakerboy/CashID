@@ -5,7 +5,7 @@ namespace CashID;
 function rand()
 {
     if (!isset(NonceTest::$randomValues)) {
-        NonceTest::$randomValues = [100000000];
+        return 100000000;
     }
     $rand = array_shift(NonceTest::$randomValues);
     NonceTest::$randomValues[] = $rand + 1;
