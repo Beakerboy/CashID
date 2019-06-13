@@ -4,7 +4,7 @@ namespace CashID;
 
 function rand()
 {
-    return array_shift(NonceTest::$randomValues);
+    return array_shift(NonceTest::$randomValues) ?? rand(100000000, 999999999);
 }
 
 class NonceTest extends \PHPUnit\Framework\TestCase
@@ -17,7 +17,7 @@ class NonceTest extends \PHPUnit\Framework\TestCase
      */
     public function testRerunDuplicateNonce()
     {
-        self::$randomValues = [100000000, 100000000, 100000001, 100000002];
+        self::$randomValues = [100000000, 100000000, 100000001];
         $this->cashid = new CashID('me.com', '/api/parse.php');
         $request1 = $this->cashid->createRequest();
         $request2 = $this->cashid->createRequest();
