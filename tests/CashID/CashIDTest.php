@@ -93,7 +93,18 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
     }
     
     /**
+     * @testCase ConfirmRequestHeadersSentException
+     */
+    public function testConfirmRequestHeadersSentException()
+    {
+        // PHPUnit has already sent headers at this point
+        $this->expectException(\Exception::class);
+        $this->cashid->confirmRequest();
+    }
+    
+    /**
      * @testCase ConfirmRequestNotVerifiedException
+     * @runInSeparateProcess
      */
     public function testConfirmRequestNotVerifiedException()
     {
