@@ -2,6 +2,8 @@
 // Declare a unique namespace to avoid naming collisions.
 namespace CashID;
 
+use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
+
 // Location pointing to a CashID response manager.
 const SERVICE_DOMAIN = 'demo.cashid.info';
 const SERVICE_PATH = "/api/parse.php";
@@ -302,7 +304,7 @@ class CashID extends JSONRPC
 
             // Validate if the required field 'address' exists.
             if (!isset($responseObject['address'])) {
-                throw new InternalException("Response data is missing required 'adress' property.", self::STATUS_CODES['RESPONSE_MISSING_ADDRESS']);
+                throw new InternalException("Response data is missing required 'address' property.", self::STATUS_CODES['RESPONSE_MISSING_ADDRESS']);
             }
 
             // Validate if the required field 'signature' exists.
@@ -383,7 +385,9 @@ class CashID extends JSONRPC
             }
 
             // Send the request parts to bitcoind for signature verification.
-            $verificationStatus = self::verifymessage($responseObject['address'], $responseObject['signature'], $responseObject['request']);
+            $bitcoinECDSA = new BitcoinECDSA();
+            $verificationStatus = $bitcoinECDSA->checkSignatureForMessage($responseObject['address'], $responseObject['signature'], $responseObject['request']);
+            //$verificationStatus = self::verifymessage($responseObject['address'], $responseObject['signature'], $responseObject['request']);
 
             // Validate the signature.
             if ($verificationStatus !== true) {
