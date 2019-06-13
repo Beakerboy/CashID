@@ -9,7 +9,7 @@ function rand()
     }
     $rand = array_shift(NonceTest::$randomValues);
     NonceTest::$randomValues[] = $rand + 1;
-    return $rand;
+    return $rand ?? 100000000;
 }
 
 class NonceTest extends \PHPUnit\Framework\TestCase
