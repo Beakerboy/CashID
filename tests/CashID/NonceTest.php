@@ -10,9 +10,14 @@ function rand()
 class NonceTest extends \PHPUnit\Framework\TestCase
 {
     public static $randomValues = array();
-    public function testSomeRandomness()
+    
+    /**
+     * @testCase testRerunDuplicateNonce
+     * @runInSeparateProcess
+     */
+    public function testRerunDuplicateNonce()
     {
-        self::$randomValues = [100000000, 100000000, 100000001];
+        self::$randomValues = [100000000, 100000000, 100000001, 100000002];
         $this->cashid = new CashID('me.com', '/api/parse.php');
         $request1 = $this->cashid->createRequest();
         $request2 = $this->cashid->createRequest();
