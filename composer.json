@@ -11,9 +11,10 @@
     "psr-4": {"CashID\\": "src/"}
   },
   "require-dev": {
-      "phpunit/phpunit": "6.*",
-      "php-coveralls/php-coveralls": "^2.0",
-      "squizlabs/php_codesniffer": "2.*"
+    "phpunit/phpunit": "6.*",
+    "guzzlehttp/guzzle": "6.x",
+    "php-coveralls/php-coveralls": "^2.0",
+    "squizlabs/php_codesniffer": "2.*"
   },
   "autoload-dev": {
     "psr-4": { "CashID\\Tests\\": "tests/" }
