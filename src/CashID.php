@@ -122,10 +122,14 @@ class CashID
     /**
      * Creates a request
      *
-     * @param {String} action - Name of the action the user authenticates to perform
-     * @param {String} data - Data relevant to the requested action
-     * @param {Array} metadata - Array with requested and optional metadata
-     * @return {mixed} returns the request URI or false if error
+     * @param string $action
+     *  Name of the action the user authenticates to perform
+     * @param string $data
+     *  Data relevant to the requested action
+     * @param array $metadata
+     *  Array with requested and optional metadata
+     * @return
+     *  returns the request URI or false if error
      */
     public function createRequest(string $action = "", string $data = "", array $metadata = [])
     {
@@ -284,7 +288,7 @@ class CashID
      *
      * @return mixed - array or false if error
      */
-    public function validateRequest()
+    public function validateRequest(string $response)
     {
         // Initalized an assumed successful status.
         self::$statusConfirmation = [
@@ -293,13 +297,9 @@ class CashID
         ];
 
         try {
-            // Validate that the response was received as POST request.
-            if (!isset($_SERVER['REQUEST_METHOD']) or $_SERVER['REQUEST_METHOD'] != 'POST') {
-                throw new InternalException("Unsupported request method.", self::STATUS_CODES['RESPONSE_INVALID_METHOD']);
-            }
-
+           
             // Attempt to decode the response data.
-            $responseObject = json_decode(@file_get_contents("php://input"), true);
+            $responseObject = json_decode($response, true);
 
             // Validate that the response is JSON encoded.
             if ($responseObject === null) {
