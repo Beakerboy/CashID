@@ -318,7 +318,7 @@ class CashID
             }
 
             // Validate the request scheme.
-            if ($parsedRequest['scheme'] != 'cashid:') {
+            if (!isset($parsedRequest['scheme'])) {
                 throw new InternalException("Request scheme '{$parsedRequest['scheme']}' is invalid, should be 'cashid:'.", self::STATUS_CODES['REQUEST_MALFORMED_SCHEME']);
             }
 
