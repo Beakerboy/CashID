@@ -29,7 +29,7 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
         $response['request'] = $requestURI;
         
         $bitcoinECDSA = new BitcoinECDSA();
-        $bitcoinECDSA->setPrivateKey('L1M8W4jMqqu5h24Nzxf1sy5eHo2aSxdwab8h1fkP5Pt9ATfnxfda');
+        $bitcoinECDSA->setPrivateKeyWithWif('L1M8W4jMqqu5h24Nzxf1sy5eHo2aSxdwab8h1fkP5Pt9ATfnxfda');
         $public_key = 'qpjvm3u8cvjddupctguwatrlaxtutprg8s04ekldyr';
         
         $signature = $bitcoinECDSA->signMessage($requestURI, true);
