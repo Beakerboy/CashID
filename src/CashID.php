@@ -297,7 +297,6 @@ class CashID
         ];
 
         try {
-           
             // Attempt to decode the response data.
             $responseObject = json_decode($response, true);
 
