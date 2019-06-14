@@ -88,33 +88,6 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
         ];
         $this->assertEquals($expected_array, $request_parts);
         $this->cashid->invalidateRequest(142, 'test');
-        
-        // Not a JSON string
-        $this->assertFalse($this->cashid->validateRequest("Not JSON"));
-        
-        // No request field
-        $this->assertFalse($this->cashid->validateRequest("{'address': 'qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4'}"));
-        
-        // No address Field
-        $JSON = "{
-            'request': 'cashid:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581'
-        }";
-        $this->assertFalse($this->cashid->validateRequest($JSON));
-        
-        // No signature Field
-        $JSON = "{
-            'request': 'cashid:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581',
-            'address': 'qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4'
-        }";
-        $this->assertFalse($this->cashid->validateRequest($JSON));
-        
-        // Incorrect domain
-        $JSON = "{
-            'request': 'cashid:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581',
-            'address': 'qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4',
-            'signature': 'IKjtNWdIp+tofJQrhxBrq91jLwdmOVNlMhfnKRiaC2t2C7vqsHRoUA+BkdgjnOqX6hv4ZdeG9ZpB6dMh/sXJg/0='
-        }";
-        $this->assertFalse($this->cashid->validateRequest($JSON));
     }
     
     /**
