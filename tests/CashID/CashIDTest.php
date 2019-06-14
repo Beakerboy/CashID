@@ -89,7 +89,16 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected_array, $request_parts);
         $this->cashid->invalidateRequest(142, 'test');
         
-        $this->assertFalse($this->cashid->validateRequest());
+        $this->assertFalse($this->cashid->validateRequest("Not JSON"));
+        
+        // No request field
+        $this->assertFalse($this->cashid->validateRequest("{'address': 'qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4'}"));
+        
+        // No address Field
+        $this->assertFalse($this->cashid->validateRequest("{'request': 'cashid:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581'}"));
+        
+        // No signature Field
+        $this->assertFalse($this->cashid->validateRequest("{'request': 'cashid:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581','address': 'qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4'}"));
     }
     
     /**
