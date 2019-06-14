@@ -98,14 +98,14 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
         // No address Field
         $JSON = "{
             'request': 'cashid:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581'
-        }"
+        }";
         $this->assertFalse($this->cashid->validateRequest($JSON));
         
         // No signature Field
         $JSON = "{
             'request': 'cashid:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581',
             'address': 'qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4'
-        }"
+        }";
         $this->assertFalse($this->cashid->validateRequest($JSON));
         
         // Incorrect domain
@@ -113,7 +113,7 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
             'request': 'cashid:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581',
             'address': 'qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4',
             'signature': 'IKjtNWdIp+tofJQrhxBrq91jLwdmOVNlMhfnKRiaC2t2C7vqsHRoUA+BkdgjnOqX6hv4ZdeG9ZpB6dMh/sXJg/0='
-        }"
+        }";
         $this->assertFalse($this->cashid->validateRequest($JSON));
     }
     
@@ -135,5 +135,44 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException(\Exception::class);
         $this->cashid->confirmRequest();
+    }
+    
+    /**
+     * @testCase testInvalidRequest
+     * @dataProvider dataProviderForInvalidRequest
+     */
+    public function testInvalidRequest($JSON_string)
+    {
+        $this->assertFalse($this->cashid->validateRequest($JSON));
+    }
+
+    public function dataProviderForInvalidRequest()
+    {
+        return [
+            [  // Not a JSON String
+                "Not JSON",
+            ],
+            [  // Missing request
+                "{'address': 'qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4'}",
+            ],
+            [  // Missing address
+               "{
+                    'request': 'cashid:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581'
+                }"
+            ],
+            [  // Missing Signature
+                "{
+                    'request': 'cashid:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581',
+                    'address': 'qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4'
+                }",
+            ],
+            [  // Mismatched domain
+                "{
+                    'request': 'cashid:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581',
+                    'address': 'qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4',
+                    'signature': 'IKjtNWdIp+tofJQrhxBrq91jLwdmOVNlMhfnKRiaC2t2C7vqsHRoUA+BkdgjnOqX6hv4ZdeG9ZpB6dMh/sXJg/0='
+                }"
+            ],
+        ];
     }
 }
