@@ -112,6 +112,7 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
     
     /**
      * @testCase testInvalidRequest
+     * @runInSeparateProcess
      * @dataProvider dataProviderForInvalidRequest
      */
     public function testInvalidRequest(string $JSON_string, array $response_array)
