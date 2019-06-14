@@ -1,7 +1,9 @@
 <?php
 namespace CashID\Tests\CashID;
 
+use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
 use CashID\CashID;
+use Submtd\CashaddrConverter;
 
 class CashIDTest extends \PHPUnit\Framework\TestCase
 {
@@ -16,6 +18,34 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
     public function testConstructor()
     {
         $this->assertInstanceOf(CashID::class, $this->cashid);
+    }
+    
+    /**
+     * @testCase completeProcess
+     */
+    public function testCompleteProcess()
+    {
+        $requestURI = $this->cashid->createRequest();
+        $response = [];
+        $response['request'] = $requestURI;
+        
+        $bitcoinECDSA = new BitcoinECDSA();
+        $bitcoinECDSA->generateRandomPrivateKey();
+        $public_key = CashaddrConverter::convertToCashaddr($bitcoinECDSA->getPubKey());
+        
+        $signature = $bitcoinECDSA->signMessage($requestURI, true);
+        
+        $response['address'] = $public_key;
+        $response['signature'] = $signature;
+        $JSON_string = json_encode($response);
+        $this->assertEquals(['action' => 'auth', 'data' => ''], $this->cashid->validateRequest($JSON_string));
+        
+        $response_array = [
+             "status" => 0,
+             "message" => "",
+        ];
+        $this->expectOutputString(json_encode($response_array));
+        $this->cashid->confirmRequest();
     }
     
     /**
