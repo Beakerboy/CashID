@@ -180,6 +180,17 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
                      "message" => "Request scheme is invalid, should be 'cashid:'.",
                 ],
             ],
+            [  // Missing nonce
+                '{
+                    "request": "cashid:demo.cashid.info/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3",
+                    "address": "qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4",
+                    "signature": "IKjtNWdIp+tofJQrhxBrq91jLwdmOVNlMhfnKRiaC2t2C7vqsHRoUA+BkdgjnOqX6hv4ZdeG9ZpB6dMh/sXJg/0="
+                }',
+                [
+                     "status" => 113,
+                     "message" => "Request parameter 'nonce' is missing.",
+                ],
+            ],
         ];
     }
 }
