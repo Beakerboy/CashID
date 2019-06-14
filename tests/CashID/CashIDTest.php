@@ -120,7 +120,6 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->cashid->validateRequest($JSON_string));
         //$this->expectOutputString(json_encode($response_array));
         $this->cashid->confirmRequest();
-        
     }
 
     public function dataProviderForInvalidRequest()
