@@ -4,19 +4,6 @@ namespace CashID;
 
 use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
 
-// Location pointing to a CashID response manager.
-//const SERVICE_DOMAIN = 'demo.cashid.info';
-//const SERVICE_PATH = "/api/parse.php";
-
-// Credentials that grant access to a bitcoind RPC connection.
-//const RPC_USERNAME = 'uvzOQgLc4VujgDfVpNsfujqasVjVQHhB';
-//const RPC_PASSWORD = '1Znrf7KClQjJ3AhxDwr7vkFZpwW0ZGUJ';
-
-// Location of a bitcoind RCP service.
-//const RPC_SCHEME = 'http://';
-//const RPC_HOST = '127.0.0.1';
-//const RPC_PORT = 8332;
-
 /**
  * Simple CashID support library that can:
  * - Issue requests
@@ -339,7 +326,7 @@ class CashID
 
             // Validate the request domain.
             if ($parsedRequest['domain'] != $this->service_domain) {
-                throw new InternalException("Request domain '{$parsedRequest['domain']}' is invalid, this service uses '" . SERVICE_DOMAIN . "'.", self::STATUS_CODES['REQUEST_INVALID_DOMAIN']);
+                throw new InternalException("Request domain '{$parsedRequest['domain']}' is invalid, this service uses '" . $this->service_domain . "'.", self::STATUS_CODES['REQUEST_INVALID_DOMAIN']);
             }
 
             // Validate the parameter structure
