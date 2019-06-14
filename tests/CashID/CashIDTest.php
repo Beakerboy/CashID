@@ -118,7 +118,7 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
     public function testInvalidRequest(string $JSON_string, array $response_array)
     {
         $this->assertFalse($this->cashid->validateRequest($JSON_string));
-        //$this->expectOutputString(json_encode($response_array));
+        $this->expectOutputString(json_encode($response_array));
         $this->cashid->confirmRequest();
     }
 
@@ -144,8 +144,8 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
                     "request": "cashid:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581"
                 }',
                 [
-                     "status" => 200,
-                     "message" => "Response data is not a valid JSON object.",
+                     "status" => 212,
+                     "message" => "Response data is missing required 'address' property.",
                 ],
             ],
             [  // Missing Signature
