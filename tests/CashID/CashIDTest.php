@@ -146,6 +146,13 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
                     "signature": "IKjtNWdIp+tofJQrhxBrq91jLwdmOVNlMhfnKRiaC2t2C7vqsHRoUA+BkdgjnOqX6hv4ZdeG9ZpB6dMh/sXJg/0="
                 }'
             ],
+            [  // Incorrect scheme
+                '{
+                    "request": "cashid1:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581",
+                    "address": "qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4",
+                    "signature": "IKjtNWdIp+tofJQrhxBrq91jLwdmOVNlMhfnKRiaC2t2C7vqsHRoUA+BkdgjnOqX6hv4ZdeG9ZpB6dMh/sXJg/0="
+                }'
+            ],
         ];
     }
 }
