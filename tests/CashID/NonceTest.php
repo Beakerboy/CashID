@@ -2,6 +2,11 @@
 
 namespace CashID;
 
+/**
+ * Overriding the PHP core random number generator
+ *
+ * There are times when we would like to specify the result of rand() to test edge cases
+ */
 function rand()
 {
     $rand = array_shift(NonceTest::$randomValues);
