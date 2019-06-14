@@ -7,33 +7,10 @@
 ### Dependencies
 
 - PECL APCu (https://pecl.php.net/package/APCu)
-- BitcoinD full node with a supported JSON RPC
+- BitcoinPHP ECDSA Library
 
 ### Specifications
 - CashID API (https://gitlab.com/cashid/protocol-specification)
-
-### Configuration
-
-Edit the cashid.php file and set the domain and path to your CashID controller that manages responses.
-
-```PHP
-// Location pointing to a CashID response manager.
-const SERVICE_DOMAIN = 'demo.cashid.info';
-const SERVICE_PATH = "/api/parse.php";
-```
-
-Set the RPC username, password and location of your Bitcoin full node
-
-```PHP
-// Credentials that grant access to a bitcoind RPC connection.
-const RPC_USERNAME = 'uvzOQgLc4VujgDfVpNsfujqasVjVQHhB';
-const RPC_PASSWORD = '1Znrf7KClQjJ3AhxDwr7vkFZpwW0ZGUJ';
-
-// Location of a bitcoind RCP service.
-const RPC_SCHEME = 'http://';
-const RPC_HOST = '127.0.0.1';
-const RPC_PORT = 8332;
-```
 
 ### Create CashID request
 
