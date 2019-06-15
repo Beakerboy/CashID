@@ -2,6 +2,6 @@
 
 namespace CashID;
 
-static class API
+class API
 {
 }
