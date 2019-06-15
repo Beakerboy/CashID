@@ -383,12 +383,11 @@ class CashID
             $converter = new \Submtd\CashaddrConverter\CashaddrConverter();
             $legacy_address = $converter->convertFromCashaddr($responseObject['address']);
             $bitcoinECDSA = new BitcoinECDSA();
-            $verificationStatus = $bitcoinECDSA->checkSignatureForMessage($responseObject['address'], $responseObject['signature'], $responseObject['request']);
-            //$verificationStatus = self::verifymessage($legacy_address, $responseObject['signature'], $responseObject['request']);
+            $verificationStatus = $bitcoinECDSA->checkSignatureForMessage($legacy_address, $responseObject['signature'], $responseObject['request']);
 
             // Validate the signature.
             if ($verificationStatus !== true) {
-                throw new InternalException("Signature verification failed: {self::$rpc_error}", self::STATUS_CODES['RESPONSE_INVALID_SIGNATURE']);
+                throw new InternalException("Signature verification failed.", self::STATUS_CODES['RESPONSE_INVALID_SIGNATURE']);
             }
 
             // Initialize an empty list of missing metadata.
