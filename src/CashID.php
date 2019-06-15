@@ -380,7 +380,7 @@ class CashID
             }
 
             // Send the request parts to bitcoind for signature verification.
-            $legacy_address = Submtd\CashaddrConverter\Facades\CashaddrConverterFacade::convertFromCashaddr($responseObject['address']);
+            $legacy_address = \Submtd\CashaddrConverter\Facades\CashaddrConverterFacade::convertFromCashaddr($responseObject['address']);
             $bitcoinECDSA = new BitcoinECDSA();
             $verificationStatus = $bitcoinECDSA->checkSignatureForMessage($responseObject['address'], $responseObject['signature'], $responseObject['request']);
             //$verificationStatus = self::verifymessage($legacy_address, $responseObject['signature'], $responseObject['request']);
