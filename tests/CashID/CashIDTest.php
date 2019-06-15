@@ -37,15 +37,18 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
         $response['address'] = $public_key;
         $response['signature'] = $signature;
         $JSON_string = json_encode($response);
-        $this->assertEquals(['action' => 'auth', 'data' => ''], $this->cashid->validateRequest($JSON_string));
-        
-        $response_array = $response;
-        $response_array= [
-            "status" => 0,
-            "message" => "",
+        $validation_response = [
+            "action" => "auth",
+            "data" => "",
             "request" => $requestURI,
             "address" => $public_key,
             "signature" => $signature,
+        ];
+        $this->assertEquals($validation_response, $this->cashid->validateRequest($JSON_string));
+        
+        $response_array= [
+            "status" => 0,
+            "message" => "",
         ];
 
         $this->expectOutputString(json_encode($response_array));
