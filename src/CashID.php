@@ -408,15 +408,17 @@ class CashID
             }
 
             // Loop over the supplied metadata fields.
-            foreach ($responseObject['metadata'] as $metadata_name => $metadata_value) {
-                // Validate if the supplied metadata was requested
-                if (!isset($parsedRequest['parameters']['required'][$metadata_name]) and !isset($parsedRequest['parameters']['optional'][$metadata_name])) {
-                    throw new InternalException("The metadata field '{$metadata_name}' was not part of the request.", self::STATUS_CODES['RESPONSE_INVALID_METADATA']);
-                }
+            if (isset($responseObject['metadata'])) {
+                foreach ($responseObject['metadata'] as $metadata_name => $metadata_value) {
+                    // Validate if the supplied metadata was requested
+                    if (!isset($parsedRequest['parameters']['required'][$metadata_name]) and !isset($parsedRequest['parameters']['optional'][$metadata_name])) {
+                        throw new InternalException("The metadata field '{$metadata_name}' was not part of the request.", self::STATUS_CODES['RESPONSE_INVALID_METADATA']);
+                    }
 
-                // Validate if the supplied value is empty.
-                if ($metadata_value == "" or $metadata_value === null) {
-                    throw new InternalException("The metadata field '{$metadata_name}' did not contain any value.", self::STATUS_CODES['RESPONSE_MALFORMED_METADATA']);
+                    // Validate if the supplied value is empty.
+                    if ($metadata_value == "" or $metadata_value === null) {
+                        throw new InternalException("The metadata field '{$metadata_name}' did not contain any value.", self::STATUS_CODES['RESPONSE_MALFORMED_METADATA']);
+                    }
                 }
             }
 
