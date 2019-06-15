@@ -21,6 +21,7 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
     
     /**
      * @testCase completeProcess
+     * @runInSeparateProcess
      */
     public function testCompleteProcess()
     {
