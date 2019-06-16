@@ -15,44 +15,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testConstructor()
     {
-        $this->assertInstanceOf(RequestGenerator::class, $this->generator);
-    }
-    
-    /**
-     * @testCase completeProcess
-     * @runInSeparateProcess
-     */
-    public function testCompleteProcess()
-    {
-        $requestURI = $this->cashid->createRequest();
-        $response = [];
-        $response['request'] = $requestURI;
-        
-        $bitcoinECDSA = new BitcoinECDSA();
-        $bitcoinECDSA->setPrivateKeyWithWif('L1M8W4jMqqu5h24Nzxf1sy5eHo2aSxdwab8h1fkP5Pt9ATfnxfda');
-        $public_key = 'qpjvm3u8cvjddupctguwatrlaxtutprg8s04ekldyr';
-        
-        $signature = $bitcoinECDSA->signMessage($requestURI, true);
-        
-        $response['address'] = $public_key;
-        $response['signature'] = $signature;
-        $JSON_string = json_encode($response);
-        $validation_response = [
-            "action" => "auth",
-            "data" => "",
-            "request" => $requestURI,
-            "address" => $public_key,
-            "signature" => $signature,
-        ];
-        $this->assertEquals($validation_response, $this->cashid->validateRequest($JSON_string));
-        
-        $response_array= [
-            "status" => 0,
-            "message" => "",
-        ];
-
-        $this->expectOutputString(json_encode($response_array));
-        $this->cashid->confirmRequest();
+        $this->assertInstanceOf(RequestGenerator::class);
     }
     
     /**
