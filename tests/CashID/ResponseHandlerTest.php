@@ -1,8 +1,8 @@
 <?php
 
-namespace CashID/Tests/CashID;
+namespace CashID\Tests\CashID;
 
-use CashID/ResponseHandler;
+use CashID\ResponseHandler;
 
 class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
 {
