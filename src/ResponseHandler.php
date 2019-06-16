@@ -22,84 +22,6 @@ class ResponseHandler
     protected $service_domain;
     protected $service_path;
 
-    // Define regular expressions to parse request data.
-    const REGEXP_REQUEST = "/(?P<scheme>cashid:)(?:[\/]{2})?(?P<domain>[^\/]+)(?P<path>\/[^\?]+)(?P<parameters>\?.+)/";
-    const REGEXP_PARAMETERS = "/(?:(?:[\?\&]a=)(?P<action>[^\&]+))?(?:(?:[\?\&]d=)(?P<data>[^\&]+))?(?:(?:[\?\&]r=)(?P<required>[^\&]+))?(?:(?:[\?\&]o=)(?P<optional>[^\&]+))?(?:(?:[\?\&]x=)(?P<nonce>[^\&]+))?/";
-    const REGEXP_METADATA = "/(i(?P<identification>(?![1-9]+))?(?P<name>1)?(?P<family>2)?(?P<nickname>3)?(?P<age>4)?(?P<gender>5)?(?P<birthdate>6)?(?P<picture>8)?(?P<national>9)?)?(p(?P<position>(?![1-9]+))?(?P<country>1)?(?P<state>2)?(?P<city>3)?(?P<streetname>4)?(?P<streetnumber>5)?(?P<residence>6)?(?P<coordinate>9)?)?(c(?P<contact>(?![1-9]+))?(?P<email>1)?(?P<instant>2)?(?P<social>3)?(?P<mobilephone>4)?(?P<homephone>5)?(?P<workphone>6)?(?P<postlabel>9)?)?/";
-
-    // List of actions that required a valid and recent timestamp as their nonce, instead of a nonce issued by us.
-    const USER_ACTIONS = [
-        'delete',
-        'logout',
-        'revoke',
-        'update',
-    ];
-
-    // List of CashID status codes.
-    const STATUS_CODES = [
-        'SUCCESSFUL' => 0,
-        'REQUEST_BROKEN' => 100,
-        'REQUEST_MISSING_SCHEME' => 111,
-        'REQUEST_MISSING_DOMAIN' => 112,
-        'REQUEST_MISSING_NONCE' => 113,
-        'REQUEST_MALFORMED_SCHEME' => 121,
-        'REQUEST_MALFORMED_DOMAIN' => 122,
-        'REQUEST_INVALID_DOMAIN' => 131,
-        'REQUEST_INVALID_NONCE' => 132,
-        'REQUEST_ALTERED' => 141,
-        'REQUEST_EXPIRED' => 142,
-        'REQUEST_CONSUMED' => 143,
-        'RESPONSE_BROKEN' => 200,
-        'RESPONSE_MISSING_REQUEST' => 211,
-        'RESPONSE_MISSING_ADDRESS' => 212,
-        'RESPONSE_MISSING_SIGNATURE' => 213,
-        'RESPONSE_MISSING_METADATA' => 214,
-        'RESPONSE_MALFORMED_ADDRESS' => 221,
-        'RESPONSE_MALFORMED_SIGNATURE' => 222,
-        'RESPONSE_MALFORMED_METADATA' => 223,
-        'RESPONSE_INVALID_METHOD' => 231,
-        'RESPONSE_INVALID_ADDRESS' => 232,
-        'RESPONSE_INVALID_SIGNATURE' => 233,
-        'RESPONSE_INVALID_METADATA' => 234,
-
-        'SERVICE_BROKEN' => 300,
-        'SERVICE_ADDRESS_DENIED' => 311,
-        'SERVICE_ADDRESS_REVOKED' => 312,
-        'SERVICE_ACTION_DENIED' => 321,
-        'SERVICE_ACTION_UNAVAILABLE' => 322,
-        'SERVICE_ACTION_NOT_IMPLEMENTED' => 323,
-        'SERVICE_INTERNAL_ERROR' => 331
-    ];
-
-    const METADATA_NAMES = [
-        'identity' => [
-            'name' => 1,
-            'family' => 2,
-            'nickname' => 3,
-            'age' => 4,
-            'gender' => 5,
-            'birthdate' => 6,
-            'picture' => 8,
-            'national' => 9
-        ],
-        'position' => [
-            'country' => 1,
-            'state' => 2,
-            'city' => 3,
-            'streetname' => 4,
-            'streetnumber' => 5,
-            'residence' => 6,
-            'coordinates' => 9,
-        ],
-        'contact' => [
-            'email' => 1,
-            'instant' => 2,
-            'social' => 3,
-            'phone' => 4,
-            'postal' => 5
-        ],
-    ];
-
     public function __construct(string $domain, string $path)
     {
         $this->service_domain = $domain;
@@ -118,10 +40,10 @@ class ResponseHandler
         $request_parts = [];
 
         // Parse the request URI.
-        @preg_match(self::REGEXP_REQUEST, $request_uri, $request_parts);
-        @preg_match(self::REGEXP_PARAMETERS, $request_parts['parameters'], $request_parts['parameters']);
-        @preg_match(self::REGEXP_METADATA, $request_parts['parameters']['required'], $request_parts['parameters']['required']);
-        @preg_match(self::REGEXP_METADATA, $request_parts['parameters']['optional'], $request_parts['parameters']['optional']);
+        @preg_match(API::REGEXP_REQUEST, $request_uri, $request_parts);
+        @preg_match(API::REGEXP_PARAMETERS, $request_parts['parameters'], $request_parts['parameters']);
+        @preg_match(API::REGEXP_METADATA, $request_parts['parameters']['required'], $request_parts['parameters']['required']);
+        @preg_match(API::REGEXP_METADATA, $request_parts['parameters']['optional'], $request_parts['parameters']['optional']);
 
         // TODO: Make this pretty. It removes the numeric index that preg_match makes despite named group matching.
         foreach ($request_parts as $key => $value) {
@@ -196,7 +118,7 @@ class ResponseHandler
 
             // Validate if the required field 'signature' exists.
             if (!isset($responseObject['signature'])) {
-                throw new InternalException("Response data is missing required 'signature' property.", self::STATUS_CODES['RESPONSE_MISSING_SIGNATURE']);
+                throw new InternalException("Response data is missing required 'signature' property.", API::STATUS_CODES['RESPONSE_MISSING_SIGNATURE']);
             }
 
             // Parse the request.
@@ -204,37 +126,37 @@ class ResponseHandler
 
             // Validate overall structure.
             if ($parsedRequest === false) {
-                throw new InternalException("Internal server error, could not evaluate request structure.", self::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
+                throw new InternalException("Internal server error, could not evaluate request structure.", API::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
             } elseif ($parsedRequest == 0) {
-                throw new InternalException("Request URI is invalid.", self::STATUS_CODES['REQUEST_BROKEN']);
+                throw new InternalException("Request URI is invalid.", API::STATUS_CODES['REQUEST_BROKEN']);
             }
 
             // Validate the request scheme.
             if (!isset($parsedRequest['scheme'])) {
-                throw new InternalException("Request scheme is invalid, should be 'cashid:'.", self::STATUS_CODES['REQUEST_MALFORMED_SCHEME']);
+                throw new InternalException("Request scheme is invalid, should be 'cashid:'.", API::STATUS_CODES['REQUEST_MALFORMED_SCHEME']);
             }
 
             // TODO: Validate the domain structure.
 
             // Validate the request domain.
             if ($parsedRequest['domain'] != $this->service_domain) {
-                throw new InternalException("Request domain '{$parsedRequest['domain']}' is invalid, this service uses '" . $this->service_domain . "'.", self::STATUS_CODES['REQUEST_INVALID_DOMAIN']);
+                throw new InternalException("Request domain '{$parsedRequest['domain']}' is invalid, this service uses '" . $this->service_domain . "'.", API::STATUS_CODES['REQUEST_INVALID_DOMAIN']);
             }
 
             // Validate the parameter structure
             if ($parsedRequest['parameters'] === false) {
-                throw new InternalException("Internal server error, could not evaluate request parameters.", self::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
+                throw new InternalException("Internal server error, could not evaluate request parameters.", API::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
             } elseif ($parsedRequest['parameters'] == 0) {
-                throw new InternalException("Request parameters are invalid.", self::STATUS_CODES['REQUEST_BROKEN']);
+                throw new InternalException("Request parameters are invalid.", API::STATUS_CODES['REQUEST_BROKEN']);
             }
 
             // Validate the existance of a nonce.
             if (!isset($parsedRequest['parameters']['nonce'])) {
-                throw new InternalException("Request parameter 'nonce' is missing.", self::STATUS_CODES['REQUEST_MISSING_NONCE']);
+                throw new InternalException("Request parameter 'nonce' is missing.", API::STATUS_CODES['REQUEST_MISSING_NONCE']);
             }
 
             // Locally store if the request action is a user-initiated action.
-            $user_initiated_request = isset(self::USER_ACTIONS[$parsedRequest['parameters']['action']]);
+            $user_initiated_request = isset(API::USER_ACTIONS[$parsedRequest['parameters']['action']]);
 
             // Locally store values to compare with nonce timestamp to validate recency.
             // NOTE: current time is set to 1 minute in the future to allow for minor clock drift.
@@ -245,7 +167,7 @@ class ResponseHandler
 
             // Validate if a user initiated request is a recent and valid timestamp...
             if ($user_initiated_request and (($parsedRequest['parameters']['nonce'] < $recent_time) or ($parsedRequest['parameters']['nonce'] > $current_time))) {
-                throw new InternalException("Request nonce for user initated action is not a valid and recent timestamp.", self::STATUS_CODES['REQUEST_INVALID_NONCE']);
+                throw new InternalException("Request nonce for user initated action is not a valid and recent timestamp.", API::STATUS_CODES['REQUEST_INVALID_NONCE']);
             }
 
             // Try to load the request from the apcu object cache.
@@ -253,22 +175,22 @@ class ResponseHandler
 
             // Validate that the request was issued by this service provider.
             if (!$user_initiated_request and ($requestReference === false)) {
-                throw new InternalException("The request nonce was not issued by this service.", self::STATUS_CODES['REQUEST_INVALID_NONCE']);
+                throw new InternalException("The request nonce was not issued by this service.", API::STATUS_CODES['REQUEST_INVALID_NONCE']);
             }
 
             // Validate if the request is available
             if (!$user_initiated_request and ($requestReference['available'] === false)) {
-                throw new InternalException("The request nonce was not issued by this service.", self::STATUS_CODES['NONCE_CONSUMED']);
+                throw new InternalException("The request nonce was not issued by this service.", API::STATUS_CODES['NONCE_CONSUMED']);
             }
 
             // Validate if the request has expired.
             if (!$user_initiated_request and ($requestReference['expires'] < time())) {
-                throw new InternalException("The request has expired and is no longer available.", self::STATUS_CODES['REQUEST_EXPIRED']);
+                throw new InternalException("The request has expired and is no longer available.", API::STATUS_CODES['REQUEST_EXPIRED']);
             }
 
             // Validate that the request has not been tampered with.
             if (!$user_initiated_request and ($requestReference['request'] != $responseObject['request'])) {
-                throw new InternalException("The response does not match the request parameters.", self::STATUS_CODES['REQUEST_ALTERED']);
+                throw new InternalException("The response does not match the request parameters.", API::STATUS_CODES['REQUEST_ALTERED']);
             }
 
             // Send the request parts to bitcoind for signature verification.
@@ -279,7 +201,7 @@ class ResponseHandler
 
             // Validate the signature.
             if ($verificationStatus !== true) {
-                throw new InternalException("Signature verification failed.", self::STATUS_CODES['RESPONSE_INVALID_SIGNATURE']);
+                throw new InternalException("Signature verification failed.", API::STATUS_CODES['RESPONSE_INVALID_SIGNATURE']);
             }
 
             // Initialize an empty list of missing metadata.
@@ -296,7 +218,7 @@ class ResponseHandler
 
             // Validate if there was missing metadata.
             if (count($missing_fields) >= 1) {
-                throw new InternalException("The required metadata field(s) '" . implode(', ', $missing_fields) . "' was not provided.", self::STATUS_CODES['RESPONSE_MISSING_METADATA']);
+                throw new InternalException("The required metadata field(s) '" . implode(', ', $missing_fields) . "' was not provided.", API::STATUS_CODES['RESPONSE_MISSING_METADATA']);
             }
 
             // Loop over the supplied metadata fields.
@@ -304,24 +226,24 @@ class ResponseHandler
                 foreach ($responseObject['metadata'] as $metadata_name => $metadata_value) {
                     // Validate if the supplied metadata was requested
                     if (!isset($parsedRequest['parameters']['required'][$metadata_name]) and !isset($parsedRequest['parameters']['optional'][$metadata_name])) {
-                        throw new InternalException("The metadata field '{$metadata_name}' was not part of the request.", self::STATUS_CODES['RESPONSE_INVALID_METADATA']);
+                        throw new InternalException("The metadata field '{$metadata_name}' was not part of the request.", API::STATUS_CODES['RESPONSE_INVALID_METADATA']);
                     }
 
                     // Validate if the supplied value is empty.
                     if ($metadata_value == "" or $metadata_value === null) {
-                        throw new InternalException("The metadata field '{$metadata_name}' did not contain any value.", self::STATUS_CODES['RESPONSE_MALFORMED_METADATA']);
+                        throw new InternalException("The metadata field '{$metadata_name}' did not contain any value.", API::STATUS_CODES['RESPONSE_MALFORMED_METADATA']);
                     }
                 }
             }
 
             // Store the response object in local cache.
             if (!apcu_store("cashid_response_{$parsedRequest['parameters']['nonce']}", $responseObject)) {
-                throw new InternalException("Internal server error, could not store response object.", self::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
+                throw new InternalException("Internal server error, could not store response object.", API::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
             }
 
             // Store the confirmation object in local cache.
             if (!apcu_store("cashid_confirmation_{$parsedRequest['parameters']['nonce']}", self::$statusConfirmation)) {
-                throw new InternalException("Internal server error, could not store confirmation object.", self::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
+                throw new InternalException("Internal server error, could not store confirmation object.", API::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
             }
 
             // Add the action and data parameters to the response structure.
