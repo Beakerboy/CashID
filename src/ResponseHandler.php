@@ -132,8 +132,8 @@ class ResponseHandler
             }
 
             // Validate the request scheme.
-            if (!isset($parsedRequest['scheme'])) {
-                throw new InternalException("Request scheme is invalid, should be 'cashid:'.", API::STATUS_CODES['REQUEST_MALFORMED_SCHEME']);
+            if ($parsedRequest['scheme'] !== 'cashid') {
+                throw new InternalException("Request scheme '{$parsedRequest['scheme']}' is invalid, should be 'cashid:'.", API::STATUS_CODES['REQUEST_MALFORMED_SCHEME']);
             }
 
             // TODO: Validate the domain structure.
