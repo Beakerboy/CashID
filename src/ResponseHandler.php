@@ -132,7 +132,7 @@ class ResponseHandler
             }
 
             // Validate the request scheme.
-            if ($parsedRequest['scheme'] !== 'cashid') {
+            if ($parsedRequest['scheme'] !== 'cashid:') {
                 throw new InternalException("Request scheme '{$parsedRequest['scheme']}' is invalid, should be 'cashid:'.", API::STATUS_CODES['REQUEST_MALFORMED_SCHEME']);
             }
 
