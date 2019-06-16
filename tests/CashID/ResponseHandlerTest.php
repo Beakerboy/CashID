@@ -102,7 +102,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     {
         // PHPUnit has already sent headers at this point
         $this->expectException(\Exception::class);
-        $this->cashid->confirmRequest();
+        $this->handler->confirmRequest();
     }
     
     /**
@@ -112,6 +112,17 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     public function testConfirmRequestNotVerifiedException()
     {
         $this->expectException(\Exception::class);
-        $this->cashid->confirmRequest();
+        $this->handler->confirmRequest();
+    }
+
+    /**
+     * @testCase ConfirmRequestNotVerifiedException
+     * @runInSeparateProcess
+     */
+    public function testInvalidateRequest()
+    {
+        $this->handler->invalidateRequest(142, 'test');
+        $this->expectOutputString(json_encode(["status" => 142, "message" => "test"]));
+        $this->handler->confirmRequest();
     }
 }
