@@ -78,7 +78,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                 }',
                 [
                      "status" => 121,
-                     "message" => "Request scheme 'cashid1' is invalid, should be 'cashid:'.",
+                     "message" => "Request scheme 'cashid1:' is invalid, should be 'cashid:'.",
                 ],
             ],
             [  // Missing nonce
