@@ -1,6 +1,6 @@
 <?php
 
-namespace CashID;
+namespace CashID\Tests\CashID;
 
 use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
 
@@ -19,5 +19,6 @@ class ResponseGenerator
     
     private function signMessage(string $message): string
     {
+        return $this->bitcoinECDSA->signMessage($message, true);
     }
 }
