@@ -3,7 +3,7 @@ namespace CashID\Tests\CashID;
 
 use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
 use CashID\RequestGenerator;
-use CashID\ReaponseHandler;
+use CashID\ResponseHandler;
 
 class CashIDTest extends \PHPUnit\Framework\TestCase
 {
