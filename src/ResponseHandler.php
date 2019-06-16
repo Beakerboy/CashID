@@ -93,7 +93,7 @@ class ResponseHandler
     {
         // Initalized an assumed successful status.
         self::$statusConfirmation = [
-            'status' => self::STATUS_CODES['SUCCESSFUL'],
+            'status' => API::STATUS_CODES['SUCCESSFUL'],
             'message' => '',
         ];
 
@@ -103,17 +103,17 @@ class ResponseHandler
 
             // Validate that the response is JSON encoded.
             if ($responseObject === null) {
-                throw new InternalException("Response data is not a valid JSON object.", self::STATUS_CODES['RESPONSE_BROKEN']);
+                throw new InternalException("Response data is not a valid JSON object.", API::STATUS_CODES['RESPONSE_BROKEN']);
             }
 
             // Validate if the required field 'request' exists.
             if (!isset($responseObject['request'])) {
-                throw new InternalException("Response data is missing required 'request' property.", self::STATUS_CODES['RESPONSE_MISSING_REQUEST']);
+                throw new InternalException("Response data is missing required 'request' property.", API::STATUS_CODES['RESPONSE_MISSING_REQUEST']);
             }
 
             // Validate if the required field 'address' exists.
             if (!isset($responseObject['address'])) {
-                throw new InternalException("Response data is missing required 'address' property.", self::STATUS_CODES['RESPONSE_MISSING_ADDRESS']);
+                throw new InternalException("Response data is missing required 'address' property.", API::STATUS_CODES['RESPONSE_MISSING_ADDRESS']);
             }
 
             // Validate if the required field 'signature' exists.
@@ -122,7 +122,7 @@ class ResponseHandler
             }
 
             // Parse the request.
-            $parsedRequest = self::parseRequest($responseObject['request']);
+            $parsedRequest = $this->parseRequest($responseObject['request']);
 
             // Validate overall structure.
             if ($parsedRequest === false) {
