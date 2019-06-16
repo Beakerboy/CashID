@@ -122,7 +122,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     public function testInvalidateRequest()
     {
         $this->handler->invalidateRequest(142, 'test');
-        $this->expectOutputString(json_encode(["status" => 142, "message" => "test"]));
+        $this->expectOutputString(json_encode(["status" => "142", "message" => "test"]));
         $this->handler->confirmRequest();
     }
 }
