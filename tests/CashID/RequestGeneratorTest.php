@@ -15,7 +15,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testConstructor()
     {
-        $this->assertInstanceOf(RequestGenerator::class);
+        $this->assertInstanceOf(RequestGenerator::class, $this->generator);
     }
     
     /**
