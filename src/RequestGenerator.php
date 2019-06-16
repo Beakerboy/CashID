@@ -5,7 +5,7 @@ namespace CashID;
 /**
  * Simple CashID support library that can issue requests.
  */
-class RequestGenrator
+class RequestGenerator
 {
     protected $service_domain;
     protected $service_path;
