@@ -19,6 +19,5 @@ class ResponseGenerator
     
     private function signMessage(string $message): string
     {
-        
     }
 }
