@@ -105,48 +105,6 @@ class ResponseHandler
         $this->service_domain = $domain;
         $this->service_path = $path;
     }
-    
-    /**
-     * Creates a metadata request string part from a metadata array
-     *
-     * @param {Array} metadata - Array with requested and optional metadata
-     * @return {string} returns the request metadata part
-     */
-    private function encodeRequestMetadata(array $metadata): string
-    {
-        // Initialize an empty metadata string.
-        $metadata_string = "";
-
-        // Iterate over the available metadata names.
-        foreach (self::METADATA_NAMES as $metadata_type => $metadata_fields) {
-            // Store the first letter of the metadata type.
-            $metadata_letter = substr($metadata_type, 0, 1);
-
-            // Initialize an empty metadata part string.
-            $metadata_part = "";
-
-            //
-            if (isset($metadata[$metadata_type])) {
-                // Iterate over each field of this metadata type.
-                foreach ($metadata_fields as $field_name => $field_code) {
-                    // If this field was requested..
-                    if (in_array($field_name, $metadata[$metadata_type])) {
-                        // .. add it to the metadata part.
-                        $metadata_part .= $field_code;
-                    }
-                }
-
-                // If, after checking for requested metadata of this type, some matches were found..
-                if ($metadata_part !== "") {
-                    // Add the letter and numbers matching the requested metadata to the metadata string.
-                    $metadata_string .= "{$metadata_letter}{$metadata_part}";
-                }
-            }
-        }
-
-        // Return the filled in metadata string.
-        return $metadata_string;
-    }
 
     /**
      * Parses a request string and returns a request array.
