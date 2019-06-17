@@ -142,7 +142,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     public function testInvalidSignedResponse(array $request, array $response_array)
     {
         $json_request = $this->generator->createRequest($request['action'], $request['data'], $request['metadata']);
-        $response = $this->response_generator-createResponse($request);
+        $response = $this->response_generator->createResponse($request);
         $this->assertFalse($this->handler->validateRequest($response));
         $this->expectOutputString(json_encode($response_array));
         $this->handler->confirmRequest();
