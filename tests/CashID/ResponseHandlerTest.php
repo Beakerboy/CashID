@@ -166,7 +166,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                 ],
                 [
                     'status' => 214,
-                    'message' => 'The required metadata field(s) 'nickname' was not provided.',
+                    'message' => "The required metadata field(s) 'nickname' was not provided.",
                 ],
             ],
         ];
