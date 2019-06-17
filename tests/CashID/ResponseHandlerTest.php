@@ -44,6 +44,74 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @testCase testParseRequest
+     * @dataProvider dataProviderForTestParseRequest
+     */
+    public funtion testParseRequest(string $request, array $expected_array)
+    {
+        $result = $this->handler->parseRequest($request);
+        $this->assertEquals($expected_array, $result);
+    }
+
+    public function dataProviderForTestParseRequest()
+    {
+        return [
+            [
+                '',
+                [
+                    "parameters" => [
+                        "action" => "login",
+                        "data" => "15366-4133-6141-9638",
+                        "optional" => [
+                            "position" => "",
+                            'identification' => '',
+                            'name' => '',
+                            'family' => '',
+                            'nickname' => '',
+                            'age' => '',
+                            'gender' => '',
+                            'birthdate' => '',
+                            'picture' => '',
+                            'national' => '',
+                            'country' => '',
+                            'state' => '',
+                            'city' => '',
+                            'streetname' => '4',
+                        ],
+                        "required" => [
+                            'contact' => '',
+                            'identification' => '',
+                            'name' => '',
+                            'family' => '',
+                            'nickname' => '',
+                            'age' => '',
+                            'gender' => '',
+                            'birthdate' => '',
+                            'picture' => '',
+                            'national' => '',
+                            'position' => '',
+                            'country' => '',
+                            'state' => '',
+                            'city' => '',
+                            'streetname' => '',
+                            'streetnumber' => '',
+                            'residence' => '',
+                            'coordinate' => '',
+                            'email' => '',
+                            'instant' => '',
+                            'social' => '3'
+                        ],
+                        'nonce' => $nonce,
+                    ],
+                    'scheme' => 'cashid:',
+                    'domain' => 'demo.cashid.info',
+                    'path' => '/api/parse.php',
+                ],
+            ],
+        ];
+    }
+
+    /**
      * @testCase testInvalidResponse
      * @runInSeparateProcess
      * @dataProvider dataProviderForInvalidResponse
