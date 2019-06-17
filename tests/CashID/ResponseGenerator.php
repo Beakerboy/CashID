@@ -39,7 +39,7 @@ class ResponseGenerator
         return [
             'request' => $request_string,
             'address' => $this->cashaddr,
-            'signature' => $this->signMessage($this->request),
+            'signature' => $this->signMessage($request_string),
             'metadata' => [],
         ];
     }
