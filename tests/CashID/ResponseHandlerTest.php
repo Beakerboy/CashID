@@ -47,7 +47,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      * @testCase testParseRequest
      * @dataProvider dataProviderForTestParseRequest
      */
-    public funtion testParseRequest(string $request, array $expected_array)
+    public function testParseRequest(string $request, array $expected_array)
     {
         $result = $this->handler->parseRequest($request);
         $this->assertEquals($expected_array, $result);
