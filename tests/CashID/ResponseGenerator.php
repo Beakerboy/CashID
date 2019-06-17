@@ -15,11 +15,12 @@ class ResponseGenerator
 
     public function createResponse($request_string): string
     {
-        // $private_key = 
-        // covert key to cashaddr
+        $converter = new \Submtd\CashaddrConverter\CashaddrConverter();
+        $cashaddr = $converter->convertToCashaddr($this->bitcoinECDSA->getWif());
+        
         return [
             "request" => $this->request,
-            "address" => $cashaddr_key,
+            "address" => $cashaddr,
             "signature" => $this->signMessage($this->request),
         ];
     }
