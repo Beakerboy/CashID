@@ -155,12 +155,12 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                 [
                     'action' => 'login',
                     'data' => '987',
-                    'metadata => [
-                        "optional" => [
-                            "position"=> ["streetname"],
+                    'metadata' => [
+                        'optional' => [
+                            'position' => ['streetname'],
                         ],
-                        "required" => [
-                            "identity"=> ["nickname"],
+                        'required' => [
+                            'identity' => ['nickname'],
                         ],
                     ],
                 ],
