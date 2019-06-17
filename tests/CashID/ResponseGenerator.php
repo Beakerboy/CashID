@@ -47,7 +47,7 @@ class ResponseGenerator
         ];
     }
 
-    public function createJSONResponse($request_string, $include_optional = true);
+    public function createJSONResponse($request_string, $include_optional = true)
     {
         return json_encode(createResponse($request_string, $include_optional = true));
     }
