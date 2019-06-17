@@ -37,9 +37,10 @@ class ResponseGenerator
         $converter = new \Submtd\CashaddrConverter\CashaddrConverter();
         
         return [
-            "request" => $request_string,
-            "address" => $cashaddr,
-            "signature" => $this->signMessage($this->request),
+            'request' => $request_string,
+            'address' => $this->cashaddr,
+            'signature' => $this->signMessage($this->request),
+            'metadata' => [],
         ];
     }
 
