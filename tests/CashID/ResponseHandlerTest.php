@@ -2,12 +2,40 @@
 
 namespace CashID\Tests\CashID;
 
+use CashID\RequestGenerator;
 use CashID\ResponseHandler;
+use CashID\Tests\CashID\ResponseGenerator;
 
 class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
+        $metadata = [
+            'identity' => [
+                'name' => 'Alice',
+                'family' => 'Smith',
+                'nickname' => 'ajsmith',
+                'age' => 20,
+                'gender' => 'female',
+                'birthdate' => '1999-01-01',
+                'national' => 'USA',
+            ],
+            'position' => [
+                'country' => 'USA',
+                'state' => 'CA',
+                'city' => 'Los Angeles',
+                'streetname' => 'Main',
+                'streetnumber' => '123',
+            ],
+            'contact' => [
+                'email' => 'ajsmith@example.com',
+                'social' => '123-45-6789',
+                'phone' => '123-123-1234',
+                'postal' => '12345',
+            ],
+        ];
+        $this->response_generator = new ResponseGenerator($metadata);
+        $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
         $this->handler = new ResponseHandler("demo.cashid.info", "/api/parse.php");
     }
 
@@ -101,6 +129,44 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                 [
                      "status" => 132,
                      "message" => "The request nonce was not issued by this service.",
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @testCase testInvalidSignedResponse
+     * @runInSeparateProcess
+     * @dataProvider dataProviderForInvalidSignedResponse
+     */
+    public function testInvalidSignedResponse(array $request, array $response_array)
+    {
+        $json_request = $this->generator->createRequest($request['action'], $request['data'], $request['metadata']);
+        $response = $this->response_generator-createResponse($request);
+        $this->assertFalse($this->handler->validateRequest($response));
+        $this->expectOutputString(json_encode($response_array));
+        $this->handler->confirmRequest();
+    }
+
+    public function dataProviderForInvalidSignedResponse()
+    {
+        return [
+            [ // Missing required field
+                [
+                    'action' => 'login',
+                    'data' => '987',
+                    'metadata => [
+                        "optional" => [
+                            "position"=> ["streetname"],
+                        ],
+                        "required" => [
+                            "identity"=> ["nickname"],
+                        ],
+                    ],
+                ],
+                [
+                    'status' => 214,
+                    'message' => 'The required metadata field(s) 'nickname' was not provided.',
                 ],
             ],
         ];
