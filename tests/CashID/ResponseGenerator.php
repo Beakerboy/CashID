@@ -24,15 +24,18 @@ class ResponseGenerator
     /**
      * Create a response
      *
-     * A JSON array is returned that includes all the required information
+     * An array is returned that includes all the required information
      * in the CashID request. The $include_optional parameter determines
      * if all or none of the optional fields are returned.
      *
+     * todo: handle cases where the required field in not in the object’s
+     *  metadata collection.
+     *
      * @param array $request
      * @param boolean $include_optional
-     * @returns string
+     * @returns array
      */
-    public function createResponse($request_string, $include_optional = true): string
+    public function createResponse($request_string, $include_optional = true): array
     {
         $converter = new \Submtd\CashaddrConverter\CashaddrConverter();
         
@@ -42,6 +45,11 @@ class ResponseGenerator
             'signature' => $this->signMessage($request_string),
             'metadata' => [],
         ];
+    }
+
+    public function createJSONResponse($request_string, $include_optional = true);
+    {
+        return json_encode(createResponse($request_string, $include_optional = true));
     }
 
     /**
