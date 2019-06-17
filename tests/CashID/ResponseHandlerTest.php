@@ -2,15 +2,19 @@
 
 namespace CashID\Tests\CashID;
 
+use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
 use CashID\RequestGenerator;
 use CashID\ResponseHandler;
-use CashID\Tests\CashID\ResponseGenerator;
+use CashID\Tests\ResponseGenerator;
 
 class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
-        $metadata = [
+        $this->bitcoinECDSA = new BitcoinECDSA();
+        $this->bitcoinECDSA->setPrivateKeyWithWif('L1M8W4jMqqu5h24Nzxf1sy5eHo2aSxdwab8h1fkP5Pt9ATfnxfda');
+        $this->cashaddr = 'qpjvm3u8cvjddupctguwatrlaxtutprg8s04ekldyr';
+        $this->metadata = [
             'identity' => [
                 'name' => 'Alice',
                 'family' => 'Smith',
@@ -34,8 +38,8 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                 'postal' => '12345',
             ],
         ];
-        $this->response_generator = new ResponseGenerator($metadata);
         $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+        $this->response_generator = new ResponseGenerator($this->metadata);
         $this->handler = new ResponseHandler("demo.cashid.info", "/api/parse.php");
     }
 
@@ -139,12 +143,18 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      * @runInSeparateProcess
      * @dataProvider dataProviderForInvalidSignedResponse
      */
-    public function testInvalidSignedResponse(array $request, array $response_array)
+    public function testInvalidSignedResponse(array $request, array $response, array $confimation)
     {
         $json_request = $this->generator->createRequest($request['action'], $request['data'], $request['metadata']);
-        $response = $this->response_generator->createResponse($request);
-        $this->assertFalse($this->handler->validateRequest($response));
-        $this->expectOutputString(json_encode($response_array));
+        $json_response = $this->response_generator->createResponse($json_request);
+        $response_array = json_decode($json_response);
+
+        // Replace the correct values with values from the dataProvider
+        foreach ($response as $key => $value) {
+            $response_array[$key] = $value;
+        }
+        $this->assertFalse($this->handler->validateRequest(json_encode($response_array)));
+        $this->expectOutputString(json_encode($confirmation));
         $this->handler->confirmRequest();
     }
 
@@ -162,6 +172,11 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                         'required' => [
                             'identity' => ['nickname'],
                         ],
+                    ],
+                ],
+                [
+                    'metadata' => [
+                        'streetname' => 'Main',
                     ],
                 ],
                 [
