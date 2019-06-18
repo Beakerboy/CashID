@@ -57,12 +57,12 @@ class ResponseHandler
             }
         }
         foreach ($request_parts['parameters']['required'] as $key => $value) {
-            if (is_int($key)) {
+            if (is_int($key) || $request_parts['parameters']['required'][$key] === '') {
                 unset($request_parts['parameters']['required'][$key]);
             }
         }
         foreach ($request_parts['parameters']['optional'] as $key => $value) {
-            if (is_int($key)) {
+            if (is_int($key) || $request_parts['parameters']['optional'][$key] === '') {
                 unset($request_parts['parameters']['optional'][$key]);
             }
         }
