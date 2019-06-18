@@ -37,8 +37,6 @@ class ResponseGenerator
      */
     public function createResponse($request_string, $include_optional = true): array
     {
-        $converter = new \Submtd\CashaddrConverter\CashaddrConverter();
-        
         // Parse the request string to see what metadata is needed
         // First pull out all parameters
         $response_array = \CashID\ResponseHandler::parseRequest($request_string);
