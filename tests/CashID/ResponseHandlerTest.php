@@ -242,6 +242,30 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                     'message' => "The metadata field 'streetname' was not part of the request.",
                 ],
             ],
+            [ // Extra optional field
+                [
+                    'action' => 'login',
+                    'data' => '987',
+                    'metadata' => [
+                        'optional' => [
+                            'position' => ['streetnumber'],
+                        ],
+                        'required' => [
+                            'identity' => ['nickname'],
+                        ],
+                    ],
+                ],
+                [
+                    'metadata' => [
+                        'streetnumber' => '',
+                        'nickname' => 'ajsmith',
+                    ],
+                ],
+                [
+                    'status' => 233,
+                    'message' => "The metadata field 'streetnumber' did not contain any value.",
+                ],
+            ],
         ];
     }
 
