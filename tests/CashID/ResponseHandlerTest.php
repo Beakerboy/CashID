@@ -126,17 +126,6 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                      "message" => "Response data is missing required 'signature' property.",
                 ],
             ],
-            [  // Failed Signature
-                '{
-                    "request": "cashid:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581",
-                    "address": "qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4",
-                    "signature": "IKjtNWdNp+tofJQrhxBrq91jLwdmOVNlMhfnKRiaC2t2C7vqsHRoUA+BkdgjnOqX6hv4ZdeG9ZpB6dMh/sXJg/0="
-                }',
-                [
-                     "status" => 222,
-                     "message" => "Signature verification failed.",
-                ],
-            ],
             [  // Mismatched domain
                 '{
                     "request": "cashid:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581",
@@ -179,6 +168,17 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                 [
                      "status" => 132,
                      "message" => "The request nonce was not issued by this service.",
+                ],
+            ],
+            [  // Failed Signature
+                '{
+                    "request": "cashid:demo.cashid.info/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581",
+                    "address": "qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4",
+                    "signature": "IKjtNWdKp+tofJQrhxBrq91jLwdmOVNlMhfnKRiaC2t2C7vqsHRoUA+BkdgjnOqX6hv4ZdeG9ZpB6dMh/sXJg/0="
+                }',
+                [
+                     "status" => 222,
+                     "message" => "Signature verification failed.",
                 ],
             ],
         ];
