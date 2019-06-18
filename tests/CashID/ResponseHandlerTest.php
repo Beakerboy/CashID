@@ -15,28 +15,22 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         $this->bitcoinECDSA->setPrivateKeyWithWif('L1M8W4jMqqu5h24Nzxf1sy5eHo2aSxdwab8h1fkP5Pt9ATfnxfda');
         $this->cashaddr = 'qpjvm3u8cvjddupctguwatrlaxtutprg8s04ekldyr';
         $this->metadata = [
-            'identity' => [
-                'name' => 'Alice',
-                'family' => 'Smith',
-                'nickname' => 'ajsmith',
-                'age' => 20,
-                'gender' => 'female',
-                'birthdate' => '1999-01-01',
-                'national' => 'USA',
-            ],
-            'position' => [
-                'country' => 'USA',
-                'state' => 'CA',
-                'city' => 'Los Angeles',
-                'streetname' => 'Main',
-                'streetnumber' => '123',
-            ],
-            'contact' => [
-                'email' => 'ajsmith@example.com',
-                'social' => '123-45-6789',
-                'phone' => '123-123-1234',
-                'postal' => '12345',
-            ],
+            'name' => 'Alice',
+            'family' => 'Smith',
+            'nickname' => 'ajsmith',
+            'age' => 20,
+            'gender' => 'female',
+            'birthdate' => '1999-01-01',
+            'national' => 'USA',
+            'country' => 'USA',
+            'state' => 'CA',
+            'city' => 'Los Angeles',
+            'streetname' => 'Main',
+            'streetnumber' => '123',
+            'email' => 'ajsmith@example.com',
+            'social' => '123-45-6789',
+            'phone' => '123-123-1234',
+            'postal' => '12345',
         ];
         $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
         $this->response_generator = new ResponseGenerator($this->metadata);
