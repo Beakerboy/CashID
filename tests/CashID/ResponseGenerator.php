@@ -53,7 +53,8 @@ class ResponseGenerator
         // Initialize the array
         $return_meta = [];
         
-        // Loop through the optional and required values and 
+        // Loop through the optional and required values and
+        // save the requested fields.
         foreach ($meta_keys as $key => $value) {
             $return_meta[$key] = $this->metadata[$key];
         }
