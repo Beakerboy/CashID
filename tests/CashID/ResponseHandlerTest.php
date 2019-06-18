@@ -262,7 +262,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                     ],
                 ],
                 [
-                    'status' => 233,
+                    'status' => 223,
                     'message' => "The metadata field 'streetnumber' did not contain any value.",
                 ],
             ],
