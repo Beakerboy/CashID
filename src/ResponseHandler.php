@@ -34,7 +34,7 @@ class ResponseHandler
      * @param {String} request_url - the full request URI to parse
      * @return {Array} returns a request array populated based on the request_url string
      */
-    public function parseRequest(string $request_uri): array
+    public static function parseRequest(string $request_uri): array
     {
         // Initialize empty structure
         $request_parts = [];
@@ -122,7 +122,7 @@ class ResponseHandler
             }
 
             // Parse the request.
-            $parsedRequest = $this->parseRequest($responseObject['request']);
+            $parsedRequest = self::parseRequest($responseObject['request']);
 
             // Validate overall structure.
             if ($parsedRequest === false) {
