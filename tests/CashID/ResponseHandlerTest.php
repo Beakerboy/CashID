@@ -57,12 +57,26 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     {
         return [
             [
-                'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c3&o=l4&x=95261230581',
+                'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c3&o=p4&x=95261230581',
                 [
                     "parameters" => [
                         "action" => "login",
                         "data" => "15366-4133-6141-9638",
                         "optional" => [
+                            "position" => "",
+                            'identification' => '',
+                            'name' => '',
+                            'family' => '',
+                            'nickname' => '',
+                            'age' => '',
+                            'gender' => '',
+                            'birthdate' => '',
+                            'picture' => '',
+                            'national' => '',
+                            'country' => '',
+                            'state' => '',
+                            'city' => '',
+                            'streetname' => '4',
                         ],
                         "required" => [
                             'contact' => '',
