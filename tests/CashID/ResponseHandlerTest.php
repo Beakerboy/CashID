@@ -57,7 +57,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     {
         return [
             [
-                '',
+                'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c3&o=l4&x=95261230581',
                 [
                     "parameters" => [
                         "action" => "login",
@@ -101,7 +101,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                             'instant' => '',
                             'social' => '3'
                         ],
-                        'nonce' => $nonce,
+                        'nonce' => '95261230581',
                     ],
                     'scheme' => 'cashid:',
                     'domain' => 'demo.cashid.info',
