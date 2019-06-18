@@ -260,6 +260,27 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                     'message' => "The metadata field 'streetnumber' did not contain any value.",
                 ],
             ],
+            [ // Incorrect Signature
+                [
+                    'action' => 'login',
+                    'data' => '987',
+                    'metadata' => [
+                        'optional' => [
+                            'position' => ['streetnumber'],
+                        ],
+                        'required' => [
+                            'identity' => ['nickname'],
+                        ],
+                    ],
+                ],
+                [
+                    'signature' => 'Bad',
+                ],
+                [
+                    'status' => 233,
+                    'message' => "Signature verification failed.",
+                ],
+            ],
         ];
     }
 
