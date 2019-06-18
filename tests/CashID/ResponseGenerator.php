@@ -38,12 +38,31 @@ class ResponseGenerator
     public function createResponse($request_string, $include_optional = true): array
     {
         $converter = new \Submtd\CashaddrConverter\CashaddrConverter();
+        $handler = new \CashID\ResponseHandler();
         
+        // Parse the request string to see what metadata is needed
+        // First pull out all parameters
+        $response_array =  $handler->parseRequest($request_string);
+        
+        $meta_keys = $response_array['parameters']['required'];
+        
+        // Merge together the optional and required parameters
+        if ($include_optional) {
+            $meta_keys = array_merge($response_array['parameters']['optional'], $meta_keys);
+        }
+        
+        // Initialize the array
+        $return_meta = [];
+        
+        // Loop through the optional and required values and 
+        foreach ($meta_keys as $key => $value) {
+            $return_meta[$key] = $this->metadata[$key];
+        }
         return [
             'request' => $request_string,
             'address' => $this->cashaddr,
             'signature' => $this->signMessage($request_string),
-            'metadata' => [],
+            'metadata' => $return_meta,
         ];
     }
 
