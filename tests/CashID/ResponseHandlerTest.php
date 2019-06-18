@@ -170,17 +170,6 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                      "message" => "The request nonce was not issued by this service.",
                 ],
             ],
-            [  // Failed Signature
-                '{
-                    "request": "cashid:demo.cashid.info/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581",
-                    "address": "qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4",
-                    "signature": "IKjtNWdKp+tofJQrhxBrq91jLwdmOVNlMhfnKRiaC2t2C7vqsHRoUA+BkdgjnOqX6hv4ZdeG9ZpB6dMh/sXJg/0="
-                }',
-                [
-                     "status" => 222,
-                     "message" => "Signature verification failed.",
-                ],
-            ],
         ];
     }
 
