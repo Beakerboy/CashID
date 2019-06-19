@@ -19,7 +19,6 @@ class RandOverrider
 
     public static function setRand(array $rand)
     {
-        echo "\nSetting the Rand array\n";
         self::$random_values = $rand;
     }
 
