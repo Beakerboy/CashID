@@ -7,9 +7,8 @@ namespace CashID;
  *
  * There are times when we would like to specify the result of rand() to test edge cases
  */
-function rand(...$params)
+public function rand(...$params)
 {
-    echo "\ncalled rand()\n";
     return RandOverrider::getRand(...$params);
 }
 
