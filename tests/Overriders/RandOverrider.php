@@ -34,6 +34,7 @@ class RandOverrider
 
     public static function setOverride(bool $override)
     {
+        echo "\nSetting override to $override\n";
         self::$override_rand = $override;
     }
 
