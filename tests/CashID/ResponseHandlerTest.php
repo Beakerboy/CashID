@@ -38,6 +38,10 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Test the parseRequest() function
+     *
+     * Ensure the function produces the correct array from the given JSON string.
+     *
      * @testCase testParseRequest
      * @dataProvider dataProviderForTestParseRequest
      */
@@ -73,6 +77,12 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Test failures in the validateRequest() function
+     *
+     * Ensure the function throws the correct exception for malformed requests.
+     * All of these failures occur before the function checks if the nonce was actually
+     * created by the requestGenerator, so we can pass them to validateRequest() in isolation.
+     *
      * @testCase testInvalidResponse
      * @runInSeparateProcess
      * @dataProvider dataProviderForInvalidResponse
@@ -168,21 +178,50 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
+    public function dataProviderForUserInitiatedResponse()
+    {
+        return [
+            [ // Old request
+                '{
+                    "request": "cashid:demo.cashid.info/api/parse.php?a=delete&x=20180929T063418Z",
+                    "address": "qzvelmkfzvq8gw0d4fvmf904ghefq66keq68qwupsv",
+                    "signature": "IDwIyQCsmFKwWWibwtxVqppt+KCDBgTKy4IN8+rL+8a9XtGN/AAl/koKPKnIQOr2/nlzOW9XaxtWP96298XkiJE="
+                 }',
+                 [
+                    'status' => 132,
+                    'message' => 'Request nonce for user initated action is not a valid and recent timestamp.',
+                 ],
+            ],
+        ];
+    }
+
     /**
+     * Test failures in the validateRequest() function.
+     *
+     * Ensure the function throws the correct exception for malformed requests.
+     * All these failures are checked after the signature is checked.
+     *
      * @testCase testInvalidSignedResponse
      * @runInSeparateProcess
      * @dataProvider dataProviderForInvalidSignedResponse
      */
     public function testInvalidSignedResponse(array $request, array $response, array $confirmation)
     {
+        // Create the request from the provided $request array
         $json_request = $this->generator->createRequest($request['action'], $request['data'], $request['metadata']);
+
+        // Create a valid response given the request and the default metadata
         $response_array = $this->response_generator->createResponse($json_request);
 
         // Replace the correct values with values from the dataProvider
         foreach ($response as $key => $value) {
             $response_array[$key] = $value;
         }
+
+        // Verify that the validation fails
         $this->assertFalse($this->handler->validateRequest(json_encode($response_array)));
+
+        // Verify that the correct exception and message is produced
         $this->expectOutputString(json_encode($confirmation));
         $this->handler->confirmRequest();
     }
@@ -285,22 +324,61 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function dataProviderForUserInitiatedResponse()
+    /**
+     * Test failures in the validateRequest() function.
+     *
+     * Ensure that the function correctly identifies tampered requests
+     *
+     * @testCase testTamperedRequest
+     * @runInSeparateProcess
+     * @dataProvider dataProviderForTamperedRequest
+     */
+    public function testTamperedRequest(array $original_request, string $new_request, array $confirmation)
+    {
+        // Create the request from the provided $request array
+        $json_request = $this->generator->createRequest($request['action'], $request['data'], $request['metadata']);
+
+        // Alter the request
+        // Append the nonce from the original request to the new request
+        $new_json_request = $$new_request . substr($json_request, -9);
+        
+        // Create a valid response given the altered request and the default metadata
+        $response_array = $this->response_generator->createResponse($new_json_request);
+
+        // Verify that the validation fails
+        $this->assertFalse($this->handler->validateRequest(json_encode($response_array)));
+
+        // Verify that the correct exception and message is produced
+        $this->expectOutputString(json_encode($confirmation));
+        $this->handler->confirmRequest();
+    }
+
+    public function dataProviderForTamperedRequest()
     {
         return [
-            [ // Old request
-                '{
-                    "request": "cashid:demo.cashid.info/api/parse.php?a=delete&x=20180929T063418Z",
-                    "address": "qzvelmkfzvq8gw0d4fvmf904ghefq66keq68qwupsv",
-                    "signature": "IDwIyQCsmFKwWWibwtxVqppt+KCDBgTKy4IN8+rL+8a9XtGN/AAl/koKPKnIQOr2/nlzOW9XaxtWP96298XkiJE="
-                 }',
-                 [
-                    'status' => 132,
-                    'message' => 'Request nonce for user initated action is not a valid and recent timestamp.',
-                 ],
+            [
+                [
+                    'action' => 'login',
+                    'data' => '987',
+                    'metadata' => [
+                        'optional' => [
+                            'position' => ['streetnumber'],
+                        ],
+                        'required' => [
+                            'identification' => ['nickname'],
+                        ],
+                    ],
+                ],
+                "cashid:demo.cashid.info/api/parse.php?a=login&d=986&r=c3&o=p4&x=",
+                [
+                    'status' => 141,
+                    'message' => "The response does not match the request parameters.",
+                ],
+                
             ],
         ];
     }
+
     /**
      * @testCase ConfirmRequestHeadersSentException
      */
