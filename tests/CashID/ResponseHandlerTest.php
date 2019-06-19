@@ -336,11 +336,11 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     public function testTamperedRequest(array $original_request, string $new_request, array $confirmation)
     {
         // Create the request from the provided $request array
-        $json_request = $this->generator->createRequest($request['action'], $request['data'], $request['metadata']);
+        $json_request = $this->generator->createRequest($original_request['action'], $original_request['data'], $original_request['metadata']);
 
         // Alter the request
         // Append the nonce from the original request to the new request
-        $new_json_request = $$new_request . substr($json_request, -9);
+        $new_json_request = $new_request . substr($json_request, -9);
         
         // Create a valid response given the altered request and the default metadata
         $response_array = $this->response_generator->createResponse($new_json_request);
