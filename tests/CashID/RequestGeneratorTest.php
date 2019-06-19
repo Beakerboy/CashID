@@ -60,6 +60,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     public function testStorageFailure()
     {
         \CashID\APCuStoreOverrider::setOverride();
+        \CashID\APCuStoreOverrider::setValues([false]);
         $request = $this->generator->createRequest();
         \CashID\APCuStoreOverrider::unsetOverride();
         
