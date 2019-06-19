@@ -7,10 +7,10 @@ namespace CashID;
  *
  * There are times when we would like to specify the result of rand() to test edge cases
  */
-function rand()
+function rand(...$params)
 {
     echo "\ncalled rand()\n";
-    return RandOverrider::getRand();
+    return RandOverrider::getRand(...$params);
 }
 
 class RandOverrider
@@ -24,12 +24,12 @@ class RandOverrider
         self::$random_values = $rand;
     }
 
-    public static function getRand()
+    public static function getRand(...$params)
     {
         if (self::$override_rand === true) {
             return array_shift(self::$random_values);
         } else {
-            return \rand(100000000, 999999999);
+            return \rand(...$params);
         }
     }
 
