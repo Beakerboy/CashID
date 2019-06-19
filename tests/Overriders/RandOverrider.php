@@ -25,7 +25,7 @@ class RandOverrider
 
     public static function getRand(...$params)
     {
-        if (self::$override_rand === true) {
+        if (self::$override_rand) {
             return array_shift(self::$random_values);
         } else {
             return \rand(...$params);
@@ -34,13 +34,11 @@ class RandOverrider
 
     public static function setOverride()
     {
-        echo "\nOverrideing rand()\n";
         self::$override_rand = true;
     }
 
     public static function unsetOverride()
     {
-        echo "\nTurn off rand() override\n";
         self::$override_rand = false;
     }
 }
