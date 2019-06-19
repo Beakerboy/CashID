@@ -18,7 +18,10 @@
     "squizlabs/php_codesniffer": "2.*"
   },
   "autoload-dev": {
-    "psr-4": { "CashID\\Tests\\": "tests/" }
+    "psr-4": {
+      "CashID\\Tests\\": "tests/",
+      "CashID\\": "tests/CashID/"
+    }
   },
   "authors": [
     {
