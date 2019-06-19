@@ -36,7 +36,7 @@ class RandOverrider
 
     public static function setOverride()
     {
-        echo "\nOverrideing rand()\n"
+        echo "\nOverrideing rand()\n";
         self::$override_rand = true;
     }
 
