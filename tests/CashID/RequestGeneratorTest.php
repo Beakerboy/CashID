@@ -1,6 +1,7 @@
 <?php
 namespace CashID\Tests\CashID;
 
+use CashID\RandOverrider;
 use CashID\RequestGenerator;
 
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
