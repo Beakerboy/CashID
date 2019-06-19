@@ -42,7 +42,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     public function testRerunDuplicateNonce()
     {
         \CashID\RandOverrider::setOverride();
-        \CashID\RandOverrider::setRand([100000000, 100000000, 100000001]);
+        \CashID\RandOverrider::setValues([100000000, 100000000, 100000001]);
         $request1 = $this->generator->createRequest();
         $request2 = $this->generator->createRequest();
         \CashID\RandOverrider::unsetOverride();
