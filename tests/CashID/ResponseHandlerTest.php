@@ -403,6 +403,54 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Test APCu response storage failure
+     *
+     * @runInSeparateProcess
+     */
+    public function testAPCuResponseFailure()
+    {
+        $json_request = $this->generator->createRequest();
+
+        \CashID\APCuStoreOverrider::setValues([false]);
+        \CashID\TimeOverrider::setOverride();
+
+        // Create the response
+        $response_array = $this->response_generator->createResponse($json_request);
+        \CashID\TimeOverrider::unsetOverride();
+        
+        // Validate storage failure
+        $this->assertFalse($this->handler->validateRequest(json_encode($response_array)));
+
+        // Verify that the correct exception and message is produced
+        $this->expectOutputString('{"status":331,"message":"Internal server error, could not store response object."}');
+        $this->handler->confirmRequest();
+    }
+
+    /**
+     * Test APCu response storage failure
+     *
+     * @runInSeparateProcess
+     */
+    public function testAPCuConfirmationFailure()
+    {
+        $json_request = $this->generator->createRequest();
+
+        \CashID\APCuStoreOverrider::setValues([true, false]);
+        \CashID\TimeOverrider::setOverride();
+
+        // Create the response
+        $response_array = $this->response_generator->createResponse($json_request);
+        \CashID\TimeOverrider::unsetOverride();
+        
+        // Validate storage failure
+        $this->assertFalse($this->handler->validateRequest(json_encode($response_array)));
+
+        // Verify that the correct exception and message is produced
+        $this->expectOutputString('{"status":331,"message":"Internal server error, could not store confirmation object."}');
+        $this->handler->confirmRequest();
+    }
+
+    /**
      * @testCase ConfirmRequestHeadersSentException
      */
     public function testConfirmRequestHeadersSentException()
