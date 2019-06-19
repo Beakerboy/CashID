@@ -86,7 +86,7 @@ class RequestGenerator
      * Creates a metadata request string part from a metadata array
      *
      * The metadata array is in the form:
-     * 
+     *
      * $metadata = [
      *    'identification' => [list, of, fields],
      *    'position' => [list, of, fields],
