@@ -1,5 +1,7 @@
 <?php
+
 namespace CashID;
+
 /**
  * Overriding the PHP core random number generator
  *
