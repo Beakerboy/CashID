@@ -1,13 +1,11 @@
 <?php
 namespace CashID\Tests\CashID;
 
-use CashID\RequestGenerator;
-
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
-        $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+        $this->generator = new \CashID\RequestGenerator("demo.cashid.info", "/api/parse.php");
     }
 
     /**
@@ -15,7 +13,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testConstructor()
     {
-        $this->assertInstanceOf(RequestGenerator::class, $this->generator);
+        $this->assertInstanceOf(\CashID\RequestGenerator::class, $this->generator);
     }
     
     /**
