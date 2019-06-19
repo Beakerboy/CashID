@@ -299,7 +299,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                     'message' => 'Request nonce for user initated action is not a valid and recent timestamp.',
                  ],
             ],
-        ]
+        ];
     }
     /**
      * @testCase ConfirmRequestHeadersSentException
