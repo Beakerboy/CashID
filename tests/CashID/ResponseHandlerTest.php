@@ -290,9 +290,9 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         return [
             [ // Old request
                 '{
-                    'request': 'cashid:sensitive.cash/api/cashid?a=delete&x=20180929T063418Z',
-                    'address': 'qzvelmkfzvq8gw0d4fvmf904ghefq66keq68qwupsv',
-                    'signature': 'IDwIyQCsmFKwWWibwtxVqppt+KCDBgTKy4IN8+rL+8a9XtGN/AAl/koKPKnIQOr2/nlzOW9XaxtWP96298XkiJE='
+                    "request": "cashid:sensitive.cash/api/cashid?a=delete&x=20180929T063418Z",
+                    "address": "qzvelmkfzvq8gw0d4fvmf904ghefq66keq68qwupsv",
+                    "signature": "IDwIyQCsmFKwWWibwtxVqppt+KCDBgTKy4IN8+rL+8a9XtGN/AAl/koKPKnIQOr2/nlzOW9XaxtWP96298XkiJE="
                  }',
                  [
                     'status' => 132,
