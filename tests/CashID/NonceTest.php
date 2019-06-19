@@ -25,7 +25,7 @@ function time()
         NonceTest::$time_override = false;
         return NonceTest::$time_value;
     } else {
-        return strtotime();
+        return strtotime("now");
     }
 }
 
