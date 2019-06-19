@@ -156,7 +156,7 @@ class ResponseHandler
             }
 
             // Locally store if the request action is a user-initiated action.
-            $user_initiated_request = isset(API::USER_ACTIONS[$parsedRequest['parameters']['action']]);
+            $user_initiated_request = in_array($parsedRequest['parameters']['action'], API::USER_ACTIONS);
 
             // Locally store values to compare with nonce timestamp to validate recency.
             // NOTE: current time is set to 1 minute in the future to allow for minor clock drift.
@@ -166,7 +166,7 @@ class ResponseHandler
             // TODO: Separate MALFORMED (valid timestamp) from INVALID (not recent) for timestamp.
 
             // Validate if a user initiated request is a recent and valid timestamp...
-            if ($user_initiated_request and ((strtotime($parsedRequest['parameters']['nonce']) < $recent_time) or (strtotime($parsedRequest['parameters']['nonce']) > $current_time))) {
+            if ($user_initiated_request and (($parsedRequest['parameters']['nonce'] < $recent_time) or ($parsedRequest['parameters']['nonce'] > $current_time))) {
                 throw new InternalException("Request nonce for user initated action is not a valid and recent timestamp.", API::STATUS_CODES['REQUEST_INVALID_NONCE']);
             }
 
