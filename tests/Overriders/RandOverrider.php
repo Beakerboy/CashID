@@ -30,7 +30,7 @@ class RandOverrider
         return array_shift(self::$random_values);
     }
 
-    public static function setOverride(boolean $override)
+    public static function setOverride(bool $override)
     {
         self::$override_rand = $override;
     }
