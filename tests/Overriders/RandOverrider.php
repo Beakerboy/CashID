@@ -2,6 +2,8 @@
 
 namespace CashID;
 
+use CashID\Overrider
+
 /**
  * Overriding the PHP core random number generator
  *
@@ -9,35 +11,17 @@ namespace CashID;
  */
 function rand(...$params)
 {
-    return RandOverrider::getRand(...$params);
+    return RandOverrider::getValue(...$params);
 }
 
-class RandOverrider
+class RandOverrider extends Overrider
 {
-    protected static $override_rand = false;
-    protected static $random_values = [];
-
-    public static function setRand(array $rand)
-    {
-        self::$random_values = $rand;
-    }
-
-    public static function getRand(...$params)
+    public static function getValue(...$params)
     {
         if (self::$override_rand) {
             return array_shift(self::$random_values);
         } else {
             return \rand(...$params);
         }
-    }
-
-    public static function setOverride()
-    {
-        self::$override_rand = true;
-    }
-
-    public static function unsetOverride()
-    {
-        self::$override_rand = false;
     }
 }
