@@ -36,4 +36,21 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $nonce = substr($requestURI, -9);
         $this->assertRegExp('/^\d{9}$/', $nonce);
     }
+
+    /**
+     * @testCase testRerunDuplicateNonce
+     */
+    public function testRerunDuplicateNonce()
+    {
+        RandOverrider::setOverride(true);
+        RandOverrider::setRand([100000000, 100000000, 100000001]);
+        $request1 = $this->generator->createRequest();
+        $request2 = $this->generator->createRequest();
+        RandOverrider::setOverride(false);
+        $nonce1 = substr($request1, -9);
+        $nonce2 = substr($request2, -9);
+        
+        $this->assertEquals(100000000, $nonce1);
+        $this->assertEquals(100000001, $nonce2);
+    }
 }
