@@ -284,6 +284,22 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
+    public function dataProviderForUserInitiatedResponse()
+    {
+        return [
+            [ // Old request
+                [
+                    'request' => 'cashid:sensitive.cash/api/cashid?a=delete&x=20180929T063418Z',
+                    'address' => 'qzvelmkfzvq8gw0d4fvmf904ghefq66keq68qwupsv',
+                    'signature' => 'IDwIyQCsmFKwWWibwtxVqppt+KCDBgTKy4IN8+rL+8a9XtGN/AAl/koKPKnIQOr2/nlzOW9XaxtWP96298XkiJE='
+                 ],
+                 [
+                    'status' => 132,
+                    'message' => 'Request nonce for user initated action is not a valid and recent timestamp.',
+                 ],
+            ],
+        ]
+    }
     /**
      * @testCase ConfirmRequestHeadersSentException
      */
