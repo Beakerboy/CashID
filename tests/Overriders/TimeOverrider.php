@@ -2,6 +2,8 @@
 
 namespace CashID;
 
+use CashID\Overrrider;
+
 /**
  * Overriding the PHP core time function
  *
@@ -9,22 +11,31 @@ namespace CashID;
  */
 function time()
 {
-    if (TimeOverrider::$time_override) {
-        TimeOverrider::$time_override = false;
-        return TimeOverrider::$time_value;
-    } else {
-        return strtotime("now");
-    }
+    return RandOverrider::getValue();
 }
-
-class TimeOverrider
+class TimeOverrider extends Overrider
 {
-    public static $time_override = false;
-    public static $time_value = 0;
+    protected static $override = false;
+    protected static $values = [];
     
-    public static function overrideTime($time)
+    public static function setValues(array $values)
     {
-        self::$time_override = true;
-        self::$time_value = $time;
+        self::$values = $values;
+    }
+    public static function getValue()
+    {
+        if (self::$override) {
+            return array_shift(self::$values);
+        } else {
+            return \time();
+        }
+    }
+    public static function setOverride()
+    {
+        self::$override = true;
+    }
+    public static function unsetOverride()
+    {
+        self::$override = false;
     }
 }
