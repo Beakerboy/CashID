@@ -398,7 +398,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->handler->validateRequest(json_encode($response_array)));
 
         // Verify that the correct exception and message is produced
-        $this->expectOutputString("{'status':142,'message':'The request has expired and is no longer available.'}");
+        $this->expectOutputString('{"status":142,"message":"The request has expired and is no longer available."}');
         $this->handler->confirmRequest();
     }
 
