@@ -20,7 +20,7 @@
   "autoload-dev": {
     "psr-4": {
       "CashID\\Tests\\": "tests/",
-      "CashID\\": "tests/CashID/"
+      "CashID\\": "tests/Overriders/"
     }
   },
   "authors": [
