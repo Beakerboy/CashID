@@ -46,7 +46,7 @@ $ php composer.phar require Beakerboy/cashid:0.*
 ### Minimum Requirements
  * PHP 7
 
-##Examples
+## Examples
 
 ### Create CashID request
 
