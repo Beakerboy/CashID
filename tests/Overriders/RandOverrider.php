@@ -13,10 +13,10 @@ function rand()
         echo "\nGetting fake rand\n";
         return RandOverrider::getRand();
     } else {
-        echo "\nGetting real rand\n";
         return \rand(100000000, 999999999);
     }
 }
+
 class RandOverrider
 {
     protected static $override_rand = false;
