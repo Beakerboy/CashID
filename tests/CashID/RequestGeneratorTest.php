@@ -61,7 +61,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     {
         \CashID\APCuStoreOverrider::setOverride();
         $request = $this->generator->createRequest();
-        \CashID\RandOverrider::unsetOverride();
+        \CashID\APCuStoreOverrider::unsetOverride();
         
         $this->assertFalse($request);
     }
