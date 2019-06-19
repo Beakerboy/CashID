@@ -76,6 +76,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      * @testCase testInvalidResponse
      * @runInSeparateProcess
      * @dataProvider dataProviderForInvalidResponse
+     * @dataProvider dataProviderForUserInitiatedResponse
      */
     public function testInvalidResponse(string $JSON_string, array $response_array)
     {
