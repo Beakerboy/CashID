@@ -13,15 +13,9 @@ function time()
 {
     return RandOverrider::getValue();
 }
+
 class TimeOverrider extends Overrider
 {
-    protected static $override = false;
-    protected static $values = [];
-    
-    public static function setValues(array $values)
-    {
-        self::$values = $values;
-    }
     public static function getValue()
     {
         if (self::$override) {
@@ -29,13 +23,5 @@ class TimeOverrider extends Overrider
         } else {
             return \time();
         }
-    }
-    public static function setOverride()
-    {
-        self::$override = true;
-    }
-    public static function unsetOverride()
-    {
-        self::$override = false;
     }
 }
