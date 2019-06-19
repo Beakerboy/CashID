@@ -274,7 +274,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                     ],
                 ],
                 [
-                    'signature' => 'Bad',
+                    'signature' => 'IKjtNWdIp+tofJQrhxBrq91jLwdmOVNlMhfnKRiaC2t2C7vqsHRoUA+BkdgjnOqX6hv4ZdeG9ZpB6dMh/sXJg/0=',
                 ],
                 [
                     'status' => 233,
