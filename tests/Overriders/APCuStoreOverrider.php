@@ -19,7 +19,7 @@ class APCuStoreOverrider extends Overrider
     public static function getValue(...$params)
     {
         if (self::$override) {
-            $return_value = array_push(self::$values);
+            $return_value = array_shift(self::$values);
             if ($return_value) {
                 return \apcu_store(...$params);
             }
