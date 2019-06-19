@@ -43,11 +43,11 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testRerunDuplicateNonce()
     {
-        RandOverrider::setOverride(true);
+        RandOverrider::setOverride();
         RandOverrider::setRand([100000000, 100000000, 100000001]);
         $request1 = $this->generator->createRequest();
         $request2 = $this->generator->createRequest();
-        RandOverrider::setOverride(false);
+        RandOverrider::unsetOverride();
         $nonce1 = substr($request1, -9);
         $nonce2 = substr($request2, -9);
         
