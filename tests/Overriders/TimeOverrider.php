@@ -11,7 +11,7 @@ use CashID\Overrrider;
  */
 function time()
 {
-    return RandOverrider::getValue();
+    return TimeOverrider::getValue();
 }
 
 class TimeOverrider extends Overrider
