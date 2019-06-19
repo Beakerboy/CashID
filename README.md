@@ -19,7 +19,7 @@
 ```javascript
 {
   "require": {
-      "Beakerboy/cashid": "0.*"
+      "beakerboy/cashid": "0.*"
   }
 }
 ```
