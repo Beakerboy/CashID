@@ -54,7 +54,7 @@ class API
     ];
 
     const METADATA_NAMES = [
-        'identity' => [
+        'identification' => [
             'name' => 1,
             'family' => 2,
             'nickname' => 3,
