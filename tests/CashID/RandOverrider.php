@@ -7,24 +7,34 @@ namespace CashID;
  */
 function rand()
 {
-    if (RandOverrider::$override_rand) {
-        return array_shift(NonceTest::$randomValues);
+    if (RandOverrider::override()) {
+        return RandOverrider::getRand();
     } else {
         return random_int(100000000, 999999999);
     }
 }
 class RandOverrider
 {
-    public static $override_rand = false;
-    public static $randomValues = [];
+    protected static $override_rand = false;
+    protected static $randomValues = [];
 
     public function setRand(array $rand)
     {
         self::$random_values = $rand;
     }
 
+    public static function getRand()
+    {
+        return array_shift(self::$random_values);
+    }
+
     public function setOverride(boolean $override)
     {
         self::$override_rand = $override;
+    }
+
+    public static function override()
+    {
+        return self::$override_rand;
     }
 }
