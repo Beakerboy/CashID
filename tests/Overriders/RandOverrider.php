@@ -12,7 +12,7 @@ function rand()
     if (RandOverrider::override()) {
         return RandOverrider::getRand();
     } else {
-        return random_int(100000000, 999999999);
+        return \rand(100000000, 999999999);
     }
 }
 class RandOverrider
