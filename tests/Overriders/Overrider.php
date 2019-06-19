@@ -2,7 +2,7 @@
 
 namespace CashID;
 
-class Overrider
+abstract class Overrider
 {
     protected static $override = false;
     protected static $values = [];
