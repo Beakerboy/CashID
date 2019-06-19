@@ -403,17 +403,6 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Test that a response to a future request causes a failure
-     *
-     * @runInSeparateProcess
-     */
-    public function testFutureRequest()
-    {
-        // Generate an forward-dated request
-        // Validate against today's date
-    }
-
-    /**
      * @testCase ConfirmRequestHeadersSentException
      */
     public function testConfirmRequestHeadersSentException()
