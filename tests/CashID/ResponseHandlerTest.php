@@ -199,7 +199,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                             'position' => ['streetname'],
                         ],
                         'required' => [
-                            'identity' => ['nickname'],
+                            'identification' => ['nickname'],
                         ],
                     ],
                 ],
@@ -222,7 +222,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                             'position' => ['streetnumber'],
                         ],
                         'required' => [
-                            'identity' => ['nickname'],
+                            'identification' => ['nickname'],
                         ],
                     ],
                 ],
@@ -246,7 +246,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                             'position' => ['streetnumber'],
                         ],
                         'required' => [
-                            'identity' => ['nickname'],
+                            'identification' => ['nickname'],
                         ],
                     ],
                 ],
@@ -270,7 +270,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                             'position' => ['streetnumber'],
                         ],
                         'required' => [
-                            'identity' => ['nickname'],
+                            'identification' => ['nickname'],
                         ],
                     ],
                 ],
