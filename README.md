@@ -69,7 +69,7 @@ $ php composer.phar require Beakerboy/cashid:0.*
     }
 ```
 
-### Validate CashID request
+### Validate CashID response
 
 ```PHP
 <?php
