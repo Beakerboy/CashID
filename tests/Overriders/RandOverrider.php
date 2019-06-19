@@ -9,12 +9,7 @@ namespace CashID;
  */
 function rand()
 {
-    if (RandOverrider::override()) {
-        echo "\nGetting fake rand\n";
-        return RandOverrider::getRand();
-    } else {
-        return \rand(100000000, 999999999);
-    }
+    return RandOverrider::getRand();
 }
 
 class RandOverrider
@@ -30,7 +25,11 @@ class RandOverrider
 
     public static function getRand()
     {
-        return array_shift(self::$random_values);
+        if (self::$override_rand) {
+            return array_shift(self::$random_values);
+        } else {
+            return \rand(100000000, 999999999);
+        }
     }
 
     public static function setOverride(bool $override)
