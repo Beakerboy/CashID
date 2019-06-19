@@ -412,11 +412,11 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         $json_request = $this->generator->createRequest();
 
         \CashID\APCuStoreOverrider::setValues([false]);
-        \CashID\TimeOverrider::setOverride();
+        \CashID\APCuStoreOverrider::setOverride();
 
         // Create the response
         $response_array = $this->response_generator->createResponse($json_request);
-        \CashID\TimeOverrider::unsetOverride();
+        \CashID\APCuStoreOverrider::unsetOverride();
         
         // Validate storage failure
         $this->assertFalse($this->handler->validateRequest(json_encode($response_array)));
@@ -436,11 +436,11 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         $json_request = $this->generator->createRequest();
 
         \CashID\APCuStoreOverrider::setValues([true, false]);
-        \CashID\TimeOverrider::setOverride();
+        \CashID\APCuStoreOverrider::setOverride();
 
         // Create the response
         $response_array = $this->response_generator->createResponse($json_request);
-        \CashID\TimeOverrider::unsetOverride();
+        \CashID\APCuStoreOverrider::unsetOverride();
         
         // Validate storage failure
         $this->assertFalse($this->handler->validateRequest(json_encode($response_array)));
