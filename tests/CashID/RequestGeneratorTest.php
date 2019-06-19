@@ -52,4 +52,17 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(100000000, $nonce1);
         $this->assertEquals(100000001, $nonce2);
     }
+
+    /**
+     * @testCase testStorageFailure
+     * @runInSeparateProcess
+     */
+    public function testStorageFailure()
+    {
+        \CashID\APCuStoreOverrider::setOverride();
+        $request = $this->generator->createRequest();
+        \CashID\RandOverrider::unsetOverride();
+        
+        $this->assertFalse($request);
+    }
 }
