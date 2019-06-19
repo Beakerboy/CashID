@@ -7,9 +7,11 @@ namespace CashID;
  */
 function rand()
 {
-    $rand = array_shift(NonceTest::$randomValues);
-    NonceTest::$randomValues[] = $rand + 1;
-    return $rand ?? random_int(100000000, 999999999);
+    if (RandOverrider::$override_rand) {
+        return array_shift(NonceTest::$randomValues);
+    } else {
+        return random_int(100000000, 999999999);
+    }
 }
 class RandOverrider
 {
