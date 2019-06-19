@@ -18,8 +18,8 @@ class RandOverrider extends Overrider
 {
     public static function getValue(...$params)
     {
-        if (self::$override_rand) {
-            return array_shift(self::$random_values);
+        if (self::$override) {
+            return array_shift(self::values);
         } else {
             return \rand(...$params);
         }
