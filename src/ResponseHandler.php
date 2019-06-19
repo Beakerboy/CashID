@@ -166,7 +166,7 @@ class ResponseHandler
             // TODO: Separate MALFORMED (valid timestamp) from INVALID (not recent) for timestamp.
 
             // Validate if a user initiated request is a recent and valid timestamp...
-            if ($user_initiated_request and (($parsedRequest['parameters']['nonce'] < $recent_time) or ($parsedRequest['parameters']['nonce'] > $current_time))) {
+            if ($user_initiated_request and ((strtotime($parsedRequest['parameters']['nonce']) < $recent_time) or (strtotime($parsedRequest['parameters']['nonce']) > $current_time))) {
                 throw new InternalException("Request nonce for user initated action is not a valid and recent timestamp.", API::STATUS_CODES['REQUEST_INVALID_NONCE']);
             }
 
