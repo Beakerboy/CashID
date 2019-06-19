@@ -25,21 +25,20 @@ class RandOverrider
 
     public static function getRand()
     {
-        if (self::$override_rand) {
+        if (self::$override_rand === true) {
             return array_shift(self::$random_values);
         } else {
             return \rand(100000000, 999999999);
         }
     }
 
-    public static function setOverride(bool $override)
+    public static function setOverride()
     {
-        echo "\nSetting override to {$override}\n";
-        self::$override_rand = $override;
+        self::$override_rand = true;
     }
 
-    public static function override()
+    public static function unsetOverride()
     {
-        return self::$override_rand;
+        self::$override_rand = false;
     }
 }
