@@ -18,7 +18,7 @@ function rand()
 class RandOverrider
 {
     protected static $override_rand = false;
-    protected static $randomValues = [];
+    protected static $random_values = [];
 
     public static function setRand(array $rand)
     {
