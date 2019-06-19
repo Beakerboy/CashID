@@ -85,8 +85,18 @@ class RequestGenerator
     /**
      * Creates a metadata request string part from a metadata array
      *
-     * @param {Array} metadata - Array with requested and optional metadata
-     * @return {string} returns the request metadata part
+     * The metadata array is in the form:
+     * 
+     * $metadata = [
+     *    'identification' => [list, of, fields],
+     *    'position' => [list, of, fields],
+     *    'contact' => [list, of, fields],
+     * ]
+     *
+     * @param array $metadata
+     *  Specification for which metadata is requested from the client.
+     * @return string
+     *  The request metadata part
      */
     private function encodeRequestMetadata(array $metadata): string
     {
