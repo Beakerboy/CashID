@@ -2,7 +2,7 @@
 
 namespace CashID;
 
-use CashID\Overrider
+use CashID\Overrider;
 
 /**
  * Overriding the PHP core random number generator
