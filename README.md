@@ -37,7 +37,7 @@ Composer will install CashID inside your vendor folder. Then you can add the fol
 require_once(__DIR__ . '/vendor/autoload.php');
 ```
 
-Alternatively, use composer on the command line to require and install MathPHP:
+Alternatively, use composer on the command line to require and install CashID:
 
 ```
 $ php composer.phar require Beakerboy/cashid:0.*
