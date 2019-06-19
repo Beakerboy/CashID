@@ -1,6 +1,6 @@
 <?php
 
-namespace CashID\Tests\CashID;
+namespace CashID\Tests;
 
 use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
 use CashID\API;
