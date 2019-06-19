@@ -23,7 +23,7 @@ function time()
 {
     if (NonceTest::$time_override) {
         NonceTest::$time_override = false;
-        return NonceTest::$time_value
+        return NonceTest::$time_value;
     } else {
         return strtotime();
     }
