@@ -55,12 +55,17 @@ class ResponseGenerator
         foreach ($meta_keys as $key => $value) {
             $return_meta[$key] = $this->metadata[$key];
         }
-        return [
+        $return_array = [
             'request' => $request_string,
             'address' => $this->cashaddr,
             'signature' => $this->signMessage($request_string),
-            'metadata' => $return_meta,
         ];
+        
+        if (count($return_meta) > 0) {
+            $return_array['metadata'] = $return_meta;
+        }
+        
+        return $return_array;
     }
 
     public function createJSONResponse($request_string, $include_optional = true)
