@@ -2,6 +2,8 @@
 
 namespace CashID;
 
+use CashID\DefaultNotary;
+
 /**
  * Simple CashID support library that can:
  * - Verify requests
@@ -23,7 +25,7 @@ class ResponseHandler
     {
         $this->service_domain = $domain;
         $this->service_path = $path;
-        $this->notary = new DefualtNotary();
+        $this->notary = $notary ?? new DefualtNotary();
     }
 
     /**
