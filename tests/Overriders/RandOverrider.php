@@ -16,6 +16,8 @@ function rand(...$params)
 
 class RandOverrider extends Overrider
 {
+    private $override;
+    
     public static function getValue(...$params)
     {
         if (self::$override) {
