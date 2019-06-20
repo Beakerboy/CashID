@@ -23,20 +23,39 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     /**
      * @testCase Create Request
      */
-    public function testCreateRequest()
+    public function testCreateRequest($action, $data, $metadata, $expected)
     {
-        $metadata = [
-            "optional" => [
-                "position"=> ["streetname"],
-            ],
-            "required" => [
-                "contact"=> ["social"],
+        $requestURI = $this->generator->createRequest($action, $data, $metadata);
+
+        // Remove the unique nonce
+        $request_without_nonce = substr($requestURI, 0, -9);
+        $this->assertEquals($expected, $request_without_nonce);
+        
+        $nonce = substr($requestURI, -9);
+
+        // The nonce is a nine digit number
+        $this->assertRegExp('/^\d{9}$/', $nonce);
+    }
+
+    public function dataProviderForTestCreateRequest()
+    {
+        return [
+            [ // Test 1
+                [
+                    'login',
+                    '15366-4133-6141-9638',
+                    [
+                        "optional" => [
+                            "position"=> ["streetname"],
+                        ],
+                        "required" => [
+                            "contact"=> ["social"],
+                        ]
+                    ],
+                    "cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c3&o=p4&x=",
+                ],
             ],
         ];
-        $requestURI = $this->generator->createRequest("login", "15366-4133-6141-9638", $metadata);
-        $this->assertEquals("cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c3&o=p4&x=", substr($requestURI, 0, -9));
-        $nonce = substr($requestURI, -9);
-        $this->assertRegExp('/^\d{9}$/', $nonce);
     }
 
     /**
