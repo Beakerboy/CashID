@@ -4,13 +4,11 @@ namespace CashID;
 
 /**
  * Simple CashID support library that can:
- * - Issue requests
  * - Verify requests
  * - Send status confirmations
  *
  * Requirements for this library to function:
  * - PHP support for PECL APCu
- * - BitcoinD node with RPC support
  */
 class ResponseHandler
 {
@@ -21,11 +19,11 @@ class ResponseHandler
     protected $service_path;
     protected $notary;
 
-    public function __construct(string $domain, string $path)
+    public function __construct(string $domain, string $path, NotaryInterface $notary = null)
     {
         $this->service_domain = $domain;
         $this->service_path = $path;
-        $this->notary = new DefualtNotary();
+        $this->notary = $notary ?? new DefualtNotary();
     }
 
     /**
