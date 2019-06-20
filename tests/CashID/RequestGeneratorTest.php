@@ -42,8 +42,8 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testRerunDuplicateNonce()
     {
-        $generator = new \CashID\RequestGenerator("demo.cashid.info", "/api/parse.php");
         RandOverrider::setOverride();
+        $generator = new \CashID\RequestGenerator("demo.cashid.info", "/api/parse.php");
         RandOverrider::setValues([100000000, 100000000, 100000001]);
         $request1 = $generator->createRequest();
         $request2 = $generator->createRequest();
