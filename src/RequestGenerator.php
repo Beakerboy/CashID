@@ -15,7 +15,7 @@ class RequestGenerator
     {
         $this->service_domain = $domain;
         $this->service_path = $path;
-        $this->cache = $cache ?? new APCuCache()
+        $this->cache = $cache ?? new APCuCache();
     }
     
     /**
