@@ -15,7 +15,7 @@ class DefaultNotary implements NotaryInterface
             return $bitcoinECDSA->checkSignatureForMessage($legacy_address, $signature, $message);
     }
 
-    public function signMessage($address, $message)
+    public function signMessage(string $address, string $message)
     {
         $this->bitcoinECDSA = new BitcoinECDSA();
         $converter = new CashaddrConverter();
