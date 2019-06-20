@@ -17,6 +17,7 @@ function rand(...$params)
 class RandOverrider extends Overrider
 {
     private $override;
+    private $values;
     
     public static function getValue(...$params)
     {
