@@ -91,7 +91,9 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $request_uri = "cashid:demo.cashid.info/api/parse.php?x={$mocked_nonce}";
         $cached_array = [ 'available' => true, 'request' => $request_uri, 'expires' => $mocked_time + (60 * 15) ];
         $cache->method('store')->with($expected_key, $cached_array)->willReturn(false);
-        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
+        
+        $notary = new \CashID\DefaultNotary();
+        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $notary, $cache);
         $request = $generator->createRequest();
         RandOverrider::unsetOverride();
         TimeOverrider::unsetOverride();
