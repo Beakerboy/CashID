@@ -8,6 +8,7 @@
 
 - PECL APCu (https://pecl.php.net/package/APCu)
 - BitcoinPHP ECDSA Library
+- CashaddrConverter
 
 ## Specifications
 - CashID API (https://gitlab.com/cashid/protocol-specification)
