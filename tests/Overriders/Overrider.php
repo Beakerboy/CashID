@@ -27,8 +27,8 @@ namespace CashID;
 
 abstract class Overrider
 {
-    private static $override = false;
-    private static $values = [];
+    protected static $override = false;
+    protected static $values = [];
 
     /**
      * Assign the list of values to be generated
