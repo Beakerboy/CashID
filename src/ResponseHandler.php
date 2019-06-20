@@ -18,12 +18,14 @@ class ResponseHandler
     protected $service_domain;
     protected $service_path;
     protected $notary;
+    protected $cache;
 
-    public function __construct(string $domain, string $path, NotaryInterface $notary = null)
+    public function __construct(string $domain, string $path, NotaryInterface $notary = null, RequestCacheInterface $cache = null)
     {
         $this->service_domain = $domain;
         $this->service_path = $path;
         $this->notary = $notary ?? new DefaultNotary();
+        $this->cache = $cache ?? new APCuCache();
     }
 
     /**
@@ -173,8 +175,8 @@ class ResponseHandler
                 throw new InternalException("Request nonce for user initated action is not a valid and recent timestamp.", API::STATUS_CODES['REQUEST_INVALID_NONCE']);
             }
 
-            // Try to load the request from the apcu object cache.
-            $requestReference = apcu_fetch("cashid_request_{$parsedRequest['parameters']['nonce']}");
+            // Try to load the request from the object cache.
+            $requestReference = $this->cache->fetch("cashid_request_{$parsedRequest['parameters']['nonce']}");
 
             // Validate that the request was issued by this service provider.
             if (!$user_initiated_request and ($requestReference === false)) {
@@ -237,12 +239,12 @@ class ResponseHandler
             }
 
             // Store the response object in local cache.
-            if (!apcu_store("cashid_response_{$parsedRequest['parameters']['nonce']}", $responseObject)) {
+            if (!$this->cache->store("cashid_response_{$parsedRequest['parameters']['nonce']}", $responseObject)) {
                 throw new InternalException("Internal server error, could not store response object.", API::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
             }
 
             // Store the confirmation object in local cache.
-            if (!apcu_store("cashid_confirmation_{$parsedRequest['parameters']['nonce']}", self::$statusConfirmation)) {
+            if (!$this->cache->store("cashid_confirmation_{$parsedRequest['parameters']['nonce']}", self::$statusConfirmation)) {
                 throw new InternalException("Internal server error, could not store confirmation object.", API::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
             }
 
