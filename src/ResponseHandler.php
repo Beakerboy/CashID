@@ -197,7 +197,7 @@ class ResponseHandler
             }
 
             // Send the request parts to bitcoind for signature verification.
-            $this->notary->checkSignature($responseObject['address'], $responseObject['signature'], $responseObject['request']);
+            $verificationStatus = $this->notary->checkSignature($responseObject['address'], $responseObject['signature'], $responseObject['request']);
 
             // Validate the signature.
             if ($verificationStatus !== true) {
