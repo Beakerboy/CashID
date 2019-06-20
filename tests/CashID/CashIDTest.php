@@ -1,7 +1,6 @@
 <?php
 namespace CashID\Tests\CashID;
 
-use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
 use CashID\RequestGenerator;
 use CashID\ResponseHandler;
 use CashID\Tests\ResponseGenerator;
@@ -10,8 +9,27 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
+        $this->metadata = [
+            'name' => 'Alice',
+            'family' => 'Smith',
+            'nickname' => 'ajsmith',
+            'age' => 20,
+            'gender' => 'female',
+            'birthdate' => '1999-01-01',
+            'national' => 'USA',
+            'country' => 'USA',
+            'state' => 'CA',
+            'city' => 'Los Angeles',
+            'streetname' => 'Main',
+            'streetnumber' => '123',
+            'email' => 'ajsmith@example.com',
+            'social' => '123-45-6789',
+            'phone' => '123-123-1234',
+            'postal' => '12345',
+        ];
         $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
         $this->handler = new ResponseHandler("demo.cashid.info", "/api/parse.php");
+        $this->responder = new ResponseGenerator($this->metadata);
     }
     
     /**
@@ -21,26 +39,16 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
     public function testCompleteProcess()
     {
         $requestURI = $this->generator->createRequest();
-        $response = [];
-        $response['request'] = $requestURI;
-        
-        $bitcoinECDSA = new BitcoinECDSA();
-        $bitcoinECDSA->setPrivateKeyWithWif('L1M8W4jMqqu5h24Nzxf1sy5eHo2aSxdwab8h1fkP5Pt9ATfnxfda');
-        $public_key = 'qpjvm3u8cvjddupctguwatrlaxtutprg8s04ekldyr';
-        
-        $signature = $bitcoinECDSA->signMessage($requestURI, true);
-        
-        $response['address'] = $public_key;
-        $response['signature'] = $signature;
-        $JSON_string = json_encode($response);
+        $response_array = $this->responder->createResponse($requestURI);
+        $json_response = json_encode($response_array);
         $validation_response = [
             "action" => "auth",
             "data" => "",
             "request" => $requestURI,
-            "address" => $public_key,
-            "signature" => $signature,
+            "address" => 'qpjvm3u8cvjddupctguwatrlaxtutprg8s04ekldyr',
+            "signature" => $response_array['signature'],
         ];
-        $this->assertEquals($validation_response, $this->handler->validateRequest($JSON_string));
+        $this->assertEquals($validation_response, $this->handler->validateRequest($json_response));
         
         $response_array= [
             "status" => 0,
