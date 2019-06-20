@@ -78,24 +78,12 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testStorageFailure()
     {
-        RandOverrider::setOverride();
-        $mocked_nonce = 200000000;
-        RandOverrider::setValues([$mocked_nonce]);
-
-        TimeOverrider::setOverride();
-        $mocked_time = 123456789;
-        TimeOverrider::setValues([$mocked_time]);
         $cache = $this->createMock(RequestCacheInterface::class);
         
-        $expected_key = "cashid_request_{$mocked_nonce}";
-        $request_uri = "cashid:demo.cashid.info/api/parse.php?x={$mocked_nonce}";
-        $cached_array = [ 'available' => true, 'request' => $request_uri, 'expires' => $mocked_time + (60 * 15) ];
-        $cache->method('store')->with($expected_key, $cached_array)->willReturn(false);
+        $cache->method('store')->willReturn(false);
         
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
         $request = $generator->createRequest();
-        RandOverrider::unsetOverride();
-        TimeOverrider::unsetOverride();
         
         $this->assertFalse($request);
     }
