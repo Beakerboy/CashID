@@ -9,11 +9,13 @@ class RequestGenerator
 {
     protected $service_domain;
     protected $service_path;
+    protected $cache;
 
-    public function __construct(string $domain, string $path)
+    public function __construct(string $domain, string $path, RequestCacheInterface $cache = null)
     {
         $this->service_domain = $domain;
         $this->service_path = $path;
+        $this->cache = $cache ?? new APCuCache()
     }
     
     /**
@@ -70,7 +72,7 @@ class RequestGenerator
             $request_uri = "cashid:" . $this->service_domain . $this->service_path . "?" . implode($parameters, '&');
 
             // Store the request and nonce in local cache.
-            if (!apcu_store("cashid_request_{$nonce}", [ 'available' => true, 'request' => $request_uri, 'expires' => time() + (60 * 15) ])) {
+            if (!$this->cache->store("cashid_request_{$nonce}", [ 'available' => true, 'request' => $request_uri, 'expires' => time() + (60 * 15) ])) {
                 throw new InternalException("Failed to store request metadata in APCu.");
             }
 
