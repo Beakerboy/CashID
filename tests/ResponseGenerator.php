@@ -2,8 +2,8 @@
 
 namespace CashID\Tests;
 
-use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
 use CashID\API;
+use CashID\DefaultNotary;
 
 class ResponseGenerator
 {
@@ -80,6 +80,7 @@ class ResponseGenerator
      */
     private function signMessage(string $message): string
     {
-        return $this->bitcoinECDSA->signMessage($message, true);
+        $notary = new DefaultNotary();
+        return $notary->signMessage($this->cashaddr, $message);
     }
 }
