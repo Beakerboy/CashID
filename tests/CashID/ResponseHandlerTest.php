@@ -406,6 +406,10 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      */
     public function testAPCuResponseFailure()
     {
+        $cache = $this->createMock(RequestCacheInterface::class);
+        $cache->method('store')->willReturn(false);
+        $notary = new \CashID\DefaultNotary();
+        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache;
         $json_request = $this->generator->createRequest();
 
         // Create the response
@@ -416,7 +420,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         \CashID\APCuStoreOverrider::setOverride();
 
         // Validate storage failure
-        $this->assertFalse($this->handler->validateRequest(json_encode($response_array)));
+        $this->assertFalse($handler->validateRequest(json_encode($response_array)));
         
         \CashID\APCuStoreOverrider::unsetOverride();
 
