@@ -131,6 +131,17 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                      "message" => "Response data is missing required 'signature' property.",
                 ],
             ],
+            [  // Malformed request
+                '{
+                    "request": "12345",
+                    "address": "qqagsast3fq0g43wnrnweefjsk28pmyvwg7t0jqgg4",
+                    "signature": "IKjtNWdIp+tofJQrhxBrq91jLwdmOVNlMhfnKRiaC2t2C7vqsHRoUA+BkdgjnOqX6hv4ZdeG9ZpB6dMh/sXJg/0="
+                }',
+                [
+                     "status" => 331,
+                     "message" => "Internal server error, could not evaluate request structure.",
+                ],
+            ],
             [  // Mismatched domain
                 '{
                     "request": "cashid:bitcoin.com/api/cashid?a=register&d=newsletter&r=i12l1c1&o=i458l3&x=95261230581",
