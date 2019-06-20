@@ -92,7 +92,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $cached_array = [ 'available' => true, 'request' => $request_uri, 'expires' => $mocked_time + (60 * 15) ];
         $cache->method('store')->with($expected_key, $cached_array)->willReturn(false);
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
-        $request = $this->generator->createRequest();
+        $request = $generator->createRequest();
         RandOverrider::unsetOverride();
         TimeOverrider::unsetOverride();
         
