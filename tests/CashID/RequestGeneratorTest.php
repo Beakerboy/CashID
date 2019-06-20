@@ -1,13 +1,15 @@
 <?php
 namespace CashID\Tests\CashID;
 
+use CashID\APCuStoreOverrider;
 use CashID\RandOverrider;
+use CashID\RequestGenerator;
 
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
-        $this->generator = new \CashID\RequestGenerator("demo.cashid.info", "/api/parse.php");
+        $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
     }
 
     /**
@@ -15,7 +17,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testConstructor()
     {
-        $this->assertInstanceOf(\CashID\RequestGenerator::class, $this->generator);
+        $this->assertInstanceOf(RequestGenerator::class, $this->generator);
     }
     
     /**
@@ -39,14 +41,14 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @testCase testRerunDuplicateNonce
+     * @runInSeparateProcess
      */
     public function testRerunDuplicateNonce()
     {
         RandOverrider::setOverride();
-        $generator = new \CashID\RequestGenerator("demo.cashid.info", "/api/parse.php");
         RandOverrider::setValues([100000000, 100000000, 100000001]);
-        $request1 = $generator->createRequest();
-        $request2 = $generator->createRequest();
+        $request1 = $this->generator->createRequest();
+        $request2 = $this->generator->createRequest();
         RandOverrider::unsetOverride();
         $nonce1 = substr($request1, -9);
         $nonce2 = substr($request2, -9);
@@ -61,10 +63,10 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testStorageFailure()
     {
-        \CashID\APCuStoreOverrider::setOverride();
-        \CashID\APCuStoreOverrider::setValues([false]);
+        APCuStoreOverrider::setOverride();
+        APCuStoreOverrider::setValues([false]);
         $request = $this->generator->createRequest();
-        \CashID\APCuStoreOverrider::unsetOverride();
+        APCuStoreOverrider::unsetOverride();
         
         $this->assertFalse($request);
     }
