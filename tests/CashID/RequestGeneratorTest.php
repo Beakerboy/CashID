@@ -87,7 +87,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $cache = $this->createMock(RequestCacheInterface::class);
         
         $expected_key = "cashid_request_{$mocked_nonce}";
-        $request_uri = 'cashid:demo.cashid.info/api/parse.php?x=200000000';
+        $request_uri = "cashid:demo.cashid.info/api/parse.php?x={$mocked_nonce}";
         $cached_array = [ 'available' => true, 'request' => $request_uri, 'expires' => $mocked_time + (60 * 15) ];
         $cache->method('store')->with($expected_key, $cached_array)->willReturn(false);
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
