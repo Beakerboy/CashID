@@ -10,7 +10,29 @@ namespace CashID;
  */
 interface NotaryInterface
 {
+    /**
+     * Check Signature
+     *
+     * @param string $address
+     *   The public key of the signing party
+     * @param string $signature
+     *   The signature
+     * @param string $message
+     *   The message which was signed
+     * @returns bool
+     *   true if successful
+     */
     public function checkSignature(string $address, string $signature, string $message);
-    
+
+    /**
+     * Sign Message
+     *
+     * @param string $address
+     *   The private key of the party signing the message
+     * @param string $message
+     *   The message to be signed
+     * @returns string
+     *   The signature
+     */
     public function signMessage(string $address, string $message);
 }
