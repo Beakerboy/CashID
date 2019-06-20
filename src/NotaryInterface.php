@@ -19,7 +19,7 @@ interface NotaryInterface
      *   The signature
      * @param string $message
      *   The message which was signed
-     * @returns bool
+     * @return bool
      *   true if successful
      */
     public function checkSignature(string $address, string $signature, string $message);
@@ -31,7 +31,7 @@ interface NotaryInterface
      *   The private key of the party signing the message
      * @param string $message
      *   The message to be signed
-     * @returns string
+     * @return string
      *   The signature
      */
     public function signMessage(string $address, string $message);
