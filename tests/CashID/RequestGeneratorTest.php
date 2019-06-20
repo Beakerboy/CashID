@@ -7,16 +7,12 @@ use CashID\RequestGenerator;
 
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 {
-    public function setUp()
-    {
-        $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
-    }
-
     /**
      * @testCase constructor
      */
     public function testConstructor()
     {
+        $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
         $this->assertInstanceOf(RequestGenerator::class, $this->generator);
     }
     
@@ -26,7 +22,8 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreateRequest($action, $data, $metadata, $expected)
     {
-        $requestURI = $this->generator->createRequest($action, $data, $metadata);
+        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+        $requestURI = $generator->createRequest($action, $data, $metadata);
 
         // Remove the unique nonce
         $request_without_nonce = substr($requestURI, 0, -9);
@@ -62,10 +59,11 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testRerunDuplicateNonce()
     {
+        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
         RandOverrider::setOverride();
         RandOverrider::setValues([100000000, 100000000, 100000001]);
-        $request1 = $this->generator->createRequest();
-        $request2 = $this->generator->createRequest();
+        $request1 = $generator->createRequest();
+        $request2 = $generator->createRequest();
         RandOverrider::unsetOverride();
         $nonce1 = substr($request1, -9);
         $nonce2 = substr($request2, -9);
@@ -76,10 +74,12 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @testCase testStorageFailure
-     * @runInSeparateProcess
      */
     public function testStorageFailure()
     {
+        $cache = $this->createMock(RequestCacheInterface::class);
+        $cache->method('store')->with($key, $var)->willReturn(false);
+        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
         APCuStoreOverrider::setOverride();
         APCuStoreOverrider::setValues([false]);
         $request = $this->generator->createRequest();
