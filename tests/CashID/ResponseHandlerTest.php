@@ -409,7 +409,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         $cache = $this->createMock(RequestCacheInterface::class);
         $cache->method('store')->willReturn(false);
         $notary = new \CashID\DefaultNotary();
-        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache;
+        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache);
         $json_request = $this->generator->createRequest();
 
         // Create the response
