@@ -2,8 +2,6 @@
 
 namespace CashID;
 
-use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
-
 /**
  * Simple CashID support library that can:
  * - Issue requests
@@ -21,11 +19,13 @@ class ResponseHandler
     
     protected $service_domain;
     protected $service_path;
+    protected $notary;
 
     public function __construct(string $domain, string $path)
     {
         $this->service_domain = $domain;
         $this->service_path = $path;
+        $this->notary = new DefualtNotary();
     }
 
     /**
@@ -199,10 +199,7 @@ class ResponseHandler
             }
 
             // Send the request parts to bitcoind for signature verification.
-            $converter = new \Submtd\CashaddrConverter\CashaddrConverter();
-            $legacy_address = $converter->convertFromCashaddr($responseObject['address']);
-            $bitcoinECDSA = new BitcoinECDSA();
-            $verificationStatus = $bitcoinECDSA->checkSignatureForMessage($legacy_address, $responseObject['signature'], $responseObject['request']);
+            $this->notary->checkSignature($responseObject['address'], $responseObject['signature'], $responseObject['request']);
 
             // Validate the signature.
             if ($verificationStatus !== true) {
