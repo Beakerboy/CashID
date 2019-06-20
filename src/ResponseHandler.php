@@ -23,7 +23,7 @@ class ResponseHandler
     {
         $this->service_domain = $domain;
         $this->service_path = $path;
-        $this->notary = $notary ?? new DefualtNotary();
+        $this->notary = new DefualtNotary();
     }
 
     /**
