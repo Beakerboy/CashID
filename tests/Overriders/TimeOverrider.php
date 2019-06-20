@@ -16,6 +16,9 @@ function time()
 
 class TimeOverrider extends Overrider
 {
+    protected static $override;
+    protected static $values;
+    
     public static function getValue()
     {
         if (self::$override) {
