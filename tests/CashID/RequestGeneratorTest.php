@@ -1,6 +1,8 @@
 <?php
 namespace CashID\Tests\CashID;
 
+use CashID\RandOverrider;
+
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
@@ -37,15 +39,14 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @testCase testRerunDuplicateNonce
-     * @runInSeparateProcess
      */
     public function testRerunDuplicateNonce()
     {
-        \CashID\RandOverrider::setOverride();
-        \CashID\RandOverrider::setValues([100000000, 100000000, 100000001]);
+        RandOverrider::setOverride();
+        RandOverrider::setValues([100000000, 100000000, 100000001]);
         $request1 = $this->generator->createRequest();
         $request2 = $this->generator->createRequest();
-        \CashID\RandOverrider::unsetOverride();
+        RandOverrider::unsetOverride();
         $nonce1 = substr($request1, -9);
         $nonce2 = substr($request2, -9);
         
