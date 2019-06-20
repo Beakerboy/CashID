@@ -10,7 +10,7 @@ namespace CashID;
  */
 interface NotaryInterface
 {
-    public function checkSignature($address, $siganture, $message);
+    public function checkSignature(string $address, string $signature, string $message);
     
-    public function signMessage($address, $message);
+    public function signMessage(string $address, string $message);
 }
