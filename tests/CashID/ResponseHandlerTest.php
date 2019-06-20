@@ -2,7 +2,6 @@
 
 namespace CashID\Tests\CashID;
 
-use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
 use CashID\RequestGenerator;
 use CashID\ResponseHandler;
 use CashID\Tests\ResponseGenerator;
@@ -11,8 +10,6 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
 {
     public function setUp()
     {
-        $this->bitcoinECDSA = new BitcoinECDSA();
-        $this->bitcoinECDSA->setPrivateKeyWithWif('L1M8W4jMqqu5h24Nzxf1sy5eHo2aSxdwab8h1fkP5Pt9ATfnxfda');
         $this->cashaddr = 'qpjvm3u8cvjddupctguwatrlaxtutprg8s04ekldyr';
         $this->metadata = [
             'name' => 'Alice',
@@ -33,7 +30,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
             'postal' => '12345',
         ];
         $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
-        $this->response_generator = new ResponseGenerator($this->metadata);
+        $this->responder = new ResponseGenerator($this->metadata);
         $this->handler = new ResponseHandler("demo.cashid.info", "/api/parse.php");
     }
 
@@ -211,7 +208,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         $json_request = $this->generator->createRequest($request['action'], $request['data'], $request['metadata']);
 
         // Create a valid response given the request and the default metadata
-        $response_array = $this->response_generator->createResponse($json_request);
+        $response_array = $this->responder->createResponse($json_request);
 
         // Replace the correct values with values from the dataProvider
         foreach ($response as $key => $value) {
@@ -343,7 +340,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         $new_json_request = $new_request . substr($json_request, -9);
         
         // Create a valid response given the altered request and the default metadata
-        $response_array = $this->response_generator->createResponse($new_json_request);
+        $response_array = $this->responder->createResponse($new_json_request);
 
         // Verify that the validation fails
         $this->assertFalse($this->handler->validateRequest(json_encode($response_array)));
@@ -392,7 +389,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         \CashID\TimeOverrider::unsetOverride();
 
         // Create the response
-        $response_array = $this->response_generator->createResponse($json_request);
+        $response_array = $this->responder->createResponse($json_request);
         
         // Validate against today's date and verify failure
         $this->assertFalse($this->handler->validateRequest(json_encode($response_array)));
@@ -412,7 +409,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         $json_request = $this->generator->createRequest();
 
         // Create the response
-        $response_array = $this->response_generator->createResponse($json_request);
+        $response_array = $this->responder->createResponse($json_request);
         
         // Override apcu_store to return false
         \CashID\APCuStoreOverrider::setValues([false]);
@@ -438,7 +435,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         $json_request = $this->generator->createRequest();
 
         // Create the response
-        $response_array = $this->response_generator->createResponse($json_request);
+        $response_array = $this->responder->createResponse($json_request);
 
         // Override apcu_store to return false on the second call
         \CashID\APCuStoreOverrider::setValues([true, false]);
