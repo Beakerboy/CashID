@@ -42,19 +42,17 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     {
         return [
             [ // Test 1
+                'login',
+                '15366-4133-6141-9638',
                 [
-                    'login',
-                    '15366-4133-6141-9638',
-                    [
-                        "optional" => [
-                            "position"=> ["streetname"],
-                        ],
-                        "required" => [
-                            "contact"=> ["social"],
-                        ]
+                    "optional" => [
+                        "position"=> ["streetname"],
                     ],
-                    "cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c3&o=p4&x=",
+                    "required" => [
+                        "contact"=> ["social"],
+                    ]
                 ],
+                "cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c3&o=p4&x=",
             ],
         ];
     }
