@@ -1,8 +1,8 @@
 <?php
 namespace CashID\Tests\CashID;
 
-use CashID\APCuStoreOverrider;
 use CashID\RandOverrider;
+use CashID\RequestCacheInterface;
 use CashID\RequestGenerator;
 
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
