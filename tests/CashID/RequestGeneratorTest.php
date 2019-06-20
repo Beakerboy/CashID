@@ -4,6 +4,7 @@ namespace CashID\Tests\CashID;
 use CashID\RandOverrider;
 use CashID\RequestCacheInterface;
 use CashID\RequestGenerator;
+use CashID\TimeOverrider;
 
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 {
