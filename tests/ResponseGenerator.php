@@ -15,8 +15,7 @@ class ResponseGenerator
      */
     public function __construct($metadata)
     {
-        $this->bitcoinECDSA = new BitcoinECDSA();
-        $this->bitcoinECDSA->setPrivateKeyWithWif('L1M8W4jMqqu5h24Nzxf1sy5eHo2aSxdwab8h1fkP5Pt9ATfnxfda');
+        $this->private_key = 'L1M8W4jMqqu5h24Nzxf1sy5eHo2aSxdwab8h1fkP5Pt9ATfnxfda';
         $this->cashaddr = 'qpjvm3u8cvjddupctguwatrlaxtutprg8s04ekldyr';
         $this->metadata = $metadata;
     }
@@ -81,6 +80,6 @@ class ResponseGenerator
     private function signMessage(string $message): string
     {
         $notary = new DefaultNotary();
-        return $notary->signMessage($this->cashaddr, $message);
+        return $notary->signMessage($this->private_key, $message);
     }
 }
