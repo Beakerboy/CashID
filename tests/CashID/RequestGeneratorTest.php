@@ -22,6 +22,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     
     /**
      * @testCase Create Request
+     * @dataProvider dataProviderForTestCreateRequest
      */
     public function testCreateRequest($action, $data, $metadata, $expected)
     {
