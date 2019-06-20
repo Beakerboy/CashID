@@ -31,8 +31,10 @@ class ResponseHandler
     /**
      * Parses a request string and returns a request array.
      *
-     * @param {String} request_url - the full request URI to parse
-     * @return {Array} returns a request array populated based on the request_url string
+     * @param string $request_uri
+     *   the full request URI to parse
+     * @return array
+     *   returns a request array populated based on the request_url string
      */
     public static function parseRequest(string $request_uri): array
     {
@@ -73,8 +75,10 @@ class ResponseHandler
     /**
      * Invalidates the current request with a custom code and message.
      *
-     * @param {String} status_code - numerical number for the status code.
-     * @param {String} status_message - textual description of the status.
+     * @param string $status_code
+     *   numerical number for the status code.
+     * @param string $status_message
+     *   textual description of the status.
      */
     public function invalidateRequest(string $status_code, string $status_message)
     {
@@ -87,7 +91,8 @@ class ResponseHandler
     /**
      * Validates the current request and updates the internal confirmation message.
      *
-     * @return mixed - array or false if error
+     * @return mixed
+     *   array or false if error
      */
     public function validateRequest(string $response)
     {
