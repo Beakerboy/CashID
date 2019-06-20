@@ -2,6 +2,7 @@
 
 namespace CashID\Tests\CashID;
 
+use CashID\RequestCacheInterface;
 use CashID\RequestGenerator;
 use CashID\ResponseHandler;
 use CashID\Tests\ResponseGenerator;
