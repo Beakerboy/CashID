@@ -60,7 +60,6 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @testCase testRerunDuplicateNonce
-     * @runInSeparateProcess
      */
     public function testRerunDuplicateNonce()
     {
