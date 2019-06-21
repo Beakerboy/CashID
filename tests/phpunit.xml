@@ -4,6 +4,9 @@
     <testsuite name="CashID">
       <directory suffix="Test.php">CashID</directory>
     </testsuite>
+    <testsuite name="Overriders">
+      <directory suffix="Test.php">Overriders</directory>
+    </testsuite>
   </testsuites>
   <filter>
     <whitelist processUncoveredFilesFromWhitelist="true">
