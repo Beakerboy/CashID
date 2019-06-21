@@ -37,7 +37,7 @@ class RequestGenerator
             $nonce = rand(100000000, 999999999);
 
             // Check if the nonce is already used, and regenerate until it does not exist.
-            while (apcu_exists("cashid_request_{$nonce}")) {
+            while ($this->cache->exists("cashid_request_{$nonce}")) {
                 // generate a random nonce.
                 $nonce = rand(100000000, 999999999);
             }
