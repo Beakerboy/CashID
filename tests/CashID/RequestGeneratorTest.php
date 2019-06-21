@@ -64,9 +64,9 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $exp_nonce1 = rand(100000000, 999999999);
         echo "\nexp nonce:{$exp_nonce1}";
         $exp_nonce2 = rand(100000000, 999999999);
-        echo "\nexp nonce2:{$exp_nonce1}";
+        echo "\nexp nonce2:{$exp_nonce2}";
         RandOverrider::setOverride();
-        RandOverrider::setValues([$exp_nonce1, $exp_nonce1, $exp_nonce2]);
+        RandOverrider::setValues([$exp_nonce1, $exp_nonce1, $exp_nonce1, $exp_nonce2]);
         $request1 = $generator->createRequest();
         $request2 = $generator->createRequest();
         RandOverrider::unsetOverride();
