@@ -35,11 +35,12 @@ class RequestGenerator
         try {
             // generate a random nonce.
             $nonce = rand(100000000, 999999999);
-
+            echo "\nnonce:{$nonce}\n";
             // Check if the nonce is already used, and regenerate until it does not exist.
             while ($this->cache->exists("cashid_request_{$nonce}")) {
                 // generate a random nonce.
                 $nonce = rand(100000000, 999999999);
+                echo "\nnew nonce:{$nonce}\n";
             }
 
             // Initialize an empty parameter list.
