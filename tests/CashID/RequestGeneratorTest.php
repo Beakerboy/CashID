@@ -66,7 +66,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $exp_nonce1 = rand(100000000, 999999999);
         $exp_nonce2 = rand(100000000, 999999999);
         $rand = $this->getFunctionMock("CashID", "rand");
-        $rand->will($this->onConsecutiveCalls($exp_nonce1, $exp_nonce1, $exp_nonce2));
+        $rand->expects($this->exactly(3))->will($this->onConsecutiveCalls($exp_nonce1, $exp_nonce1, $exp_nonce2));
         $request1 = $generator->createRequest();
         $request2 = $generator->createRequest();
         $nonce1 = substr($request1, -9);
