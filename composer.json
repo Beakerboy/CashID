@@ -12,7 +12,7 @@
     "psr-4": {"CashID\\": "src/"}
   },
   "require-dev": {
-    "phpunit/phpunit": "6.*",
+    "phpunit/phpunit": ">5.*",
     "php-coveralls/php-coveralls": "^2.0",
     "squizlabs/php_codesniffer": "2.*",
     "php-mock/php-mock-phpunit": "2.*"
