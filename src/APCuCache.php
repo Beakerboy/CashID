@@ -13,4 +13,9 @@ class APCuCache implements RequestCacheInterface
     {
         return apcu_fetch($key);
     }
+
+    public function exists(string $key)
+    {
+        return apcu_exists($key);
+    }
 }
