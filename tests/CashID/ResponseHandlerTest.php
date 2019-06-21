@@ -403,6 +403,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     /**
      * Test APCu response storage failure
      *
+     * @runInSeparateProcessP
      */
     public function testAPCuResponseFailure()
     {
@@ -426,6 +427,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * Test APCu response storage failure
+     * @runInSeparateProcess
      *
      */
     public function testAPCuConfirmationFailure()
