@@ -63,8 +63,8 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     public function testRerunDuplicateNonce()
     {
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
-        $exp_nonce1 = rand(100000000, 999999999);
-        $exp_nonce2 = rand(100000000, 999999999);
+        $exp_nonce1 = 100000000;
+        $exp_nonce2 = 999999999;
         $rand = $this->getFunctionMock("CashID", "rand");
         $rand->expects($this->exactly(3))->will($this->onConsecutiveCalls($exp_nonce1, $exp_nonce1, $exp_nonce2));
         $request1 = $generator->createRequest();
