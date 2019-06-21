@@ -17,7 +17,7 @@ namespace CashID;
  *
  *     public static function getValue(...$params)
  *     {
- *         if (self::$override_rand) {
+ *         if (static::$override_rand) {
  *             return array_shift(self::$random_values);
  *         } else {
  *             return \rand(...$params);
@@ -35,7 +35,7 @@ abstract class Overrider
      */
     public static function setValues(array $values)
     {
-        self::$values = $values;
+        static::$values = $values;
     }
 
     /**
@@ -48,7 +48,7 @@ abstract class Overrider
      */
     public static function setOverride()
     {
-        self::$override = true;
+        static::$override = true;
     }
 
     /**
@@ -56,6 +56,6 @@ abstract class Overrider
      */
     public static function unsetOverride()
     {
-        self::$override = false;
+        static::$override = false;
     }
 }
