@@ -403,7 +403,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     /**
      * Test APCu response storage failure
      *
-     * @runInSeparateProcessP
+     * @runInSeparateProcess
      */
     public function testAPCuResponseFailure()
     {
@@ -438,6 +438,11 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     {
         $cache = $this->createMock(RequestCacheInterface::class);
         $cache->method('store')->will($this->onConsecutiveCalls(true, false));
+        $cache->method('fetch')->will($this->returnCallback(
+            function ($key) {
+                return apcu_fetch($key);
+            }
+        ));
         $notary = new \CashID\DefaultNotary();
         $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache);
         $json_request = $this->generator->createRequest();
