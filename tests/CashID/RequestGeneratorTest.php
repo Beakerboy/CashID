@@ -1,5 +1,5 @@
 <?php
-namespace CashID;
+namespace CashID\Tests\CashID;
 
 use CashID\RandOverrider;
 use CashID\RequestCacheInterface;
