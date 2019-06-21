@@ -408,7 +408,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     public function testAPCuResponseFailure()
     {
         $cache = $this->createMock(RequestCacheInterface::class);
-        $cache->method('store')->will($this->onConsecutiveCalls(true, true));
+        $cache->method('store')->willReturn(false);
         $cache->method('fetch')->will($this->returnCallback(
             function ($key) {
                 return apcu_fetch($key);
