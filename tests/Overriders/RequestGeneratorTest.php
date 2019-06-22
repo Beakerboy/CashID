@@ -17,7 +17,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $exp_nonce1 = 100000000;
         $exp_nonce2 = 999999999;
         $rand = $this->getFunctionMock(__NAMESPACE__, "rand");
-        $rand->expects($this->exactly(3))->with(100000000, 999999999)->willReturn(100000000);
+        $rand->expects($this->exactly(6))->with(100000000, 999999999)->willReturn(100000000);
         $request1 = $generator->createRequest();
         $request2 = $generator->createRequest();
         $nonce1 = substr($request1, -9);
