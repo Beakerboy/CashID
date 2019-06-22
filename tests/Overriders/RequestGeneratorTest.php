@@ -15,7 +15,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
         $exp_nonce1 = 100000000;
         $exp_nonce2 = 999999999;
-        $rand = $this->getFunctionMock("CashID", "rand");
+        $rand = $this->getFunctionMock(__NAMESPACE__, "rand");
         $rand->expects($this->exactly(3))->will($this->onConsecutiveCalls($exp_nonce1, $exp_nonce1, $exp_nonce2));
         $request1 = $generator->createRequest();
         $request2 = $generator->createRequest();
