@@ -2,6 +2,8 @@
 
 namespace CashID;
 
+use CashID\Tests\ResponseGenerator;
+
 class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
 {
     use \phpmock\phpunit\PHPMock;
