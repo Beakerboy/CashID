@@ -41,7 +41,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     public function testOldRequest()
     {
         $time = $this->getFunctionMock("CashID", "time");
-        $time->expects($this->exactly(4))->will($this->onConsecutiveCalls(strtotime('-1 month'), strtotime('now')));
+        $time->expects($this->any())->will($this->onConsecutiveCalls(strtotime('-1 month'), strtotime('now')));
         $json_request = $this->generator->createRequest();
 
         // Create the response
