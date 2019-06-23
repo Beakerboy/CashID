@@ -4,7 +4,7 @@ namespace CashID;
 
 use CashID\RequestGenerator;
 
-class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
+class RandTest extends \PHPUnit\Framework\TestCase
 {
     use \phpmock\phpunit\PHPMock;
 
