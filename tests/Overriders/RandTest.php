@@ -19,7 +19,7 @@ class RandTest extends \PHPUnit\Framework\TestCase
         $exp_nonce1 = 100000000;
         $exp_nonce2 = 999999999;
         $rand = $this->getFunctionMock("CashID", "rand");
-        $rand->expects($this->any())->willReturn(100000000);
+        $rand->expects($this->any())->willReturn(100000000, 100000001);
         $request1 = $generator->createRequest();
         $request2 = $generator->createRequest();
         $nonce1 = substr($request1, -9);
