@@ -5,10 +5,6 @@ namespace CashID;
 class RandTest extends \PHPUnit\Framework\TestCase
 {
     use \phpmock\phpunit\PHPMock;
-    function setup()
-    {
-        $this->return = 100000000;
-    }
 
     /**
      * @testCase testRerunDuplicateNonce
