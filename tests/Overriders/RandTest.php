@@ -18,8 +18,7 @@ class RandTest extends \PHPUnit\Framework\TestCase
         $exp_nonce1 = 100000000;
         $exp_nonce2 = 999999999;
         $rand = $this->getFunctionMock("CashID", "rand");
-        $rand->expects($this->any())->will($this->onConsecutiveCalls(100000000, 100000001, 100000002, 100000003, 100000004, 100000005, 999999999));
-        $mock = $rand->build();
+        $rand->expects($this->exaxtly(6))->will($this->onConsecutiveCalls(100000000, 100000001, 100000002, 100000003, 100000004, 100000005, 999999999));
         $request1 = $generator->createRequest();
         $request2 = $generator->createRequest();
         $nonce1 = substr($request1, -9);
