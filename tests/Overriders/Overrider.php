@@ -58,4 +58,34 @@ abstract class Overrider
     {
         static::$override = false;
     }
+
+    public static function createMock($namespace, $function)
+    {
+        $name = ucfirst($function);
+        echo "<?php
+
+namespace {$namespace};
+
+use \Overrider;
+
+function {$function}(...\$params)
+{
+    return {$name)Overrider::getValue(...\$params);
+}
+
+class {$name}Overrider extends Overrider
+{
+    protected static \$values;
+    protected static \$override;
+    public static function getValue(...\$params)
+    {
+        if (self::\$override) {
+            return array_shift(self::$values);
+        } else {
+            return \\{$function}(...\$params);
+        }
+    }
+}
+";
+    }
 }
