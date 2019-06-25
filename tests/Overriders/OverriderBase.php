@@ -1,6 +1,6 @@
 <?php
 
-namespace \CoreOverrider;
+namespace CoreOverrider;
 
 /**
  * Override a core function within a namespace
