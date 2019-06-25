@@ -2,7 +2,7 @@
 
 namespace CashID;
 
-use \CoreOverrrider\OverriderBase;
+use \CoreOverrider\OverriderBase;
 
 /**
  * Overriding the PHP core time function
