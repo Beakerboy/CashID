@@ -70,7 +70,7 @@ use \Overrider;
 
 function {$function}(...\$params)
 {
-    return {$name)Overrider::getValue(...\$params);
+    return {$name}Overrider::getValue(...\$params);
 }
 
 class {$name}Overrider extends Overrider
