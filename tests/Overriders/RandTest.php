@@ -14,6 +14,6 @@ class RandTest extends \PHPUnit\Framework\TestCase
         RandOverrider::setValues([100000000, 100000001]);
         $this->assertEquals(100000000, rand());
         $this->assertEquals(100000001, rand());
-        RandOverroder::unsetOverride();
+        RandOverrider::unsetOverride();
     }
 }
