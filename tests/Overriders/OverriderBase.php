@@ -88,7 +88,7 @@ class {$name}Overrider extends OverriderBase
     }
 }
 ";
-    file_put_contents($filename, $file_contents);
-    include($filename);
+        file_put_contents($filename, $file_contents);
+        include($filename);
     }
 }
