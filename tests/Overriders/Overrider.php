@@ -67,7 +67,7 @@ abstract class Overrider
 
 namespace {$namespace};
 
-use \Overrider;
+use Overrider;
 
 function {$function}(...\$params)
 {
