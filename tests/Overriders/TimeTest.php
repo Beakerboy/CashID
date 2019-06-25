@@ -4,6 +4,11 @@ namespace CashID;
 
 class TimeTest extends \PHPUnit\Framework\TestCase
 {
+    public function setup()
+    {
+        $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+    }
+
     /**
      * Test that a response to an old request causes a failure
      *
