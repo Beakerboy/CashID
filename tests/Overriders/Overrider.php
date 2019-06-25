@@ -62,7 +62,8 @@ abstract class Overrider
     public static function createMock($namespace, $function)
     {
         $name = ucfirst($function);
-        echo "<?php
+        $filename = $name . "Overrider.php";
+        $file_contents = "<?php
 
 namespace {$namespace};
 
@@ -87,5 +88,7 @@ class {$name}Overrider extends Overrider
     }
 }
 ";
+    file_put_contents($filename, $file_contents);
+    include($filename);
     }
 }
