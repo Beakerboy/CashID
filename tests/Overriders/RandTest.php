@@ -9,7 +9,7 @@ class RandTest extends \PHPUnit\Framework\TestCase
      */
     public function testRerunDuplicateNonce()
     {
-        Overrider::createMock("CashID", "rand");
+        \CoreOverrider\OverriderBase::createMock("CashID", "rand");
         RandOverrider::setOverride();
         RandOverrider::setValues([100000000, 100000001]);
         $this->assertEquals(100000000, rand());
