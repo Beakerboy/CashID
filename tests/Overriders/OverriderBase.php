@@ -1,6 +1,6 @@
 <?php
 
-namespace CashID;
+namespace CoreOverrider;
 
 /**
  * Override a core function within a namespace
@@ -25,7 +25,7 @@ namespace CashID;
  *     }
  */
 
-abstract class Overrider
+abstract class OverriderBase
 {
     protected static $override = false;
     protected static $values = [];
@@ -67,14 +67,14 @@ abstract class Overrider
 
 namespace {$namespace};
 
-use Overrider;
+use \CoreOverrider\OverriderBase;
 
 function {$function}(...\$params)
 {
     return {$name}Overrider::getValue(...\$params);
 }
 
-class {$name}Overrider extends Overrider
+class {$name}Overrider extends OverriderBase
 {
     protected static \$values;
     protected static \$override;
