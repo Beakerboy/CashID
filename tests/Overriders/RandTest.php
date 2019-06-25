@@ -4,8 +4,6 @@ namespace CashID;
 
 class RandTest extends \PHPUnit\Framework\TestCase
 {
-    use \phpmock\phpunit\PHPMock;
-
     /**
      * @testCase testRerunDuplicateNonce
      */
