@@ -2,7 +2,7 @@
 
 namespace CashID;
 
-use CashID\Overrrider;
+use \CoreOverrrider\OverriderBase;
 
 /**
  * Overriding the PHP core time function
@@ -14,7 +14,7 @@ function time()
     return TimeOverrider::getValue();
 }
 
-class TimeOverrider extends Overrider
+class TimeOverrider extends OverriderBase
 {
 
     protected static $values;
