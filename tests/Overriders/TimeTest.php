@@ -2,6 +2,8 @@
 
 namespace CashID;
 
+use CashID\Tests\ResponseGenerator;
+
 class TimeTest extends \PHPUnit\Framework\TestCase
 {
     public function setup()
