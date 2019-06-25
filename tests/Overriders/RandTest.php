@@ -11,7 +11,7 @@ class RandTest extends \PHPUnit\Framework\TestCase
      */
     public function testRerunDuplicateNonce()
     {
-        PHPMock::defineFunctionMock();
+        \PHPMock::defineFunctionMock();
         $rand = $this->getFunctionMock(__NAMESPACE__, "rand");
         $rand->expects($this->twice())->willReturn(100000000, 100000001);
         $this->assertEquals(100000000, rand());
