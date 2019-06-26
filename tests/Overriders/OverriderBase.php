@@ -83,7 +83,7 @@ class {$name}Overrider extends OverriderBase
     {
         self::\$num_calls++;
         if (self::\$override) {
-            echo '\\n' . self::\num_calls . self::\$values[0]. '\\n';
+            echo '\\n' . self::\num_calls . ': ' . self::\$values[0]. '\\n';
             return array_shift(self::\$values);
         } else {
             return \\{$function}(...\$params);
