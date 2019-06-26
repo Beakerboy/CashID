@@ -14,7 +14,7 @@ class RandTest extends \PHPUnit\Framework\TestCase
         \CoreOverrider\OverriderBase::createMock("CashID", "rand");
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
         RandOverrider::setOverride();
-        RandOverrider::setValues([$exp_nonce1, $exp_nonce1, $exp_nonce2]);
+        RandOverrider::willReturn($exp_nonce1, $exp_nonce1, $exp_nonce2);
         $request1 = $generator->createRequest();
         $request2 = $generator->createRequest();
         RandOverrider::unsetOverride();
