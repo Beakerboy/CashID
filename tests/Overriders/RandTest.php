@@ -9,8 +9,8 @@ class RandTest extends \PHPUnit\Framework\TestCase
      */
     public function testRerunDuplicateNonce()
     {
-        $exp_nonce1 = rand(100000000, 999999999);
-        $exp_nonce2 = rand(100000000, 999999999);
+        $exp_nonce1 = \rand(100000000, 999999999);
+        $exp_nonce2 = \rand(100000000, 999999999);
         \CoreOverrider\OverriderBase::createMock("CashID", "rand");
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
         RandOverrider::setOverride();
