@@ -81,6 +81,7 @@ class {$name}Overrider extends OverriderBase
     public static function getValue(...\$params)
     {
         if (self::\$override) {
+            echo self::\$values[0];
             return array_shift(self::\$values);
         } else {
             return \\{$function}(...\$params);
