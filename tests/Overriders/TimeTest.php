@@ -40,7 +40,7 @@ class TimeTest extends \PHPUnit\Framework\TestCase
     public function testOldRequest()
     {
         \CoreOverrider\OverriderBase::createMock("CashID", "time");
-        TimeOverrider::setValues([strtotime('-1 month')]);
+        TimeOverrider::willReturn(strtotime('-1 month'));
         TimeOverrider::setOverride();
         $json_request = $this->generator->createRequest();
         TimeOverrider::unsetOverride();
