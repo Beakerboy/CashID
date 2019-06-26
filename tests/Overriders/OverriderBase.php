@@ -33,7 +33,7 @@ abstract class OverriderBase
     /**
      * Assign the list of values to be generated
      */
-    public static function setValues(array $values)
+    public static function willReturn(...$values)
     {
         static::$values = $values;
     }
