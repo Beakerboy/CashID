@@ -1,6 +1,6 @@
 <?php
 
-namespace CashID;
+namespace CoreOverrider;
 
 /**
  * Override a core function within a namespace
@@ -25,7 +25,7 @@ namespace CashID;
  *     }
  */
 
-abstract class Overrider
+abstract class OverriderBase
 {
     protected static $override = false;
     protected static $values = [];
@@ -33,7 +33,7 @@ abstract class Overrider
     /**
      * Assign the list of values to be generated
      */
-    public static function setValues(array $values)
+    public static function willReturn(...$values)
     {
         static::$values = $values;
     }
@@ -57,5 +57,40 @@ abstract class Overrider
     public static function unsetOverride()
     {
         static::$override = false;
+    }
+
+    public static function createMock($namespace, $function)
+    {
+        $name = ucfirst($function);
+        $filename = $name . "Overrider.php";
+        $file_contents = "<?php
+
+namespace {$namespace};
+
+use \CoreOverrider\OverriderBase;
+
+function {$function}(...\$params)
+{
+    return {$name}Overrider::getValue(...\$params);
+}
+
+class {$name}Overrider extends OverriderBase
+{
+    protected static \$values;
+    protected static \$override;
+    protected static \$num_calls = 0;
+    public static function getValue(...\$params)
+    {
+        self::\$num_calls++;
+        if (self::\$override) {
+            return array_shift(self::\$values);
+        } else {
+            return \\{$function}(...\$params);
+        }
+    }
+}
+";
+        file_put_contents($filename, $file_contents);
+        include($filename);
     }
 }
