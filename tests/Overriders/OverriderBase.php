@@ -78,10 +78,12 @@ class {$name}Overrider extends OverriderBase
 {
     protected static \$values;
     protected static \$override;
+    protected static \$num_calls = 0;
     public static function getValue(...\$params)
     {
+        self::\$num_calls++;
         if (self::\$override) {
-            echo self::\$values[0];
+            echo '\\n' . self::\num_calls . self::\$values[0]. '\\n';
             return array_shift(self::\$values);
         } else {
             return \\{$function}(...\$params);
