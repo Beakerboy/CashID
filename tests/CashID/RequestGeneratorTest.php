@@ -8,6 +8,7 @@ use CashID\TimeOverrider;
 
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 {
+    use \phpmock\phpunit\PHPMock;
     /**
      * @testCase constructor
      */
@@ -74,10 +75,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $nonce2 = substr($request2, -9);
         
         $this->assertEquals($exp_nonce1, $nonce1);
-        $this->assertEquals($exp_nonce2, $nonce2);
-    }
-
-    /**
+        $this->ass
      * @testCase testStorageFailure
      */
     public function testStorageFailure()
