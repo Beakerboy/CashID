@@ -8,6 +8,7 @@ use CashID\TimeOverrider;
 
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 {
+    use \phpmock\phpunit\PHPMock;
     /**
      * @testCase constructor
      */
@@ -53,26 +54,6 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
                 "cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c3&o=p4&x=",
             ],
         ];
-    }
-
-    /**
-     * @testCase testRerunDuplicateNonce
-     */
-    public function testRerunDuplicateNonce()
-    {
-        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
-        $exp_nonce1 = rand(100000000, 999999999);
-        $exp_nonce2 = rand(100000000, 999999999);
-        RandOverrider::setOverride();
-        RandOverrider::setValues([$exp_nonce1, $exp_nonce1, $exp_nonce2]);
-        $request1 = $generator->createRequest();
-        $request2 = $generator->createRequest();
-        RandOverrider::unsetOverride();
-        $nonce1 = substr($request1, -9);
-        $nonce2 = substr($request2, -9);
-        
-        $this->assertEquals($exp_nonce1, $nonce1);
-        $this->assertEquals($exp_nonce2, $nonce2);
     }
 
     /**
