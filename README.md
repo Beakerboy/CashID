@@ -20,7 +20,7 @@
 ```javascript
 {
   "require": {
-      "beakerboy/cashid": "0.*"
+      "beakerboy/cashid-library": "0.*"
   }
 }
 ```
