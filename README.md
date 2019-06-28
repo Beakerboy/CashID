@@ -85,7 +85,7 @@ $ php composer.phar require Beakerboy/cashid:0.*
     $response = file_get_contents('php://input');
 
     // Parse the request.
-    $request = $cashid->validateRequest($response)
+    $request = $handler->validateRequest($response)
 
     // Validate the request.
     if($request !== false)
@@ -94,5 +94,5 @@ $ php composer.phar require Beakerboy/cashid:0.*
     }
 
     // Send the request confirmation.
-    $cashid->confirm_request();
+    $handler->confirm_request();
 ```
