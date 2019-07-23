@@ -1,10 +1,8 @@
 <?php
 namespace CashID\Tests\CashID;
 
-use CashID\RandOverrider;
 use CashID\RequestCacheInterface;
 use CashID\RequestGenerator;
-use CashID\TimeOverrider;
 
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 {
@@ -91,13 +89,13 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
 
         // Turn on overriding and set the values to return instead.
-        RandOverrider::setOverride();
-        RandOverrider::willReturn($exp_nonce1, $exp_nonce1, $exp_nonce2);
+        \CashID\RandOverrider::setOverride();
+        \CashID\RandOverrider::willReturn($exp_nonce1, $exp_nonce1, $exp_nonce2);
 
         // Generate 2 requests and extract the nonce values.
         $request1 = $generator->createRequest();
         $request2 = $generator->createRequest();
-        RandOverrider::unsetOverride();
+        \CashID\RandOverrider::unsetOverride();
         $nonce1 = substr($request1, -9);
         $nonce2 = substr($request2, -9);
 
