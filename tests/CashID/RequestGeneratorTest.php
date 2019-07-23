@@ -73,7 +73,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      * and rerun nonce generation until a unique nonce is found.
      *
      * @testCase testRerunDuplicateNonce
-     * @runTestsInSeparateProcesses
+     * @runInSeparateProcess
      */
     public function testRerunDuplicateNonce()
     {
