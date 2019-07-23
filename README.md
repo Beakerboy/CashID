@@ -53,6 +53,8 @@ $ php composer.phar require Beakerboy/cashid:0.*
 
 ```PHP
 <?php
+    use CashID\RequestGenerator;
+
     // Specify your server details
     $domain = 'mydomain.com';
     $listener_script = '/api/parse.php';
@@ -74,6 +76,8 @@ $ php composer.phar require Beakerboy/cashid:0.*
 
 ```PHP
 <?php
+    use CashID\ResponseHandler;
+
     // Specify your server details
     $domain = 'mydomain.com';
     $listener_script = '/api/parse.php';
