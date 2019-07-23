@@ -8,12 +8,10 @@ use CashID\Notary\NotaryInterface;
 use CashID\Notary\DefaultNotary;
 
 /**
- * Simple CashID support library that can:
- * - Verify requests
- * - Send status confirmations
+ * ResponseHandler
  *
- * Requirements for this library to function:
- * - PHP support for PECL APCu
+ * The ResponseHandler class validates a CashID response and produces an
+ * appropriate confirmation or error code.
  */
 class ResponseHandler
 {
