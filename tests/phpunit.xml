@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="bootstrap.php" colors="true">
   <testsuites>
-    <testsuite name="Overriders">
-      <directory suffix="Test.php">Overriders</directory>
-    </testsuite>
     <testsuite name="CashID">
       <directory suffix="Test.php">CashID</directory>
     </testsuite>
