@@ -1,6 +1,6 @@
 <?php
 
-namespace CashID/Cache;
+namespace CashID\Cache;
 
 interface RequestCacheInterface
 {
