@@ -14,7 +14,8 @@
   "require-dev": {
     "phpunit/phpunit": "6.*",
     "php-coveralls/php-coveralls": "^2.0",
-    "squizlabs/php_codesniffer": "2.*"
+    "squizlabs/php_codesniffer": "2.*",
+    "suin/phpcs-psr4-sniff": "2.*"
   },
   "autoload-dev": {
     "psr-4": {
