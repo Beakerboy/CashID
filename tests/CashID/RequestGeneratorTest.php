@@ -69,4 +69,41 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         
         $this->assertFalse($request);
     }
+
+    /**
+     * Verify that the library will check for duplicate nonces
+     * and rerun nonce generation until a unique nonce is found.
+     *
+     * @testCase testRerunDuplicateNonce
+     * @runTestsInSeparateProcesses
+     */
+    public function testRerunDuplicateNonce()
+    {
+        // Generate two random nonce values.
+        // (should I specify them instead to ensure uniqueness?)
+        $exp_nonce1 = \rand(100000000, 999999999);
+        $exp_nonce2 = \rand(100000000, 999999999);
+
+        // Override the rand function with a mock.
+        \CoreOverrider\OverriderBase::createMock("CashID", "rand");
+
+        // Create a RequestGenerator
+        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+
+        // Turn on overriding and set the values to return instead.
+        RandOverrider::setOverride();
+        RandOverrider::willReturn($exp_nonce1, $exp_nonce1, $exp_nonce2);
+
+        // Generate 2 requests and extract the nonce values.
+        $request1 = $generator->createRequest();
+        $request2 = $generator->createRequest();
+        RandOverrider::unsetOverride();
+        $nonce1 = substr($request1, -9);
+        $nonce2 = substr($request2, -9);
+
+        // Assert that the nonce values are unique despite the rand function
+        // returning one nonce value twice.
+        $this->assertEquals($exp_nonce1, $nonce1);
+        $this->assertEquals($exp_nonce2, $nonce2);
+    }
 }
