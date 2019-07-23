@@ -1,6 +1,6 @@
 <?php
 
-namespace CashID;
+namespace CashID\Notary;
 
 /**
  * Notary Interface
