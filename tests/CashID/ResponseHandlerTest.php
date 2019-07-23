@@ -420,7 +420,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                 return apcu_fetch($key);
             }
         ));
-        $notary = new \CashID\DefaultNotary();
+        $notary = new \CashID\Notary\DefaultNotary();
         $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache);
         $json_request = $this->generator->createRequest();
 
