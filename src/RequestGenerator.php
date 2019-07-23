@@ -6,7 +6,12 @@ use CashID\Cache\RequestCacheInterface;
 use CashID\Cache\APCuCache;
 
 /**
- * Simple CashID support library that can issue requests.
+ * Request Generator
+ *
+ * The RequestGenerator creates CashID requests following the CashID standard.
+ * The constructor is given the domain name and path that will be handling the
+ * response, while the createRequest function creates a request string from
+ * the required data and metadata.
  */
 class RequestGenerator
 {
@@ -22,7 +27,11 @@ class RequestGenerator
     }
     
     /**
-     * Creates a request
+     * Create a request
+     *
+     * Given an action, data, and a set of metadata, construct a valid CashID
+     * request. A unique random nonce is generated for each request and saved
+     * in the user cache.
      *
      * @param string $action
      *  Name of the action the user authenticates to perform
