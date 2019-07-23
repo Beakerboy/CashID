@@ -198,7 +198,7 @@ class ResponseHandler
                 throw new InternalException("The response does not match the request parameters.", API::STATUS_CODES['REQUEST_ALTERED']);
             }
 
-            // Send the request parts to bitcoind for signature verification.
+            // Send the request parts to the notary for signature verification.
             $verificationStatus = $this->notary->checkSignature($responseObject['address'], $responseObject['signature'], $responseObject['request']);
 
             // Validate the signature.
@@ -273,12 +273,12 @@ class ResponseHandler
     {
         // Sanity check if headers have already been sent.
         if (headers_sent()) {
-            throw new \Exception('cashid->confirm_request was called after data had been transmitted to the client, which prevents setting the required headers.');
+            throw new \Exception('cashid->confirmRequest was called after data had been transmitted to the client, which prevents setting the required headers.');
         }
 
         // Sanity check if validation has not yet been done.
         if (!isset(self::$statusConfirmation['status'])) {
-            throw new \Exception('cashid->confirm_request was called before validate_request so there is no confirmation to transmit to the client.');
+            throw new \Exception('cashid->confirmRequest was called before validateRequest so there is no confirmation to transmit to the client.');
         }
 
         // Configure confirmation message type.
