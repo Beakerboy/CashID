@@ -2,7 +2,7 @@
 
 namespace CashID\Tests\CashID;
 
-use CashID\RequestCacheInterface;
+use CashID\Cache\RequestCacheInterface;
 use CashID\RequestGenerator;
 use CashID\ResponseHandler;
 use CashID\Tests\ResponseGenerator;
@@ -391,7 +391,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                 return apcu_fetch($key);
             }
         ));
-        $notary = new \CashID\DefaultNotary();
+        $notary = new \CashID\Notary\DefaultNotary();
         $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache);
         $json_request = $this->generator->createRequest();
 
@@ -420,7 +420,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                 return apcu_fetch($key);
             }
         ));
-        $notary = new \CashID\DefaultNotary();
+        $notary = new \CashID\Notary\DefaultNotary();
         $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache);
         $json_request = $this->generator->createRequest();
 

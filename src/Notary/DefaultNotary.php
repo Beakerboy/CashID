@@ -1,6 +1,6 @@
 <?php
 
-namespace CashID;
+namespace CashID\Notary;
 
 use BitcoinPHP\BitcoinECDSA\BitcoinECDSA;
 use Submtd\CashaddrConverter\CashaddrConverter;

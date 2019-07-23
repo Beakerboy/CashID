@@ -1,7 +1,7 @@
 <?php
 namespace CashID\Tests\CashID;
 
-use CashID\RequestCacheInterface;
+use CashID\Cache\RequestCacheInterface;
 use CashID\RequestGenerator;
 
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase

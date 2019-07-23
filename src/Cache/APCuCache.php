@@ -1,6 +1,6 @@
 <?php
 
-namespace CashID;
+namespace CashID\Cache;
 
 class APCuCache implements RequestCacheInterface
 {
