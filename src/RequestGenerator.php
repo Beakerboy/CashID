@@ -2,6 +2,9 @@
 
 namespace CashID;
 
+use CashID\Cache\RequestCacheInterface;
+use CashID\Cache\APCuCache;
+
 /**
  * Simple CashID support library that can issue requests.
  */
