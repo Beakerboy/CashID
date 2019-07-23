@@ -474,10 +474,10 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     public function testOldRequest()
     {
         \CoreOverrider\OverriderBase::createMock("CashID", "time");
-        TimeOverrider::willReturn(strtotime('-1 month'));
-        TimeOverrider::setOverride();
+        \CashID\TimeOverrider::willReturn(strtotime('-1 month'));
+        \CashID\TimeOverrider::setOverride();
         $json_request = $this->generator->createRequest();
-        TimeOverrider::unsetOverride();
+        \CashID\TimeOverrider::unsetOverride();
 
         // Create the response
         $response_array = $this->responder->createResponse($json_request);
