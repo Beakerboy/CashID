@@ -94,5 +94,5 @@ $ php composer.phar require Beakerboy/cashid:0.*
     }
 
     // Send the request confirmation.
-    $handler->confirm_request();
+    $handler->confirmRequest();
 ```
