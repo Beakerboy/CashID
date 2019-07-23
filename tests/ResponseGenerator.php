@@ -3,7 +3,7 @@
 namespace CashID\Tests;
 
 use CashID\API;
-use CashID\DefaultNotary;
+use CashID\Notary\DefaultNotary;
 
 class ResponseGenerator
 {
