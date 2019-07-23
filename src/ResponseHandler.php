@@ -2,6 +2,11 @@
 
 namespace CashID;
 
+use CashID\Cache\RequestCacheInterface;
+use CashID\Cache\APCuCache;
+use CashID\Notary\NotaryInterface;
+use CashID\Notary\DefaultNotary;
+
 /**
  * Simple CashID support library that can:
  * - Verify requests
