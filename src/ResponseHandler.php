@@ -188,7 +188,7 @@ class ResponseHandler
 
             // Validate if the request is available
             if (!$user_initiated_request and ($requestReference['available'] === false)) {
-                throw new InternalException("The request nonce was not issued by this service.", API::STATUS_CODES['NONCE_CONSUMED']);
+                throw new InternalException("The request nonce was not issued by this service.", API::STATUS_CODES['REQUEST_CONSUMED']);
             }
 
             // Validate if the request has expired.
