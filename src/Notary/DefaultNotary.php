@@ -7,6 +7,9 @@ use Submtd\CashaddrConverter\CashaddrConverter;
 
 class DefaultNotary implements NotaryInterface
 {
+    /**
+     * @inheritdoc
+     */
     public function checkSignature(string $address, string $signature, string $message)
     {
             $converter = new CashaddrConverter();
@@ -15,6 +18,9 @@ class DefaultNotary implements NotaryInterface
             return $bitcoinECDSA->checkSignatureForMessage($legacy_address, $signature, $message);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function signMessage(string $address, string $message)
     {
         $bitcoinECDSA = new BitcoinECDSA();
