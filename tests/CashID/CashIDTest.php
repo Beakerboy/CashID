@@ -52,7 +52,10 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the complete process
      *
+     * This test must run in a separate process to prevent header interference
+     *
      * @testCase completeProcess
+     * @runInSeparateProcess
      */
     public function testCompleteProcess()
     {
