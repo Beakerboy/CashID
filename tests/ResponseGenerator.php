@@ -29,16 +29,16 @@ class ResponseGenerator
     /**
      * Create a response
      *
-     * An array is returned that includes all the required information
-     * in the CashID request. The $include_optional parameter determines
-     * if all or none of the optional fields are returned.
+     * An array is returned that includes all the required information in the
+     * CashID request. The $include_optional parameter determines if all or
+     * none of the optional fields are returned.
      *
      * todo: handle cases where the required field in not in the object’s
      *  metadata collection.
      *
      * @param array $request
      * @param boolean $include_optional
-     * @returns array
+     * @return array
      */
     public function createResponse($request_string, $include_optional = true): array
     {
@@ -56,8 +56,8 @@ class ResponseGenerator
         // Initialize the array
         $return_meta = [];
         
-        // Loop through the optional and required values and
-        // save the requested fields.
+        // Loop through the optional and required values and save the requested
+        // fields.
         foreach ($meta_keys as $key => $value) {
             $return_meta[$key] = $this->metadata[$key];
         }
@@ -74,7 +74,15 @@ class ResponseGenerator
         return $return_array;
     }
 
-    public function createJSONResponse($request_string, $include_optional = true)
+    /**
+     * Create a JSON Response
+     *
+     * The response array is returned as a JSON encoded string.
+     * @param array $request
+     * @param boolean $include_optional
+     * @return string
+     */
+    public function createJSONResponse($request_string, $include_optional = true): string
     {
         return json_encode(createResponse($request_string, $include_optional = true));
     }
