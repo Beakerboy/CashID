@@ -4,36 +4,55 @@ namespace CashID\Tests\CashID;
 use CashID\Cache\RequestCacheInterface;
 use CashID\RequestGenerator;
 
+/**
+ * Test the RequestGenerator calss
+ *
+ * Unit tests for each function
+ */
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     /**
+     * Test the class constructor
+     *
      * @testCase constructor
      */
     public function testConstructor()
     {
+        // Create a new object
         $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+
+        // Ensure it is the correct class type
         $this->assertInstanceOf(RequestGenerator::class, $this->generator);
     }
     
     /**
+     * Test the cretaeRequest function
+     *
      * @testCase Create Request
      * @dataProvider dataProviderForTestCreateRequest
      */
     public function testCreateRequest($action, $data, $metadata, $expected)
     {
+        // Create a RequestGenerator and generate a request given the test data
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
         $requestURI = $generator->createRequest($action, $data, $metadata);
 
-        // Remove the unique nonce
+        // Remove the unique nonce since we don't know what its value is
         $request_without_nonce = substr($requestURI, 0, -9);
+
+        // Ensure the rest of the request matches the expectation
         $this->assertEquals($expected, $request_without_nonce);
-        
+
+        // Save the nonce
         $nonce = substr($requestURI, -9);
 
-        // The nonce is a nine digit number
+        // Ensure the nonce is a nine digit number
         $this->assertRegExp('/^\d{9}$/', $nonce);
     }
 
+    /**
+     * Data for the testCreateRequest function
+     */
     public function dataProviderForTestCreateRequest()
     {
         return [
@@ -54,33 +73,38 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Simulate a storage failure
+     *
      * @testCase testStorageFailure
      */
     public function testStorageFailure()
     {
+        // Create a mock request cache with a store that always returns false
         $cache = $this->createMock(RequestCacheInterface::class);
         
         $cache->method('store')->willReturn(false);
-        
+
+        // Create a RequestGenerator with the mocked cache
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
+
+        // Generate a request and ensure it fails
         $request = $generator->createRequest();
         
         $this->assertFalse($request);
     }
 
     /**
-     * Verify that the library will check for duplicate nonces
-     * and rerun nonce generation until a unique nonce is found.
+     * Verify that the library will check for duplicate nonces and rerun nonce
+     * generation until a unique nonce is found.
      *
      * @testCase testRerunDuplicateNonce
      * @runInSeparateProcess
      */
     public function testRerunDuplicateNonce()
     {
-        // Generate two random nonce values.
-        // (should I specify them instead to ensure uniqueness?)
-        $exp_nonce1 = \rand(100000000, 999999999);
-        $exp_nonce2 = \rand(100000000, 999999999);
+        // Two unique nonce values.
+        $exp_nonce1 = 100000000;
+        $exp_nonce2 = 999999999;
 
         // Override the rand function with a mock.
         \CoreOverrider\OverriderBase::createMock("CashID", "rand");
@@ -88,7 +112,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         // Create a RequestGenerator
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
 
-        // Turn on overriding and set the values to return instead.
+        // Override the rand function with the specified sequence of values
         \CashID\RandOverrider::setOverride();
         \CashID\RandOverrider::willReturn($exp_nonce1, $exp_nonce1, $exp_nonce2);
 
