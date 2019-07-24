@@ -4,7 +4,7 @@
   "description": "CashID library for PHP",
   "keywords": ["bitcoin", "authentication"],
   "require": {
-    "php": ">=7.0.0",
+    "php": ">=7.1.0",
     "bitcoin-php/bitcoin-ecdsa": ">=1.3",
     "submtd/cashaddr-converter": ">=1.0.1"
   },
