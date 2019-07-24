@@ -97,6 +97,9 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      * Verify that the library will check for duplicate nonces and rerun nonce
      * generation until a unique nonce is found.
      *
+     * This must run in a separate process as earlier calls to rand() will
+     * prevent it from being overloaded.
+     *
      * @testCase testRerunDuplicateNonce
      * @runInSeparateProcess
      */
