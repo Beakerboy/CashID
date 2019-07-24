@@ -48,7 +48,6 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      *
      * Ensure the function produces the correct array from the given JSON string.
      *
-     * @testCase testParseRequest
      * @dataProvider dataProviderForTestParseRequest
      */
     public function testParseRequest(string $request, array $expected_array)
@@ -93,7 +92,6 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      * All of these failures occur before the function checks if the nonce was actually
      * created by the requestGenerator, so we can pass them to validateRequest() in isolation.
      *
-     * @testCase testInvalidResponse
      * @runInSeparateProcess
      * @dataProvider dataProviderForInvalidResponse
      * @dataProvider dataProviderForUserInitiatedResponse
@@ -220,7 +218,6 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      * Ensure the function throws the correct exception for malformed requests.
      * All these failures are checked after the signature is checked.
      *
-     * @testCase testInvalidSignedResponse
      * @runInSeparateProcess
      * @dataProvider dataProviderForInvalidSignedResponse
      */
@@ -348,7 +345,6 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      *
      * Ensure that the function correctly identifies tampered requests
      *
-     * @testCase testTamperedRequest
      * @runInSeparateProcess
      * @dataProvider dataProviderForTamperedRequest
      */
@@ -489,7 +485,6 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      * This runs in a separate process to ensure the exception is independant
      * from the exception thrown in ConfirmRequestHeadersSentException
      *
-     * @testCase ConfirmRequestNotVerifiedException
      * @runInSeparateProcess
      */
     public function testConfirmRequestNotVerifiedException()
