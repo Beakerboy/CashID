@@ -14,7 +14,6 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the class constructor
      *
-     * @testCase constructor
      */
     public function testConstructor()
     {
@@ -28,7 +27,6 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     /**
      * Test the cretaeRequest function
      *
-     * @testCase Create Request
      * @dataProvider dataProviderForTestCreateRequest
      */
     public function testCreateRequest($action, $data, $metadata, $expected)
@@ -75,7 +73,6 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     /**
      * Simulate a storage failure
      *
-     * @testCase testStorageFailure
      */
     public function testStorageFailure()
     {
@@ -100,7 +97,6 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      * This must run in a separate process as earlier calls to rand() will
      * prevent it from being overloaded.
      *
-     * @testCase testRerunDuplicateNonce
      * @runInSeparateProcess
      */
     public function testRerunDuplicateNonce()
