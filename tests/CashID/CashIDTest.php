@@ -5,10 +5,21 @@ use CashID\RequestGenerator;
 use CashID\ResponseHandler;
 use CashID\Tests\ResponseGenerator;
 
+/**
+ * CashID Test
+ *
+ * A complete functional test of a working CashID interaction
+ */
 class CashIDTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * Setup
+     *
+     * Set the global objects for this test
+     */
     public function setUp()
     {
+        // Define some metatdata for our "user" to respond with
         $this->metadata = [
             'name' => 'Alice',
             'family' => 'Smith',
@@ -27,20 +38,37 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
             'phone' => '123-123-1234',
             'postal' => '12345',
         ];
+
+        // Create the generator
         $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+
+        // Create a response handler with matching server and script
         $this->handler = new ResponseHandler("demo.cashid.info", "/api/parse.php");
+
+        // Supply the "user" with their metadata
         $this->responder = new ResponseGenerator($this->metadata);
     }
     
     /**
+     * Test the complete process
+     *
+     * This test must run in a separate process to prevent header interference
+     *
      * @testCase completeProcess
      * @runInSeparateProcess
      */
     public function testCompleteProcess()
     {
+        // Create a minimal request
         $requestURI = $this->generator->createRequest();
+
+        // The user creates their response.
         $response_array = $this->responder->createResponse($requestURI);
+
+        // JSON encode the response
         $json_response = json_encode($response_array);
+
+        // The expected validation response
         $validation_response = [
             "action" => "auth",
             "data" => "",
@@ -48,14 +76,18 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
             "address" => 'qpjvm3u8cvjddupctguwatrlaxtutprg8s04ekldyr',
             "signature" => $response_array['signature'],
         ];
+
+        // Assert the validation responds appropriately.
         $this->assertEquals($validation_response, $this->handler->validateRequest($json_response));
-        
-        $response_array = [
+
+        // The expected confirmation
+        $confirmation_array = [
             "status" => 0,
             "message" => "",
         ];
 
-        $this->expectOutputString(json_encode($response_array));
+        // Assert that the handler responds appropriately
+        $this->expectOutputString(json_encode($confirmation_array));
         $this->handler->confirmRequest();
     }
 }

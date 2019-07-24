@@ -7,8 +7,16 @@ use CashID\RequestGenerator;
 use CashID\ResponseHandler;
 use CashID\Tests\ResponseGenerator;
 
+/**
+ * Test the ResponseHandlerr class
+ *
+ * Unit tests for each function
+ */
 class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * Set up the default objects for the test
+     */
     public function setUp()
     {
         $this->cashaddr = 'qpjvm3u8cvjddupctguwatrlaxtutprg8s04ekldyr';
@@ -49,9 +57,13 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected_array, $result);
     }
 
+    /**
+     * Data for the testParseRequest test case
+     */
     public function dataProviderForTestParseRequest()
     {
         return [
+            // Test 1
             [
                 'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c3&o=p4&x=95261230581',
                 [
@@ -88,11 +100,17 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      */
     public function testInvalidResponse(string $JSON_string, array $response_array)
     {
+        // Verify that the function return false
         $this->assertFalse($this->handler->validateRequest($JSON_string));
+
+        // Verify the correct status code is produce
         $this->expectOutputString(json_encode($response_array));
         $this->handler->confirmRequest();
     }
 
+    /**
+     * Provide an assortment of malformed response strings
+     */
     public function dataProviderForInvalidResponse()
     {
         return [
@@ -176,6 +194,9 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
+    /**
+     * Provide an assortment of malformed user-initiated response strings
+     */
     public function dataProviderForUserInitiatedResponse()
     {
         return [
@@ -384,6 +405,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      */
     public function testAPCuResponseFailure()
     {
+        // Create a mock request cache whos storage fails, but successfully fetches
         $cache = $this->createMock(RequestCacheInterface::class);
         $cache->method('store')->willReturn(false);
         $cache->method('fetch')->will($this->returnCallback(
@@ -391,8 +413,14 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                 return apcu_fetch($key);
             }
         ));
+
+        // Use the default notary
         $notary = new \CashID\Notary\DefaultNotary();
+
+        // Create or hobbled response handler
         $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache);
+
+        // Generate a request using the fully functional generator
         $json_request = $this->generator->createRequest();
 
         // Create the response
@@ -408,11 +436,13 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * Test APCu response storage failure
-     * @runInSeparateProcess
      *
+     * @runInSeparateProcess
      */
     public function testAPCuConfirmationFailure()
     {
+        // Create a mock request cache whos storage fails the second time,
+        // but successfully fetches
         $cache = $this->createMock(RequestCacheInterface::class);
         $cache->method('store')->will($this->onConsecutiveCalls(true, false));
         $cache->method('fetch')->will($this->returnCallback(
@@ -420,8 +450,14 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                 return apcu_fetch($key);
             }
         ));
+
+        // Use the default notary
         $notary = new \CashID\Notary\DefaultNotary();
+
+        // Create a hobbled handler
         $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache);
+
+        // Generate a request using the fully functional generator
         $json_request = $this->generator->createRequest();
 
         // Create the response
@@ -436,6 +472,8 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Expect an exception if headers have been sent prior to confirmation
+     *
      * @testCase ConfirmRequestHeadersSentException
      */
     public function testConfirmRequestHeadersSentException()
@@ -446,6 +484,11 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     }
     
     /**
+     * Expect an exception if no request was every sent
+     *
+     * This runs in a separate process to ensure the exception is independant
+     * from the exception thrown in ConfirmRequestHeadersSentException
+     *
      * @testCase ConfirmRequestNotVerifiedException
      * @runInSeparateProcess
      */
@@ -456,6 +499,8 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Test that the invalidateRequest function returns the expected output
+     *
      * @testCase ConfirmRequestNotVerifiedException
      * @runInSeparateProcess
      */
@@ -469,14 +514,22 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     /**
      * Test that a response to an old request causes a failure
      *
+     * This test runs in a seperate process because earlier calls to time()
+     * will prevent it from being overridden
+     *
      * @runInSeparateProcess
      */
     public function testOldRequest()
     {
+        // Mock the time function to always return the date one month ago
         \CoreOverrider\OverriderBase::createMock("CashID", "time");
         \CashID\TimeOverrider::willReturn(strtotime('-1 month'));
         \CashID\TimeOverrider::setOverride();
+
+        // Create a request
         $json_request = $this->generator->createRequest();
+
+        // Turn off the override
         \CashID\TimeOverrider::unsetOverride();
 
         // Create the response
