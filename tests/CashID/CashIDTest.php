@@ -50,7 +50,7 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
         ];
         $this->assertEquals($validation_response, $this->handler->validateRequest($json_response));
         
-        $response_array= [
+        $response_array = [
             "status" => 0,
             "message" => "",
         ];
