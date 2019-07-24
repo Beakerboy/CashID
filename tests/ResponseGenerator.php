@@ -5,6 +5,12 @@ namespace CashID\Tests;
 use CashID\API;
 use CashID\Notary\DefaultNotary;
 
+/**
+ * Response Generator
+ *
+ * This class simulates the actions of a user. The class produces a signed
+ * response for a provided request given a collection of metadata.
+ */
 class ResponseGenerator
 {
     /**
