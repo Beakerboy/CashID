@@ -18,10 +18,10 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     public function testConstructor()
     {
         // Create a new object
-        $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
 
         // Ensure it is the correct class type
-        $this->assertInstanceOf(RequestGenerator::class, $this->generator);
+        $this->assertInstanceOf(RequestGenerator::class, $generator);
     }
     
     /**
