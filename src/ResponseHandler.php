@@ -86,7 +86,7 @@ class ResponseHandler
             }
 
             // Parse the request.
-            $parsedRequest = self::parseRequest($responseObject['request']);
+            $parsedRequest = API::parseRequest($responseObject['request']);
 
             // Validate overall structure.
             if (!$parsedRequest) {
