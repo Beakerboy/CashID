@@ -14,6 +14,8 @@ use CashID\Tests\ResponseGenerator;
  */
 class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
 {
+    use \phpmock\phpunit\PHPMock;
+
     /**
      * Set up the default objects for the test
      */
@@ -516,16 +518,11 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      */
     public function testOldRequest()
     {
-        // Mock the time function to always return the date one month ago
-        \CoreOverrider\OverriderBase::createMock("CashID", "time");
-        \CashID\TimeOverrider::willReturn(strtotime('-1 month'));
-        \CashID\TimeOverrider::setOverride();
+        $time = $this->getFunctionMock('CashID', "time");
+        $time->expects($this->exactly(2))->willReturn(strtotime('-1 month'), strtotime('now'));
 
         // Create a request
         $json_request = $this->generator->createRequest();
-
-        // Turn off the override
-        \CashID\TimeOverrider::unsetOverride();
 
         // Create the response
         $response_array = $this->responder->createResponse($json_request);
