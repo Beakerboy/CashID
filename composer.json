@@ -15,7 +15,8 @@
     "phpunit/phpunit": "6.*",
     "php-coveralls/php-coveralls": "^2.0",
     "squizlabs/php_codesniffer": "3.*",
-    "suin/phpcs-psr4-sniff": "2.*"
+    "suin/phpcs-psr4-sniff": "2.*",
+    "php-mock/php-mock-phpunit”: ">=2.4.0"
   },
   "autoload-dev": {
     "psr-4": {
