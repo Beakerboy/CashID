@@ -133,7 +133,7 @@ class ResponseHandler
             $parsedRequest = self::parseRequest($responseObject['request']);
 
             // Validate overall structure.
-            if ($parsedRequest === false) {
+            if (!$parsedRequest) {
                 throw new InternalException("Internal server error, could not evaluate request structure.", API::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
             } elseif ($parsedRequest == 0) {
                 throw new InternalException("Request URI is invalid.", API::STATUS_CODES['REQUEST_BROKEN']);
