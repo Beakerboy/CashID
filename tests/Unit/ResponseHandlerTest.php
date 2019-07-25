@@ -19,31 +19,31 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     private $generator;
     private $responder;
     private $handler;
+    private $cashaddr = 'qpjvm3u8cvjddupctguwatrlaxtutprg8s04ekldyr';
+    private $metadata = [
+        'name' => 'Alice',
+        'family' => 'Smith',
+        'nickname' => 'ajsmith',
+        'age' => 20,
+        'gender' => 'female',
+        'birthdate' => '1999-01-01',
+        'national' => 'USA',
+        'country' => 'USA',
+        'state' => 'CA',
+        'city' => 'Los Angeles',
+        'streetname' => 'Main',
+        'streetnumber' => '123',
+        'email' => 'ajsmith@example.com',
+        'social' => '123-45-6789',
+        'phone' => '123-123-1234',
+        'postal' => '12345',
+    ];
 
     /**
      * Set up the default objects for the test
      */
     public function setUp()
     {
-        $this->cashaddr = 'qpjvm3u8cvjddupctguwatrlaxtutprg8s04ekldyr';
-        $this->metadata = [
-            'name' => 'Alice',
-            'family' => 'Smith',
-            'nickname' => 'ajsmith',
-            'age' => 20,
-            'gender' => 'female',
-            'birthdate' => '1999-01-01',
-            'national' => 'USA',
-            'country' => 'USA',
-            'state' => 'CA',
-            'city' => 'Los Angeles',
-            'streetname' => 'Main',
-            'streetnumber' => '123',
-            'email' => 'ajsmith@example.com',
-            'social' => '123-45-6789',
-            'phone' => '123-123-1234',
-            'postal' => '12345',
-        ];
         $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
         $this->responder = new ResponseGenerator($this->metadata);
         $this->handler = new ResponseHandler("demo.cashid.info", "/api/parse.php");
