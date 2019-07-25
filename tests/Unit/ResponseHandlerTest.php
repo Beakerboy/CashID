@@ -16,6 +16,10 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
 {
     use \phpmock\phpunit\PHPMock;
 
+    private $generator;
+    private $responder;
+    private $handler;
+
     /**
      * Set up the default objects for the test
      */
@@ -91,8 +95,10 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      * Test failures in the validateRequest() function
      *
      * Ensure the function throws the correct exception for malformed requests.
-     * All of these failures occur before the function checks if the nonce was actually
-     * created by the requestGenerator, so we can pass them to validateRequest() in isolation.
+     * All of these failures occur before the function checks if the nonce was
+     * actually created by the requestGenerator, so we can pass them to
+     * validateRequest() in isolation. This should probably be changed in case
+     * the function is refactored.
      *
      * @runInSeparateProcess
      * @dataProvider dataProviderForInvalidResponse
