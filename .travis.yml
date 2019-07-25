@@ -15,6 +15,7 @@ script:
   - mkdir -p build/logs
   - vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-clover build/logs/clover.xml
   - vendor/bin/phpcs --ignore=vendor --standard=coding_standard.xml .
+  - vendor/bin/phpstan analyze src --level 4
 
 after_success:
   - travis_retry php vendor/bin/php-coveralls -v
