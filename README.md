@@ -41,7 +41,7 @@ require_once(__DIR__ . '/vendor/autoload.php');
 Alternatively, use composer on the command line to require and install CashID:
 
 ```
-$ php composer.phar require Beakerboy/cashid:0.*
+$ php composer.phar require beakerboy/cashid:0.*
 ```
 
 ### Minimum Requirements
