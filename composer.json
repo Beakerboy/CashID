@@ -12,7 +12,7 @@
     "psr-4": {"CashID\\": "src/"}
   },
   "require-dev": {
-    "phpstan/phpstan": ">10.0",
+    "phpstan/phpstan": ">5.0",
     "phpunit/phpunit": "6.*",
     "php-coveralls/php-coveralls": "^2.0",
     "php-mock/php-mock-phpunit": ">=2.4.0",
