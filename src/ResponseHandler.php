@@ -133,7 +133,7 @@ class ResponseHandler
             $parsedRequest = self::parseRequest($responseObject['request']);
 
             // Validate overall structure.
-            if ($parsedRequest === false) {
+            if (!$parsedRequest) {
                 throw new InternalException("Internal server error, could not evaluate request structure.", API::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
             } elseif ($parsedRequest == 0) {
                 throw new InternalException("Request URI is invalid.", API::STATUS_CODES['REQUEST_BROKEN']);
@@ -182,7 +182,7 @@ class ResponseHandler
             $requestReference = $this->cache->fetch("cashid_request_{$parsedRequest['parameters']['nonce']}");
 
             // Validate that the request was issued by this service provider.
-            if (!$user_initiated_request and ($requestReference === false)) {
+            if (!$user_initiated_request and (!$requestReference)) {
                 throw new InternalException("The request nonce was not issued by this service.", API::STATUS_CODES['REQUEST_INVALID_NONCE']);
             }
 
