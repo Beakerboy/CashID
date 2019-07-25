@@ -11,6 +11,7 @@ use CashID\RequestGenerator;
  */
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 {
+    use \phpmock\phpunit\PHPMock;
     /**
      * Test the class constructor
      *
@@ -106,7 +107,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $exp_nonce2 = 999999999;
 
         $rand = $this->getFunctionMock('CashID', "rand");
-        $rand->expects($this->once())->willReturn(100000000, 999999999);
+        $rand->expects($this->exactly(2))->willReturn(100000000, 999999999);
 
         // Generate 2 requests and extract the nonce values.
         $request1 = $generator->createRequest();
