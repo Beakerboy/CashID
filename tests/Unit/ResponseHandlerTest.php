@@ -8,7 +8,7 @@ use CashID\ResponseHandler;
 use CashID\Tests\ResponseGenerator;
 
 /**
- * Test the ResponseHandlerr class
+ * Test the ResponseHandler class
  *
  * Unit tests for each function
  */
