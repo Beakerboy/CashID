@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="bootstrap.php" colors="true">
   <testsuites>
-    <testsuite name="CashID">
+    <testsuite name="Functional">
+      <directory suffix="Test.php">CashID</directory>
+    </testsuite>
+    <testsuite name="Unit">
       <directory suffix="Test.php">CashID</directory>
     </testsuite>
   </testsuites>
