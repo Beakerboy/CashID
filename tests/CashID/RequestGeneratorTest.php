@@ -106,6 +106,9 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $exp_nonce1 = 100000000;
         $exp_nonce2 = 999999999;
 
+        // Create a RequestGenerator
+        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+
         $rand = $this->getFunctionMock('CashID', "rand");
         $rand->expects($this->exactly(2))->willReturn(100000000, 999999999);
 
