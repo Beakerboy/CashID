@@ -182,7 +182,7 @@ class ResponseHandler
             $requestReference = $this->cache->fetch("cashid_request_{$parsedRequest['parameters']['nonce']}");
 
             // Validate that the request was issued by this service provider.
-            if (!$user_initiated_request and ($requestReference === false)) {
+            if (!$user_initiated_request and (!$requestReference)) {
                 throw new InternalException("The request nonce was not issued by this service.", API::STATUS_CODES['REQUEST_INVALID_NONCE']);
             }
 
