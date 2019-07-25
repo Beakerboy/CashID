@@ -519,7 +519,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     public function testOldRequest()
     {
         $time = $this->getFunctionMock('CashID', "time");
-        $time->expects($this->once())->willReturn(strtotime('-1 month'));
+        $time->expects($this->exactly(3))->willReturn(strtotime('-1 month'), strtotime('now'), strtotime('now'));
 
         // Create a request
         $json_request = $this->generator->createRequest();
