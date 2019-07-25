@@ -11,6 +11,7 @@ use CashID\RequestGenerator;
  */
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 {
+    use \phpmock\phpunit\PHPMock;
     /**
      * Test the class constructor
      *
@@ -105,20 +106,16 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $exp_nonce1 = 100000000;
         $exp_nonce2 = 999999999;
 
-        // Override the rand function with a mock.
-        \CoreOverrider\OverriderBase::createMock("CashID", "rand");
-
         // Create a RequestGenerator
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
 
-        // Override the rand function with the specified sequence of values
-        \CashID\RandOverrider::setOverride();
-        \CashID\RandOverrider::willReturn($exp_nonce1, $exp_nonce1, $exp_nonce2);
+        $rand = $this->getFunctionMock('CashID', "rand");
+        $rand->expects($this->exactly(2))->willReturn(100000000, 999999999);
 
         // Generate 2 requests and extract the nonce values.
         $request1 = $generator->createRequest();
         $request2 = $generator->createRequest();
-        \CashID\RandOverrider::unsetOverride();
+
         $nonce1 = substr($request1, -9);
         $nonce2 = substr($request2, -9);
 

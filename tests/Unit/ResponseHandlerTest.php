@@ -8,36 +8,42 @@ use CashID\ResponseHandler;
 use CashID\Tests\ResponseGenerator;
 
 /**
- * Test the ResponseHandlerr class
+ * Test the ResponseHandler class
  *
  * Unit tests for each function
  */
 class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
 {
+    use \phpmock\phpunit\PHPMock;
+
+    private $generator;
+    private $responder;
+    private $handler;
+    private $cashaddr = 'qpjvm3u8cvjddupctguwatrlaxtutprg8s04ekldyr';
+    private $metadata = [
+        'name' => 'Alice',
+        'family' => 'Smith',
+        'nickname' => 'ajsmith',
+        'age' => 20,
+        'gender' => 'female',
+        'birthdate' => '1999-01-01',
+        'national' => 'USA',
+        'country' => 'USA',
+        'state' => 'CA',
+        'city' => 'Los Angeles',
+        'streetname' => 'Main',
+        'streetnumber' => '123',
+        'email' => 'ajsmith@example.com',
+        'social' => '123-45-6789',
+        'phone' => '123-123-1234',
+        'postal' => '12345',
+    ];
+
     /**
      * Set up the default objects for the test
      */
     public function setUp()
     {
-        $this->cashaddr = 'qpjvm3u8cvjddupctguwatrlaxtutprg8s04ekldyr';
-        $this->metadata = [
-            'name' => 'Alice',
-            'family' => 'Smith',
-            'nickname' => 'ajsmith',
-            'age' => 20,
-            'gender' => 'female',
-            'birthdate' => '1999-01-01',
-            'national' => 'USA',
-            'country' => 'USA',
-            'state' => 'CA',
-            'city' => 'Los Angeles',
-            'streetname' => 'Main',
-            'streetnumber' => '123',
-            'email' => 'ajsmith@example.com',
-            'social' => '123-45-6789',
-            'phone' => '123-123-1234',
-            'postal' => '12345',
-        ];
         $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
         $this->responder = new ResponseGenerator($this->metadata);
         $this->handler = new ResponseHandler("demo.cashid.info", "/api/parse.php");
@@ -89,8 +95,10 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      * Test failures in the validateRequest() function
      *
      * Ensure the function throws the correct exception for malformed requests.
-     * All of these failures occur before the function checks if the nonce was actually
-     * created by the requestGenerator, so we can pass them to validateRequest() in isolation.
+     * All of these failures occur before the function checks if the nonce was
+     * actually created by the requestGenerator, so we can pass them to
+     * validateRequest() in isolation. This should probably be changed in case
+     * the function is refactored.
      *
      * @runInSeparateProcess
      * @dataProvider dataProviderForInvalidResponse
@@ -516,16 +524,11 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      */
     public function testOldRequest()
     {
-        // Mock the time function to always return the date one month ago
-        \CoreOverrider\OverriderBase::createMock("CashID", "time");
-        \CashID\TimeOverrider::willReturn(strtotime('-1 month'));
-        \CashID\TimeOverrider::setOverride();
+        $time = $this->getFunctionMock('CashID', "time");
+        $time->expects($this->exactly(4))->willReturn(strtotime('-1 month'), strtotime('now'), strtotime('now'), strtotime('now'));
 
         // Create a request
         $json_request = $this->generator->createRequest();
-
-        // Turn off the override
-        \CashID\TimeOverrider::unsetOverride();
 
         // Create the response
         $response_array = $this->responder->createResponse($json_request);
