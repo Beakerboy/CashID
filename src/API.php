@@ -81,4 +81,45 @@ class API
             'postal' => 5
         ],
     ];
+
+    /**
+     * Parses a request string and returns a request array.
+     *
+     * @param string $request_uri
+     *   the full request URI to parse
+     * @return array
+     *   returns a request array populated based on the request_url string
+     */
+    public static function parseRequest(string $request_uri): array
+    {
+        // Initialize empty structure
+        $request_parts = [];
+        // Parse the request URI.
+        @preg_match(API::REGEXP_REQUEST, $request_uri, $request_parts);
+        @preg_match(API::REGEXP_PARAMETERS, $request_parts['parameters'], $request_parts['parameters']);
+        @preg_match(API::REGEXP_METADATA, $request_parts['parameters']['required'], $request_parts['parameters']['required']);
+        @preg_match(API::REGEXP_METADATA, $request_parts['parameters']['optional'], $request_parts['parameters']['optional']);
+        // TODO: Make this pretty. It removes the numeric index that preg_match makes despite named group matching.
+        foreach ($request_parts as $key => $value) {
+            if (is_int($key)) {
+                unset($request_parts[$key]);
+            }
+        }
+        foreach ($request_parts['parameters'] as $key => $value) {
+            if (is_int($key)) {
+                unset($request_parts['parameters'][$key]);
+            }
+        }
+        foreach ($request_parts['parameters']['required'] as $key => $value) {
+            if (is_int($key) || $request_parts['parameters']['required'][$key] === '') {
+                unset($request_parts['parameters']['required'][$key]);
+            }
+        }
+        foreach ($request_parts['parameters']['optional'] as $key => $value) {
+            if (is_int($key) || $request_parts['parameters']['optional'][$key] === '') {
+                unset($request_parts['parameters']['optional'][$key]);
+            }
+        }
+        return $request_parts;
+    }
 }
