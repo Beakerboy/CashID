@@ -39,7 +39,7 @@ class RequestGenerator
      *  Data relevant to the requested action
      * @param array $metadata
      *  Array with requested and optional metadata
-     * @return
+     * @return mixed
      *  returns the request URI or false if error
      */
     public function createRequest(string $action = "", string $data = "", array $metadata = [])
