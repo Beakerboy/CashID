@@ -28,8 +28,13 @@ abstract class CashIDService
     {
         // Assign the provided dependency to the property
         foreach ($dependencies as $object) {
+            // If the parameter is not an object, throw an exception
+            if (!is_object($object)) {
+                throw new CashIDException("Dependencies must be objects.");
+            }
             $interface_names = class_implements($object);
             $used = false;
+
             // Check the list of interfaces to ensure it implements one we need
             foreach ($interface_names as $interface_name) {
                 // If it does, save it to the appropriate class parameter
@@ -46,6 +51,8 @@ abstract class CashIDService
                 throw new CashIDException("Class '{$class_name}' cannot be used as a dependency.");
             }
         }
+
+        // Assign any remaining default dependencies.
         foreach ($this->defaultDependencies as $dependency) {
             $name = $dependency['name'];
             $class = $dependency['class'];
