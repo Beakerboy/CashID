@@ -2,6 +2,8 @@
 
 namespace CashID\Services;
 
+use CashID\Exceptions\CashIDException;
+
 abstract class CashIDService
 {
     protected $service_domain;
@@ -41,7 +43,7 @@ abstract class CashIDService
             // If it does not, throw an exception
             if (!$used) {
                 $class_name = get_class($object);
-                throw new \Exception("Class '{$class_name}' cannot be used as a dependency.");
+                throw new CashIDException("Class '{$class_name}' cannot be used as a dependency.");
             }
         }
         foreach ($this->defaultDependencies as $dependency) {
