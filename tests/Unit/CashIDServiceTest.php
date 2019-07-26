@@ -14,16 +14,26 @@ class CashIDServiceTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test that setDependencies throws an exception
+     *
+     * @dataProvider dataProviderForTestCreateRequest
      */
-    public function testCreateRequest()
+    public function testCreateRequest($non_dependency)
     {
-        // Create a DefaultNotary
-        $notary = new \CashID\Notary\DefaultNotary();
-
-        // The RequestGenerator does not have a dependency for the NotaryInterface
+        // The RequestGenerator does not have a dependency for the provided item
         $this->expectException(CashIDException::class);
 
         // We expect it to throw an exception when constructed with an invalid dependency
-        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $notary);
+        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $non_dependency);
     }
+
+    public function dataProviderForTestCreateRequest()
+    {
+        return [
+            // Object that is not a defined dependency
+            [new \CashID\Notary\DefaultNotary()],
+            // Non-object
+            ["Text"],
+        ];
+    }
+    
 }
