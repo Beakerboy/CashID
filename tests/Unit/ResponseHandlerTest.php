@@ -438,7 +438,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      *
      * @runInSeparateProcess
      */
-    public function testAPCuConfirmationFailure()
+    public function testAPCuAlterFailure()
     {
         // Create a mock request cache whos storage fails the second time,
         // but successfully fetches
