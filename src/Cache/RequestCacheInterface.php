@@ -38,4 +38,13 @@ interface RequestCacheInterface
      * @param string $key
      */
     public function exists(string $key);
+
+    /**
+     * Delete
+     *
+     * Delete a key from the cache
+     *
+     * @param string $key
+     */
+    public function delete(string $key);
 }
