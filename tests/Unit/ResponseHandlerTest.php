@@ -498,4 +498,26 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         $this->expectOutputString('{"status":142,"message":"The request has expired and is no longer available."}');
         $this->handler->confirmRequest();
     }
+
+    /**
+     * Test that a consumed request cannot be reused
+     */
+    public function testConsumedRequest()
+    {
+        // Create a request
+        $json_request = $this->generator->createRequest();
+
+        // Create the response
+        $response = $this->responder->createJSONResponse($json_request);
+        
+        // Validate
+        $this->handler->validateRequest($response);
+
+        // Validating a second time will fail
+        $this->assertFalse($this->handler->validateRequest($response));
+
+        // Verify that the correct exception and message is produced
+        $this->expectOutputString('{"status":143,"message":"The request has been used and is no longer available."}');
+        $this->handler->confirmRequest();
+    }
 }
