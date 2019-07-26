@@ -5,6 +5,7 @@ namespace CashID;
 use CashID\Cache\RequestCacheInterface;
 use CashID\Cache\APCuCache;
 use CashID\Exceptions\InternalException;
+use CashID\Exceptions\CashIDException;
 use CashID\Notary\NotaryInterface;
 use CashID\Notary\DefaultNotary;
 
@@ -283,13 +284,13 @@ class ResponseHandler
         // Sanity check if headers have already been sent.
         if (headers_sent()) {
             $message = 'cashid->confirmRequest was called after data had been transmitted to the client, which prevents setting the required headers.';
-            throw new \Exception($message);
+            throw new CashIDException($message);
         }
 
         // Sanity check if validation has not yet been done.
         if (!isset(self::$statusConfirmation['status'])) {
             $message = 'cashid->confirmRequest was called before validateRequest so there is no confirmation to transmit to the client.';
-            throw new \Exception($message);
+            throw new CashIDException($message);
         }
 
         // Configure confirmation message type.
