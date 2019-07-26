@@ -17,8 +17,13 @@ class CashIDServiceTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreateRequest($action, $data, $metadata, $expected)
     {
+        // Create a DefaultNotary
         $notary = new \CashID\Notary\DefaultNotary();
+
+        // The RequestGenerator does not have a dependency for the NotaryInterface
         $this->expectException(CashIDException::class);
+
+        // We expect it to throw an exception when constructed with an invalid dependency
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $notary);
     }
 }
