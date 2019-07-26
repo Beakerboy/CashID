@@ -110,7 +110,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
 
         $rand = $this->getFunctionMock('CashID\Services', "rand");
-        $rand->expects($this->exactly(2))->willReturn(100000000, 999999999);
+        $rand->expects($this->exactly(3))->willReturn(100000000, 100000000, 999999999);
 
         // Generate 2 requests and extract the nonce values.
         $request1 = $generator->createRequest();
