@@ -19,6 +19,12 @@ class ResponseHandler extends CashIDService
     // Storage for a status confirmation message.
     private static $statusConfirmation;
 
+    // Default dependencies
+    protected $defaultDependencies = [
+        'CashID\Notary\NotaryInterface'       => ['name' => 'notary', 'class' => '\CashID\Notary\DefaultNotary'],
+        'CashID\Cache\RequestCacheInterface'  => ['name' => 'cache', 'class' => '\CashID\Cache\APCuCache'],
+    ];
+
     protected $notary;
 
     /**
