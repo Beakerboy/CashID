@@ -468,7 +468,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         $response = $this->responder->createJSONResponse($json_request);
 
         // Validate storage failure
-        $this->assertFalse($handler->validateRequest($response_array));
+        $this->assertFalse($handler->validateRequest($response));
 
         // Verify that the correct exception and message is produced
         $this->expectOutputString('{"status":331,"message":"Internal server error, could not alter request object."}');
