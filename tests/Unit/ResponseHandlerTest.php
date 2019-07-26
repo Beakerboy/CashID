@@ -3,8 +3,8 @@
 namespace CashID\Tests\CashID;
 
 use CashID\Cache\RequestCacheInterface;
-use CashID\RequestGenerator;
-use CashID\ResponseHandler;
+use CashID\Services\RequestGenerator;
+use CashID\Services\ResponseHandler;
 use CashID\Tests\ResponseGenerator;
 
 /**
