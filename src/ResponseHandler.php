@@ -4,6 +4,7 @@ namespace CashID;
 
 use CashID\Cache\RequestCacheInterface;
 use CashID\Cache\APCuCache;
+use CashID\Exceptions\InternalException;
 use CashID\Notary\NotaryInterface;
 use CashID\Notary\DefaultNotary;
 
