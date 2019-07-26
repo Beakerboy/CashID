@@ -41,7 +41,7 @@ class RequestGenerator extends CashIDService
     {
         try {
             $user_generated = false;
-            if(isset(API::USER_ACTIONS[$action])) {
+            if (isset(API::USER_ACTIONS[$action])) {
                 $user_generated = true;
             } else {
                 // generate a random nonce.
@@ -77,7 +77,7 @@ class RequestGenerator extends CashIDService
                 $parameters['o'] = "o=" . $this->encodeRequestMetadata($metadata['optional']);
             }
 
-            if (!$user_generated){
+            if (!$user_generated) {
                 // Append the nonce to the parameter list.
                 $parameters['x'] = "x={$nonce}";
             }
