@@ -35,5 +35,4 @@ class CashIDServiceTest extends \PHPUnit\Framework\TestCase
             ["Text"],
         ];
     }
-    
 }
