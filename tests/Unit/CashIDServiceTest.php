@@ -15,7 +15,7 @@ class CashIDServiceTest extends \PHPUnit\Framework\TestCase
     /**
      * Test that setDependencies throws an exception
      */
-    public function testCreateRequest($action, $data, $metadata, $expected)
+    public function testCreateRequest()
     {
         // Create a DefaultNotary
         $notary = new \CashID\Notary\DefaultNotary();
