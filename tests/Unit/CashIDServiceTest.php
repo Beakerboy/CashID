@@ -30,7 +30,7 @@ class CashIDServiceTest extends \PHPUnit\Framework\TestCase
     {
         return [
             // Object that is not a defined dependency
-            [new \CashID\Notary\DefaultNotary()],
+            [new \stdClass()],
             // Non-object
             ["Text"],
         ];
