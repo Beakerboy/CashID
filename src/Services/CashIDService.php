@@ -11,6 +11,16 @@ abstract class CashIDService
     protected $cache;
     protected $defaultDependencies;
 
+    /**
+     * Class Constructor
+     *
+     * @param string $domain
+     *   The domain of the response handler
+     * @param string $path
+     *   The path to the response handler
+     * @param object $dependencies
+     *   0 or more objects defined in the children classes
+     */
     public function __construct(string $domain, string $path, ...$dependencies)
     {
         $this->service_domain = $domain;
@@ -20,6 +30,10 @@ abstract class CashIDService
 
     /**
      * Set the class dependencies
+     *
+     * This function allows the user to specify object dependencies in any order
+     * when constructing the object. It also allows users to create custom children
+     * with any number of dependencies, which can be injected upon creation.
      *
      * @param array $dependencies
      *   an array of objects
