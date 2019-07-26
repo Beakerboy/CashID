@@ -68,6 +68,12 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
                 ],
                 "cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c3&o=p4&x=",
             ],
+            [
+                 'logout',
+                 'Twenty',
+                 [],
+                 'cashid:demo.cashid.info/api/parse.php?a=logout&d=Twenty',
+            ],
         ];
     }
 
