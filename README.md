@@ -45,7 +45,7 @@ $ php composer.phar require beakerboy/cashid-library:0.*
 ```
 
 ### Minimum Requirements
- * PHP 7
+ * PHP 7.1
 
 ## Examples
 
