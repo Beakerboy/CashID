@@ -376,11 +376,8 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
             }
         ));
 
-        // Use the default notary
-        $notary = new \CashID\Notary\DefaultNotary();
-
         // Create or hobbled response handler
-        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache);
+        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $cache);
 
         // Generate a request using the fully functional generator
         $json_request = $this->generator->createRequest();
@@ -413,11 +410,8 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
             }
         ));
 
-        // Use the default notary
-        $notary = new \CashID\Notary\DefaultNotary();
-
         // Create a hobbled handler
-        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache);
+        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $cache);
 
         // Generate a request using the fully functional generator
         $json_request = $this->generator->createRequest();
@@ -455,11 +449,8 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
             }
         ));
 
-        // Use the default notary
-        $notary = new \CashID\Notary\DefaultNotary();
-
         // Create a hobbled handler
-        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache);
+        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $cache);
 
         // Generate a request using the fully functional generator
         $json_request = $this->generator->createRequest();
