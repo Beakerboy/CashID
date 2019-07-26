@@ -4,6 +4,7 @@ namespace CashID;
 
 use CashID\Cache\RequestCacheInterface;
 use CashID\Cache\APCuCache;
+use CashID\Exceptions\InternalException;
 
 /**
  * Request Generator

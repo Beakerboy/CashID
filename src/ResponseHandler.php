@@ -4,6 +4,8 @@ namespace CashID;
 
 use CashID\Cache\RequestCacheInterface;
 use CashID\Cache\APCuCache;
+use CashID\Exceptions\InternalException;
+use CashID\Exceptions\CashIDException;
 use CashID\Notary\NotaryInterface;
 use CashID\Notary\DefaultNotary;
 
@@ -72,17 +74,23 @@ class ResponseHandler
 
             // Validate if the required field 'request' exists.
             if (!isset($responseObject['request'])) {
-                throw new InternalException("Response data is missing required 'request' property.", API::STATUS_CODES['RESPONSE_MISSING_REQUEST']);
+                $message = "Response data is missing required 'request' property.";
+                $code = API::STATUS_CODES['RESPONSE_MISSING_REQUEST'];
+                throw new InternalException($message, $code);
             }
 
             // Validate if the required field 'address' exists.
             if (!isset($responseObject['address'])) {
-                throw new InternalException("Response data is missing required 'address' property.", API::STATUS_CODES['RESPONSE_MISSING_ADDRESS']);
+                $message = "Response data is missing required 'address' property.";
+                $code = API::STATUS_CODES['RESPONSE_MISSING_ADDRESS'];
+                throw new InternalException($message, $code);
             }
 
             // Validate if the required field 'signature' exists.
             if (!isset($responseObject['signature'])) {
-                throw new InternalException("Response data is missing required 'signature' property.", API::STATUS_CODES['RESPONSE_MISSING_SIGNATURE']);
+                $message = "Response data is missing required 'signature' property.";
+                $code = API::STATUS_CODES['RESPONSE_MISSING_SIGNATURE'];
+                throw new InternalException($message, $code);
             }
 
             // Parse the request.
@@ -90,33 +98,43 @@ class ResponseHandler
 
             // Validate overall structure.
             if (!$parsedRequest) {
-                throw new InternalException("Internal server error, could not evaluate request structure.", API::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
+                $message = "Internal server error, could not evaluate request structure.";
+                $code = API::STATUS_CODES['SERVICE_INTERNAL_ERROR'];
+                throw new InternalException($message, $code);
             } elseif ($parsedRequest == 0) {
                 throw new InternalException("Request URI is invalid.", API::STATUS_CODES['REQUEST_BROKEN']);
             }
 
             // Validate the request scheme.
             if ($parsedRequest['scheme'] !== 'cashid:') {
-                throw new InternalException("Request scheme '{$parsedRequest['scheme']}' is invalid, should be 'cashid:'.", API::STATUS_CODES['REQUEST_MALFORMED_SCHEME']);
+                $message = "Request scheme '{$parsedRequest['scheme']}' is invalid, should be 'cashid:'.";
+                $code = API::STATUS_CODES['REQUEST_MALFORMED_SCHEME'];
+                throw new InternalException($message, $code);
             }
 
             // TODO: Validate the domain structure.
 
             // Validate the request domain.
             if ($parsedRequest['domain'] != $this->service_domain) {
-                throw new InternalException("Request domain '{$parsedRequest['domain']}' is invalid, this service uses '" . $this->service_domain . "'.", API::STATUS_CODES['REQUEST_INVALID_DOMAIN']);
+                $message = "Request domain '{$parsedRequest['domain']}' is invalid, this service uses '" . $this->service_domain . "'.";
+                $code = API::STATUS_CODES['REQUEST_INVALID_DOMAIN'];
+                throw new InternalException($message, $code);
             }
 
             // Validate the parameter structure
             if ($parsedRequest['parameters'] === false) {
-                throw new InternalException("Internal server error, could not evaluate request parameters.", API::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
+                $message = "Internal server error, could not evaluate request parameters.";
+                $code = API::STATUS_CODES['SERVICE_INTERNAL_ERROR'];
+                throw new InternalException($message, $code);
             } elseif ($parsedRequest['parameters'] == 0) {
                 throw new InternalException("Request parameters are invalid.", API::STATUS_CODES['REQUEST_BROKEN']);
             }
 
             // Validate the existance of a nonce.
             if (!isset($parsedRequest['parameters']['nonce'])) {
-                throw new InternalException("Request parameter 'nonce' is missing.", API::STATUS_CODES['REQUEST_MISSING_NONCE']);
+                $message = "Request parameter 'nonce' is missing.";
+                $code = API::STATUS_CODES['REQUEST_MISSING_NONCE'];
+                throw new InternalException($message, $code);
             }
 
             // Locally store if the request action is a user-initiated action.
@@ -129,40 +147,56 @@ class ResponseHandler
 
             // TODO: Separate MALFORMED (valid timestamp) from INVALID (not recent) for timestamp.
 
+            $nonce = $parsedRequest['parameters']['nonce'];
             // Validate if a user initiated request is a recent and valid timestamp...
-            if ($user_initiated_request and (($parsedRequest['parameters']['nonce'] < $recent_time) or ($parsedRequest['parameters']['nonce'] > $current_time))) {
-                throw new InternalException("Request nonce for user initated action is not a valid and recent timestamp.", API::STATUS_CODES['REQUEST_INVALID_NONCE']);
+            if ($user_initiated_request && (($nonce < $recent_time) or ($nonce > $current_time))) {
+                $message = "Request nonce for user initated action is not a valid and recent timestamp.";
+                $code = API::STATUS_CODES['REQUEST_INVALID_NONCE'];
+                throw new InternalException($message, $code);
             }
 
             // Try to load the request from the object cache.
-            $requestReference = $this->cache->fetch("cashid_request_{$parsedRequest['parameters']['nonce']}");
+            $requestReference = $this->cache->fetch("cashid_request_{$nonce}");
 
             // Validate that the request was issued by this service provider.
-            if (!$user_initiated_request and (!$requestReference)) {
-                throw new InternalException("The request nonce was not issued by this service.", API::STATUS_CODES['REQUEST_INVALID_NONCE']);
+            if (!$user_initiated_request && !$requestReference) {
+                $message = "The request nonce was not issued by this service.";
+                $code = API::STATUS_CODES['REQUEST_INVALID_NONCE'];
+                throw new InternalException($message, $code);
             }
 
             // Validate if the request is available
-            if (!$user_initiated_request and ($requestReference['available'] === false)) {
-                throw new InternalException("The request nonce was not issued by this service.", API::STATUS_CODES['REQUEST_CONSUMED']);
+            if (!$user_initiated_request && ($requestReference['available'] === false)) {
+                $message = "The request has been used and is no longer available.";
+                $code = API::STATUS_CODES['REQUEST_CONSUMED'];
+                throw new InternalException($message, $code);
             }
 
             // Validate if the request has expired.
-            if (!$user_initiated_request and ($requestReference['expires'] < time())) {
-                throw new InternalException("The request has expired and is no longer available.", API::STATUS_CODES['REQUEST_EXPIRED']);
+            if (!$user_initiated_request && ($requestReference['expires'] < time())) {
+                $message = "The request has expired and is no longer available.";
+                $code = API::STATUS_CODES['REQUEST_EXPIRED'];
+                throw new InternalException($message, $code);
             }
 
             // Validate that the request has not been tampered with.
-            if (!$user_initiated_request and ($requestReference['request'] != $responseObject['request'])) {
-                throw new InternalException("The response does not match the request parameters.", API::STATUS_CODES['REQUEST_ALTERED']);
+            if (!$user_initiated_request && ($requestReference['request'] != $responseObject['request'])) {
+                $message = "The response does not match the request parameters.";
+                $code = API::STATUS_CODES['REQUEST_ALTERED'];
+                throw new InternalException($message, $code);
             }
 
             // Send the request parts to the notary for signature verification.
-            $verificationStatus = $this->notary->checkSignature($responseObject['address'], $responseObject['signature'], $responseObject['request']);
+            $address = $responseObject['address'];
+            $signature = $responseObject['signature'];
+            $request = $responseObject['request'];
+            $verificationStatus = $this->notary->checkSignature($address, $signature, $request);
 
             // Validate the signature.
             if ($verificationStatus !== true) {
-                throw new InternalException("Signature verification failed.", API::STATUS_CODES['RESPONSE_INVALID_SIGNATURE']);
+                $message = "Signature verification failed.";
+                $code = API::STATUS_CODES['RESPONSE_INVALID_SIGNATURE'];
+                throw new InternalException($message, $code);
             }
 
             // Initialize an empty list of missing metadata.
@@ -171,7 +205,7 @@ class ResponseHandler
             // Loop over the required metadata fields.
             foreach ($parsedRequest['parameters']['required'] as $metadata_name => $metadata_value) {
                 // If the field was required and missing from the response..
-                if (($metadata_value) and (!isset($responseObject['metadata'][$metadata_name]))) {
+                if ($metadata_value && !isset($responseObject['metadata'][$metadata_name])) {
                     // Store it in the list of missing fields.
                     $missing_fields[$metadata_name] = $metadata_name;
                 }
@@ -179,32 +213,49 @@ class ResponseHandler
 
             // Validate if there was missing metadata.
             if (count($missing_fields) >= 1) {
-                throw new InternalException("The required metadata field(s) '" . implode(', ', $missing_fields) . "' was not provided.", API::STATUS_CODES['RESPONSE_MISSING_METADATA']);
+                $message = "The required metadata field(s) '" . implode(', ', $missing_fields) . "' was not provided.";
+                $code = API::STATUS_CODES['RESPONSE_MISSING_METADATA'];
+                throw new InternalException($message, $code);
             }
 
             // Loop over the supplied metadata fields.
             if (isset($responseObject['metadata'])) {
                 foreach ($responseObject['metadata'] as $metadata_name => $metadata_value) {
                     // Validate if the supplied metadata was requested
-                    if (!isset($parsedRequest['parameters']['required'][$metadata_name]) and !isset($parsedRequest['parameters']['optional'][$metadata_name])) {
-                        throw new InternalException("The metadata field '{$metadata_name}' was not part of the request.", API::STATUS_CODES['RESPONSE_INVALID_METADATA']);
+                    if (!isset($parsedRequest['parameters']['required'][$metadata_name]) && !isset($parsedRequest['parameters']['optional'][$metadata_name])) {
+                        $message = "The metadata field '{$metadata_name}' was not part of the request.";
+                        $code = API::STATUS_CODES['RESPONSE_INVALID_METADATA'];
+                        throw new InternalException($message, $code);
                     }
 
                     // Validate if the supplied value is empty.
-                    if ($metadata_value == "" or $metadata_value === null) {
-                        throw new InternalException("The metadata field '{$metadata_name}' did not contain any value.", API::STATUS_CODES['RESPONSE_MALFORMED_METADATA']);
+                    if (($metadata_value == "") || ($metadata_value === null)) {
+                        $message = "The metadata field '{$metadata_name}' did not contain any value.";
+                        $code = API::STATUS_CODES['RESPONSE_MALFORMED_METADATA'];
+                        throw new InternalException($message, $code);
                     }
                 }
             }
 
             // Store the response object in local cache.
-            if (!$this->cache->store("cashid_response_{$parsedRequest['parameters']['nonce']}", $responseObject)) {
-                throw new InternalException("Internal server error, could not store response object.", API::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
+            if (!$this->cache->store("cashid_response_{$nonce}", $responseObject)) {
+                $message = "Internal server error, could not store response object.";
+                $code = API::STATUS_CODES['SERVICE_INTERNAL_ERROR'];
+                throw new InternalException($message, $code);
             }
 
             // Store the confirmation object in local cache.
-            if (!$this->cache->store("cashid_confirmation_{$parsedRequest['parameters']['nonce']}", self::$statusConfirmation)) {
-                throw new InternalException("Internal server error, could not store confirmation object.", API::STATUS_CODES['SERVICE_INTERNAL_ERROR']);
+            if (!$this->cache->store("cashid_confirmation_{$nonce}", self::$statusConfirmation)) {
+                $message = "Internal server error, could not store confirmation object.";
+                $code = API::STATUS_CODES['SERVICE_INTERNAL_ERROR'];
+                throw new InternalException($message, $code);
+            }
+
+            // Alter the key to make it no longer available
+            if (!$this->cache->delete("cashid_request_{$nonce}") || !$this->cache->store("cashid_request_{$nonce}", [ 'available' => false ])) {
+                $message = "Internal server error, could not alter request object.";
+                $code = API::STATUS_CODES['SERVICE_INTERNAL_ERROR'];
+                throw new InternalException($message, $code);
             }
 
             // Add the action and data parameters to the response structure.
@@ -232,12 +283,14 @@ class ResponseHandler
     {
         // Sanity check if headers have already been sent.
         if (headers_sent()) {
-            throw new \Exception('cashid->confirmRequest was called after data had been transmitted to the client, which prevents setting the required headers.');
+            $message = 'cashid->confirmRequest was called after data had been transmitted to the client, which prevents setting the required headers.';
+            throw new CashIDException($message);
         }
 
         // Sanity check if validation has not yet been done.
         if (!isset(self::$statusConfirmation['status'])) {
-            throw new \Exception('cashid->confirmRequest was called before validateRequest so there is no confirmation to transmit to the client.');
+            $message = 'cashid->confirmRequest was called before validateRequest so there is no confirmation to transmit to the client.';
+            throw new CashIDException($message);
         }
 
         // Configure confirmation message type.
