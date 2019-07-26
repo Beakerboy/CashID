@@ -436,7 +436,6 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     /**
      * Expect an exception if headers have been sent prior to confirmation
      *
-     * @testCase ConfirmRequestHeadersSentException
      */
     public function testConfirmRequestHeadersSentException()
     {
@@ -462,7 +461,6 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     /**
      * Test that the invalidateRequest function returns the expected output
      *
-     * @testCase ConfirmRequestNotVerifiedException
      * @runInSeparateProcess
      */
     public function testInvalidateRequest()
@@ -501,6 +499,8 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * Test that a consumed request cannot be reused
+     *
+     * @runInSeparateProcess
      */
     public function testConsumedRequest()
     {
