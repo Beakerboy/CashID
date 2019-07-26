@@ -1,6 +1,6 @@
 <?php
 
-namespace CashID;
+namespace CashID\Services;
 
 use CashID\Cache\RequestCacheInterface;
 use CashID\Cache\APCuCache;
@@ -14,19 +14,8 @@ use CashID\Exceptions\InternalException;
  * response, while the createRequest function creates a request string from
  * the required data and metadata.
  */
-class RequestGenerator
-{
-    protected $service_domain;
-    protected $service_path;
-    protected $cache;
-
-    public function __construct(string $domain, string $path, RequestCacheInterface $cache = null)
-    {
-        $this->service_domain = $domain;
-        $this->service_path = $path;
-        $this->cache = $cache ?? new APCuCache();
-    }
-    
+class RequestGenerator extends CashIDService
+{    
     /**
      * Create a request
      *
