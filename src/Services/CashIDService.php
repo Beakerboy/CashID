@@ -18,7 +18,7 @@ abstract class CashIDService
      *   The domain of the response handler
      * @param string $path
      *   The path to the response handler
-     * @param array $dependencies
+     * @param mixed $dependencies
      *   0 or more objects defined in the children classes
      */
     public function __construct(string $domain, string $path, ...$dependencies)
