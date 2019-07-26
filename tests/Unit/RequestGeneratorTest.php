@@ -2,7 +2,7 @@
 namespace CashID\Tests\CashID;
 
 use CashID\Cache\RequestCacheInterface;
-use CashID\RequestGenerator;
+use CashID\Services\RequestGenerator;
 
 /**
  * Test the RequestGenerator calss
