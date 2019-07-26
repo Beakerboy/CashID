@@ -1,6 +1,6 @@
 <?php
 
-namespace CashID/Services;
+namespace CashID\Services;
 
 abstract class CashIDService
 {
