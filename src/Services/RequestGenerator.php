@@ -41,7 +41,10 @@ class RequestGenerator extends CashIDService
     {
         try {
             $user_generated = false;
-            if (isset(API::USER_ACTIONS[$action])) {
+            // Check is the action is a user-initiated action.
+            // If so, we will provide a nonce-less request as
+            // a favor.
+            if (in_array($action, API::USER_ACTIONS)) {
                 $user_generated = true;
             } else {
                 // generate a random nonce.
