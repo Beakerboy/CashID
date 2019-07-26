@@ -165,7 +165,7 @@ class ResponseHandler
 
             // Validate if the request is available
             if (!$user_initiated_request && ($requestReference['available'] === false)) {
-                $message = "The request nonce was not issued by this service.";
+                $message = "The request has been used and is no longer available.";
                 $code = API::STATUS_CODES['REQUEST_CONSUMED'];
                 throw new InternalException($message, $code);
             }
