@@ -80,7 +80,7 @@ class ResponseHandler
             // Validate if the required field 'address' exists.
             if (!isset($responseObject['address'])) {
                 $message = "Response data is missing required 'address' property.";
-                $code;
+                $code = API::STATUS_CODES['RESPONSE_MISSING_ADDRESS'];
                 throw new InternalException($message, $code);
             }
 
