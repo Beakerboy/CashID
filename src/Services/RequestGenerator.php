@@ -16,7 +16,11 @@ use CashID\Exceptions\InternalException;
  * the required data and metadata.
  */
 class RequestGenerator extends CashIDService
-{    
+{
+    protected $defaultDependencies = [
+        'CashID\Cache\RequestCacheInterface' => ['name' => 'cache', 'class' => '\CashID\Cache\APCuCache'],
+    ];
+
     /**
      * Create a request
      *
