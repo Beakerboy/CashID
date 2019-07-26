@@ -27,4 +27,12 @@ class APCuCache implements RequestCacheInterface
     {
         return apcu_exists($key);
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function delete(string $key)
+    {
+        return apcu_delete($key);
+    }
 }
