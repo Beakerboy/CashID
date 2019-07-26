@@ -3,8 +3,8 @@
 namespace CashID\Tests\CashID;
 
 use CashID\Cache\RequestCacheInterface;
-use CashID\RequestGenerator;
-use CashID\ResponseHandler;
+use CashID\Services\RequestGenerator;
+use CashID\Services\ResponseHandler;
 use CashID\Tests\ResponseGenerator;
 
 /**
@@ -376,11 +376,8 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
             }
         ));
 
-        // Use the default notary
-        $notary = new \CashID\Notary\DefaultNotary();
-
         // Create or hobbled response handler
-        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache);
+        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $cache);
 
         // Generate a request using the fully functional generator
         $json_request = $this->generator->createRequest();
@@ -413,11 +410,8 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
             }
         ));
 
-        // Use the default notary
-        $notary = new \CashID\Notary\DefaultNotary();
-
         // Create a hobbled handler
-        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache);
+        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $cache);
 
         // Generate a request using the fully functional generator
         $json_request = $this->generator->createRequest();
@@ -455,11 +449,8 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
             }
         ));
 
-        // Use the default notary
-        $notary = new \CashID\Notary\DefaultNotary();
-
         // Create a hobbled handler
-        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache);
+        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $cache);
 
         // Generate a request using the fully functional generator
         $json_request = $this->generator->createRequest();
@@ -522,7 +513,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      */
     public function testOldRequest()
     {
-        $time = $this->getFunctionMock('CashID', "time");
+        $time = $this->getFunctionMock('CashID\Services', "time");
         $time->expects($this->exactly(4))->willReturn(strtotime('-1 month'), strtotime('now'), strtotime('now'), strtotime('now'));
 
         // Create a request

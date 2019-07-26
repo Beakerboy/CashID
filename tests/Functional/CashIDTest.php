@@ -1,8 +1,8 @@
 <?php
 namespace CashID\Tests\CashID;
 
-use CashID\RequestGenerator;
-use CashID\ResponseHandler;
+use CashID\Services\RequestGenerator;
+use CashID\Services\ResponseHandler;
 use CashID\Tests\ResponseGenerator;
 
 /**

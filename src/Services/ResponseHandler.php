@@ -1,13 +1,12 @@
 <?php
 
-namespace CashID;
+namespace CashID\Services;
 
+use CashID\API;
 use CashID\Cache\RequestCacheInterface;
-use CashID\Cache\APCuCache;
 use CashID\Exceptions\InternalException;
 use CashID\Exceptions\CashIDException;
 use CashID\Notary\NotaryInterface;
-use CashID\Notary\DefaultNotary;
 
 /**
  * ResponseHandler
@@ -15,23 +14,18 @@ use CashID\Notary\DefaultNotary;
  * The ResponseHandler class validates a CashID response and produces an
  * appropriate confirmation or error code.
  */
-class ResponseHandler
+class ResponseHandler extends CashIDService
 {
     // Storage for a status confirmation message.
     private static $statusConfirmation;
-    
-    protected $service_domain;
-    protected $service_path;
-    protected $notary;
-    protected $cache;
 
-    public function __construct(string $domain, string $path, NotaryInterface $notary = null, RequestCacheInterface $cache = null)
-    {
-        $this->service_domain = $domain;
-        $this->service_path = $path;
-        $this->notary = $notary ?? new DefaultNotary();
-        $this->cache = $cache ?? new APCuCache();
-    }
+    // Default dependencies
+    protected $defaultDependencies = [
+        'CashID\Notary\NotaryInterface'       => ['name' => 'notary', 'class' => '\CashID\Notary\DefaultNotary'],
+        'CashID\Cache\RequestCacheInterface'  => ['name' => 'cache', 'class' => '\CashID\Cache\APCuCache'],
+    ];
+
+    protected $notary;
 
     /**
      * Invalidates the current request with a custom code and message.
