@@ -53,7 +53,7 @@ $ php composer.phar require beakerboy/cashid-library:0.*
 
 ```PHP
 <?php
-    use CashID\RequestGenerator;
+    use CashID\Services\RequestGenerator;
 
     // Specify your server details
     $domain = 'mydomain.com';
@@ -76,7 +76,7 @@ $ php composer.phar require beakerboy/cashid-library:0.*
 
 ```PHP
 <?php
-    use CashID\ResponseHandler;
+    use CashID\Services\ResponseHandler;
 
     // Specify your server details
     $domain = 'mydomain.com';
