@@ -26,7 +26,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     }
     
     /**
-     * Test the cretaeRequest function
+     * Test the createRequest function
      *
      * @dataProvider dataProviderForTestCreateRequest
      */
@@ -68,10 +68,32 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
                 ],
                 "cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c3&o=p4&x=",
             ],
+        ];
+    }
+
+    /**
+     * Test the createRequest function with user-initiated action
+     *
+     * @dataProvider dataProviderForTestCreateUserRequest
+     */
+    public function testCreateUserRequest($action, $expected)
+    {
+        // Create a RequestGenerator and generate a request given the test data
+        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+        $requestURI = $generator->createRequest($action);
+
+        // Ensure the rest of the request matches the expectation
+        $this->assertEquals($expected, $requestURI);
+    }
+
+    /**
+     * Data for the testCreateUserRequest function
+     */
+    public function dataProviderForTestCreateUserRequest()
+    {
+        return [
             [
                 'logout',
-                '',
-                [],
                 'cashid:demo.cashid.info/api/parse.php?a=logout',
             ],
         ];
