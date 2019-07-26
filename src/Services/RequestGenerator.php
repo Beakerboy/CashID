@@ -41,6 +41,7 @@ class RequestGenerator extends CashIDService
     {
         try {
             $user_generated = false;
+            $nonce = null;
             // Check is the action is a user-initiated action.
             // If so, we will provide a nonce-less request as
             // a favor.
