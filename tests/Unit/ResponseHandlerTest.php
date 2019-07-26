@@ -434,6 +434,48 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Test APCu response storage failure
+     *
+     * @runInSeparateProcess
+     */
+    public function testAPCuConfirmationFailure()
+    {
+        // Create a mock request cache whos storage fails the second time,
+        // but successfully fetches
+        $cache = $this->createMock(RequestCacheInterface::class);
+        $cache->method('store')->will($this->onConsecutiveCalls(true, true, false));
+        $cache->method('fetch')->will($this->returnCallback(
+            function ($key) {
+                return apcu_fetch($key);
+            }
+        ));
+        $cache->method('delete')->will($this->returnCallback(
+            function ($key) {
+                return apcu_delete($key);
+            }
+        ));
+
+        // Use the default notary
+        $notary = new \CashID\Notary\DefaultNotary();
+
+        // Create a hobbled handler
+        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $notary, $cache);
+
+        // Generate a request using the fully functional generator
+        $json_request = $this->generator->createRequest();
+
+        // Create the response
+        $response = $this->responder->createJSONResponse($json_request);
+
+        // Validate storage failure
+        $this->assertFalse($handler->validateRequest($response_array));
+
+        // Verify that the correct exception and message is produced
+        $this->expectOutputString('{"status":331,"message":"Internal server error, could not alter request object."}');
+        $this->handler->confirmRequest();
+    }
+    
+    /**
      * Expect an exception if headers have been sent prior to confirmation
      *
      */
