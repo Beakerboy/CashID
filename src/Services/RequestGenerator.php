@@ -40,13 +40,22 @@ class RequestGenerator extends CashIDService
     public function createRequest(string $action = "", string $data = "", array $metadata = [])
     {
         try {
-            // generate a random nonce.
-            $nonce = rand(100000000, 999999999);
-
-            // Check if the nonce is already used, and regenerate until it does not exist.
-            while ($this->cache->exists("cashid_request_{$nonce}")) {
+            $user_generated = false;
+            $nonce = null;
+            // Check is the action is a user-initiated action.
+            // If so, we will provide a nonce-less request as
+            // a favor.
+            if (in_array($action, API::USER_ACTIONS)) {
+                $user_generated = true;
+            } else {
                 // generate a random nonce.
                 $nonce = rand(100000000, 999999999);
+
+                // Check if the nonce is already used, and regenerate until it does not exist.
+                while ($this->cache->exists("cashid_request_{$nonce}")) {
+                    // generate a random nonce.
+                    $nonce = rand(100000000, 999999999);
+                }
             }
 
             // Initialize an empty parameter list.
@@ -72,14 +81,16 @@ class RequestGenerator extends CashIDService
                 $parameters['o'] = "o=" . $this->encodeRequestMetadata($metadata['optional']);
             }
 
-            // Append the nonce to the parameter list.
-            $parameters['x'] = "x={$nonce}";
+            if (!$user_generated) {
+                // Append the nonce to the parameter list.
+                $parameters['x'] = "x={$nonce}";
+            }
 
             // Form the request URI from the configured values.
             $request_uri = "cashid:" . $this->service_domain . $this->service_path . "?" . implode($parameters, '&');
 
-            // Store the request and nonce in local cache.
-            if (!$this->cache->store("cashid_request_{$nonce}", [ 'available' => true, 'request' => $request_uri, 'expires' => time() + (60 * 15) ])) {
+            // Store the request and nonce in local cache if not user generated.
+            if (!$user_generated && !$this->cache->store("cashid_request_{$nonce}", [ 'available' => true, 'request' => $request_uri, 'expires' => time() + (60 * 15) ])) {
                 throw new InternalException("Failed to store request metadata in APCu.");
             }
 
