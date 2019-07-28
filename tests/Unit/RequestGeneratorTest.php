@@ -68,6 +68,18 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
                 ],
                 "cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c3&o=p4&x=",
             ],
+            [ // Minimal with nulls
+                null,
+                null,
+                null,
+                'cashid:demo.cashid.info/api/parse.php?x=',
+            ],
+            [ // Minimal with empty
+                '',
+                '',
+                [],
+                'cashid:demo.cashid.info/api/parse.php?x=',
+            ],
         ];
     }
 

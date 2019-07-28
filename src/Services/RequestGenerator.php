@@ -37,7 +37,7 @@ class RequestGenerator extends CashIDService
      * @return mixed
      *  returns the request URI or false if error
      */
-    public function createRequest(string $action = "", string $data = "", array $metadata = [])
+    public function createRequest(?string $action = "", ?string $data = "", ?array $metadata = [])
     {
         try {
             $user_generated = false;
