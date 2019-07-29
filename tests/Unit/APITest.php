@@ -85,8 +85,7 @@ class APITest extends \PHPUnit\Framework\TestCase
                         "action" => "login",
                         "data" => "15366-4133-6141-9638",
                         'required' => [
-                                'contact' => [],
-                            ],
+                            'contact' => [],
                         ],
                         'nonce' => '95261230581',
                     ],
