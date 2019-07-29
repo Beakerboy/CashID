@@ -50,12 +50,92 @@ class APITest extends \PHPUnit\Framework\TestCase
                     'path' => '/api/parse.php',
                 ],
             ],
-            [
+            [ // Missing parameter
                 'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r&x=95261230581',
                 [
                     [
                         'parameters' => [
                             'required' => [],
+                        ],
+                        'nonce' => '95261230581',
+                    ],
+                    'scheme' => 'cashid:',
+                    'domain' => 'demo.cashid.info',
+                    'path' => '/api/parse.php',
+                ],
+            ],
+            [ // Missing parameter family
+                'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=&x=95261230581',
+                [
+                    [
+                        'parameters' => [
+                            'required' => [],
+                        ],
+                        'nonce' => '95261230581',
+                    ],
+                    'scheme' => 'cashid:',
+                    'domain' => 'demo.cashid.info',
+                    'path' => '/api/parse.php',
+                ],
+            ],
+            [ // Missing parameter type
+                'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c&x=95261230581',
+                [
+                    [
+                        'parameters' => [
+                            'required' => [
+                                'contact' => [],
+                            ],
+                        ],
+                        'nonce' => '95261230581',
+                    ],
+                    'scheme' => 'cashid:',
+                    'domain' => 'demo.cashid.info',
+                    'path' => '/api/parse.php',
+                ],
+            ],
+            [ // Parameter type is undefined
+                'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c7&x=95261230581',
+                [
+                    [
+                        'parameters' => [
+                            'required' => [
+                                'contact' => [],
+                            ],
+                        ],
+                        'nonce' => '95261230581',
+                    ],
+                    'scheme' => 'cashid:',
+                    'domain' => 'demo.cashid.info',
+                    'path' => '/api/parse.php',
+                ],
+            ],
+            [ // Including undefined type
+                'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c79&x=95261230581',
+                [
+                    [
+                        'parameters' => [
+                            'required' => [
+                                'contact' => [],
+                            ],
+                        ],
+                        'nonce' => '95261230581',
+                    ],
+                    'scheme' => 'cashid:',
+                    'domain' => 'demo.cashid.info',
+                    'path' => '/api/parse.php',
+                ],
+            ],
+            [ // Including undefined type
+                'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c54&x=95261230581',
+                [
+                    [
+                        'parameters' => [
+                            'required' => [
+                                'contact' => [
+                                    'postal' => 4,
+                                ],
+                            ],
                         ],
                         'nonce' => '95261230581',
                     ],
