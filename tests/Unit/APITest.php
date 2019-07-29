@@ -53,10 +53,10 @@ class APITest extends \PHPUnit\Framework\TestCase
             [ // Missing parameter
                 'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r&x=95261230581',
                 [
-                    [
-                        'parameters' => [
-                            'required' => [],
-                        ],
+                    'parameters' => [
+                        "action" => "login",
+                        "data" => "15366-4133-6141-9638",
+                        'required' => [],
                         'nonce' => '95261230581',
                     ],
                     'scheme' => 'cashid:',
@@ -67,10 +67,10 @@ class APITest extends \PHPUnit\Framework\TestCase
             [ // Missing parameter family
                 'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=&x=95261230581',
                 [
-                    [
-                        'parameters' => [
-                            'required' => [],
-                        ],
+                    'parameters' => [
+                        "action" => "login",
+                        "data" => "15366-4133-6141-9638",
+                        'required' => [],
                         'nonce' => '95261230581',
                     ],
                     'scheme' => 'cashid:',
@@ -81,9 +81,10 @@ class APITest extends \PHPUnit\Framework\TestCase
             [ // Missing parameter type
                 'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c&x=95261230581',
                 [
-                    [
-                        'parameters' => [
-                            'required' => [
+                    'parameters' => [
+                        "action" => "login",
+                        "data" => "15366-4133-6141-9638",
+                        'required' => [
                                 'contact' => [],
                             ],
                         ],
@@ -97,11 +98,11 @@ class APITest extends \PHPUnit\Framework\TestCase
             [ // Parameter type is undefined
                 'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c7&x=95261230581',
                 [
-                    [
-                        'parameters' => [
-                            'required' => [
-                                'contact' => [],
-                            ],
+                    'parameters' => [
+                        "action" => "login",
+                        "data" => "15366-4133-6141-9638",
+                        'required' => [
+                            'contact' => [],
                         ],
                         'nonce' => '95261230581',
                     ],
@@ -110,31 +111,15 @@ class APITest extends \PHPUnit\Framework\TestCase
                     'path' => '/api/parse.php',
                 ],
             ],
-            [ // Including undefined type
-                'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c79&x=95261230581',
-                [
-                    [
-                        'parameters' => [
-                            'required' => [
-                                'contact' => [],
-                            ],
-                        ],
-                        'nonce' => '95261230581',
-                    ],
-                    'scheme' => 'cashid:',
-                    'domain' => 'demo.cashid.info',
-                    'path' => '/api/parse.php',
-                ],
-            ],
-            [ // Including undefined type
+            [ // Parameters out of order
                 'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c54&x=95261230581',
                 [
-                    [
-                        'parameters' => [
-                            'required' => [
-                                'contact' => [
-                                    'postal' => 4,
-                                ],
+                    'parameters' => [
+                        "action" => "login",
+                        "data" => "15366-4133-6141-9638",
+                        'required' => [
+                            'contact' => [
+                                'postal' => 4,
                             ],
                         ],
                         'nonce' => '95261230581',
@@ -148,12 +133,31 @@ class APITest extends \PHPUnit\Framework\TestCase
             [ // Including undefined type
                 'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=c54z54&x=95261230581',
                 [
-                    [
-                        'parameters' => [
-                            'required' => [
-                                'contact' => [
-                                    'postal' => 4,
-                                ],
+                    'parameters' => [
+                        "action" => "login",
+                        "data" => "15366-4133-6141-9638",
+                        'required' => [
+                            'contact' => [
+                                'postal' => 4,
+                            ],
+                        ],
+                        'nonce' => '95261230581',
+                    ],
+                    'scheme' => 'cashid:',
+                    'domain' => 'demo.cashid.info',
+                    'path' => '/api/parse.php',
+                ],
+            ],
+            
+            [ // Including undefined type
+                'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r=i78&x=95261230581',
+                [
+                    'parameters' => [
+                        "action" => "login",
+                        "data" => "15366-4133-6141-9638",
+                        'required' => [
+                            'identity' => [
+                                'picture' => 8,
                             ],
                         ],
                         'nonce' => '95261230581',
