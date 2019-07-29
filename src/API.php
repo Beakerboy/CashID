@@ -2,6 +2,8 @@
 
 namespace CashID;
 
+use CashID\Exceptions\InternalException;
+
 class API
 {
    // Define regular expressions to parse request data.
