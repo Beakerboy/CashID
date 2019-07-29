@@ -50,6 +50,20 @@ class APITest extends \PHPUnit\Framework\TestCase
                     'path' => '/api/parse.php',
                 ],
             ],
+            [
+                'cashid:demo.cashid.info/api/parse.php?a=login&d=15366-4133-6141-9638&r&x=95261230581',
+                [
+                    [
+                        'parameters' => [
+                            'required' => [],
+                        ],
+                        'nonce' => '95261230581',
+                    ],
+                    'scheme' => 'cashid:',
+                    'domain' => 'demo.cashid.info',
+                    'path' => '/api/parse.php',
+                ],
+            ],
         ];
     }
 }
