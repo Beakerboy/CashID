@@ -70,7 +70,7 @@ abstract class CashIDService
         foreach ($this->defaultDependencies as $dependency) {
             $name = $dependency['name'];
             $class = $dependency['class'];
-            $this->$name = new $class;
+            $this->$name = new $class();
         }
     }
 }
