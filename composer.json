@@ -13,6 +13,7 @@
     "psr-4": {"CashID\\": "src/"}
   },
   "require-dev": {
+    "ext-apcu": "^4.0",
     "phpstan/phpstan": ">0.11.0",
     "phpunit/phpunit": "7.*",
     "php-coveralls/php-coveralls": "^2.0",
