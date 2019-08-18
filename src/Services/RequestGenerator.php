@@ -3,7 +3,7 @@
 namespace CashID\Services;
 
 use CashID\API;
-use CashID\Cache\RequestCacheInterface;
+use Psr\SimpleCache\CacheInterface;
 use CashID\Cache\APCuCache;
 use CashID\Exceptions\InternalException;
 
@@ -18,7 +18,7 @@ use CashID\Exceptions\InternalException;
 class RequestGenerator extends CashIDService
 {
     protected $defaultDependencies = [
-        'CashID\Cache\RequestCacheInterface' => ['name' => 'cache', 'class' => '\CashID\Cache\APCuCache'],
+        'Psr\SimpleCache\CacheInterfacee' => ['name' => 'cache', 'class' => '\Paillechat\ApcuSimpleCache\ApcuCache'],
     ];
 
     /**
@@ -90,7 +90,7 @@ class RequestGenerator extends CashIDService
             $request_uri = "cashid:" . $this->service_domain . $this->service_path . "?" . implode($parameters, '&');
 
             // Store the request and nonce in local cache if not user generated.
-            if (!$user_generated && !$this->cache->store("cashid_request_{$nonce}", [ 'available' => true, 'request' => $request_uri, 'expires' => time() + (60 * 15) ])) {
+            if (!$user_generated && !$this->cache->set("cashid_request_{$nonce}", [ 'available' => true, 'request' => $request_uri, 'expires' => time() + (60 * 15) ])) {
                 throw new InternalException("Failed to store request metadata in APCu.");
             }
 
