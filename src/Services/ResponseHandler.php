@@ -22,7 +22,7 @@ class ResponseHandler extends CashIDService
     // Default dependencies
     protected $defaultDependencies = [
         'CashID\Notary\NotaryInterface'       => ['name' => 'notary', 'class' => '\CashID\Notary\DefaultNotary'],
-        'CashID\Cache\RequestCacheInterface'  => ['name' => 'cache', 'class' => '\CashID\Cache\APCuCache'],
+        'Psr\SimpleCache\CacheInterfacee' => ['name' => 'cache', 'class' => '\Paillechat\ApcuSimpleCache\ApcuCache'],
     ];
 
     protected $notary;
