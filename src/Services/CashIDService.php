@@ -3,6 +3,7 @@
 namespace CashID\Services;
 
 use CashID\Exceptions\CashIDException;
+use Psr\SimpleCache\CacheInterface;
 
 abstract class CashIDService
 {
