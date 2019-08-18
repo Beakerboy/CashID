@@ -3,7 +3,6 @@
 namespace CashID\Services;
 
 use CashID\API;
-use Psr\SimpleCache\CacheInterface;
 use CashID\Cache\APCuCache;
 use CashID\Exceptions\InternalException;
 
