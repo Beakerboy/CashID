@@ -14,7 +14,10 @@ use CashID\Exceptions\InternalException;
  * the required data and metadata.
  */
 class RequestGenerator extends CashIDService
-{   
+{
+    // Default dependencies
+    protected $defaultDependencies = [];
+
     /**
      * Create a request
      *
