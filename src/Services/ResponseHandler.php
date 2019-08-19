@@ -3,7 +3,6 @@
 namespace CashID\Services;
 
 use CashID\API;
-use CashID\Cache\RequestCacheInterface;
 use CashID\Exceptions\InternalException;
 use CashID\Exceptions\CashIDException;
 use CashID\Notary\NotaryInterface;
@@ -21,8 +20,7 @@ class ResponseHandler extends CashIDService
 
     // Default dependencies
     protected $defaultDependencies = [
-        'CashID\Notary\NotaryInterface'       => ['name' => 'notary', 'class' => '\CashID\Notary\DefaultNotary'],
-        'CashID\Cache\RequestCacheInterface'  => ['name' => 'cache', 'class' => '\CashID\Cache\APCuCache'],
+        'CashID\Notary\NotaryInterface' => ['name' => 'notary', 'class' => '\CashID\Notary\DefaultNotary'],
     ];
 
     protected $notary;
@@ -150,7 +148,7 @@ class ResponseHandler extends CashIDService
             }
 
             // Try to load the request from the object cache.
-            $requestReference = $this->cache->fetch("cashid_request_{$nonce}");
+            $requestReference = $this->cache->get("cashid_request_{$nonce}");
 
             // Validate that the request was issued by this service provider.
             if (!$user_initiated_request && !$requestReference) {
@@ -232,21 +230,21 @@ class ResponseHandler extends CashIDService
             }
 
             // Store the response object in local cache.
-            if (!$this->cache->store("cashid_response_{$nonce}", $responseObject)) {
+            if (!$this->cache->set("cashid_response_{$nonce}", $responseObject)) {
                 $message = "Internal server error, could not store response object.";
                 $code = API::STATUS_CODES['SERVICE_INTERNAL_ERROR'];
                 throw new InternalException($message, $code);
             }
 
             // Store the confirmation object in local cache.
-            if (!$this->cache->store("cashid_confirmation_{$nonce}", self::$statusConfirmation)) {
+            if (!$this->cache->set("cashid_confirmation_{$nonce}", self::$statusConfirmation)) {
                 $message = "Internal server error, could not store confirmation object.";
                 $code = API::STATUS_CODES['SERVICE_INTERNAL_ERROR'];
                 throw new InternalException($message, $code);
             }
 
             // Alter the key to make it no longer available
-            if (!$this->cache->delete("cashid_request_{$nonce}") || !$this->cache->store("cashid_request_{$nonce}", [ 'available' => false ])) {
+            if (!$this->cache->delete("cashid_request_{$nonce}") || !$this->cache->set("cashid_request_{$nonce}", [ 'available' => false ])) {
                 $message = "Internal server error, could not alter request object.";
                 $code = API::STATUS_CODES['SERVICE_INTERNAL_ERROR'];
                 throw new InternalException($message, $code);

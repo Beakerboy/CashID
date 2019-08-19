@@ -1,8 +1,9 @@
 <?php
 namespace CashID\Tests\CashID;
 
-use CashID\Cache\RequestCacheInterface;
 use CashID\Services\RequestGenerator;
+use Paillechat\ApcuSimpleCache\ApcuCache;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * Test the RequestGenerator calss
@@ -18,8 +19,10 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testConstructor()
     {
+        $cache = new ApcuCache();
+        
         // Create a new object
-        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
 
         // Ensure it is the correct class type
         $this->assertInstanceOf(RequestGenerator::class, $generator);
@@ -32,8 +35,10 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreateRequest($action, $data, $metadata, $expected)
     {
+        $cache = new ApcuCache();
+
         // Create a RequestGenerator and generate a request given the test data
-        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
         $requestURI = $generator->createRequest($action, $data, $metadata);
 
         // Remove the unique nonce since we don't know what its value is
@@ -90,8 +95,10 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreateUserRequest($action, $expected)
     {
+        $cache = new ApcuCache();
+        
         // Create a RequestGenerator and generate a request given the test data
-        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
         $requestURI = $generator->createRequest($action);
 
         // Ensure the rest of the request matches the expectation
@@ -118,9 +125,9 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     public function testStorageFailure()
     {
         // Create a mock request cache with a store that always returns false
-        $cache = $this->createMock(RequestCacheInterface::class);
+        $cache = $this->createMock(CacheInterface::class);
         
-        $cache->method('store')->willReturn(false);
+        $cache->method('set')->willReturn(false);
 
         // Create a RequestGenerator with the mocked cache
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
@@ -142,12 +149,14 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     public function testRerunDuplicateNonce()
     {
+        $cache = new ApcuCache();
+
         // Two unique nonce values.
         $exp_nonce1 = 100000000;
         $exp_nonce2 = 999999999;
 
         // Create a RequestGenerator
-        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
 
         $rand = $this->getFunctionMock('CashID\Services', "rand");
         $rand->expects($this->exactly(3))->willReturn(100000000, 100000000, 999999999);

@@ -6,6 +6,8 @@ use CashID\Cache\RequestCacheInterface;
 use CashID\Services\RequestGenerator;
 use CashID\Services\ResponseHandler;
 use CashID\Tests\ResponseGenerator;
+use Psr\SimpleCache\CacheInterface;
+use Paillechat\ApcuSimpleCache\ApcuCache;
 
 /**
  * Test the ResponseHandler class
@@ -44,9 +46,10 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      */
     public function setUp()
     {
-        $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+        $this->cache = new ApcuCache();
+        $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $this->cache);
         $this->responder = new ResponseGenerator($this->metadata);
-        $this->handler = new ResponseHandler("demo.cashid.info", "/api/parse.php");
+        $this->handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $this->cache);
     }
 
     /**
@@ -368,9 +371,9 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     public function testAPCuResponseFailure()
     {
         // Create a mock request cache whos storage fails, but successfully fetches
-        $cache = $this->createMock(RequestCacheInterface::class);
-        $cache->method('store')->willReturn(false);
-        $cache->method('fetch')->will($this->returnCallback(
+        $cache = $this->createMock(CacheInterface::class);
+        $cache->method('set')->willReturn(false);
+        $cache->method('get')->will($this->returnCallback(
             function ($key) {
                 return apcu_fetch($key);
             }
@@ -402,9 +405,9 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     {
         // Create a mock request cache whos storage fails the second time,
         // but successfully fetches
-        $cache = $this->createMock(RequestCacheInterface::class);
-        $cache->method('store')->will($this->onConsecutiveCalls(true, false));
-        $cache->method('fetch')->will($this->returnCallback(
+        $cache = $this->createMock(CacheInterface::class);
+        $cache->method('set')->will($this->onConsecutiveCalls(true, false));
+        $cache->method('get')->will($this->returnCallback(
             function ($key) {
                 return apcu_fetch($key);
             }
@@ -436,9 +439,9 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
     {
         // Create a mock request cache whos storage fails the second time,
         // but successfully fetches
-        $cache = $this->createMock(RequestCacheInterface::class);
-        $cache->method('store')->will($this->onConsecutiveCalls(true, true, false));
-        $cache->method('fetch')->will($this->returnCallback(
+        $cache = $this->createMock(CacheInterface::class);
+        $cache->method('set')->will($this->onConsecutiveCalls(true, true, false));
+        $cache->method('get')->will($this->returnCallback(
             function ($key) {
                 return apcu_fetch($key);
             }

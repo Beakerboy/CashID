@@ -4,6 +4,7 @@ namespace CashID\Tests\CashID;
 use CashID\Services\RequestGenerator;
 use CashID\Services\ResponseHandler;
 use CashID\Tests\ResponseGenerator;
+use Paillechat\ApcuSimpleCache\ApcuCache;
 
 /**
  * CashID Test
@@ -19,6 +20,7 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
      */
     public function setUp()
     {
+        $cache = new ApcuCache();
         // Define some metatdata for our "user" to respond with
         $this->metadata = [
             'name' => 'Alice',
@@ -40,10 +42,10 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
         ];
 
         // Create the generator
-        $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php");
+        $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
 
         // Create a response handler with matching server and script
-        $this->handler = new ResponseHandler("demo.cashid.info", "/api/parse.php");
+        $this->handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $cache);
 
         // Supply the "user" with their metadata
         $this->responder = new ResponseGenerator($this->metadata);

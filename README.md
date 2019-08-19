@@ -6,7 +6,7 @@
 
 ## Dependencies
 
-- PECL APCu (https://pecl.php.net/package/APCu)
+- Any PSR-16 compatible cache (such as paillechat/apcu-simple-cache)
 - BitcoinPHP ECDSA Library
 - CashaddrConverter
 
@@ -15,12 +15,13 @@
 
 ## Setup
 
- Add the library to your `composer.json` file in your project:
+ Add this library and your selection of cache implementations to your `composer.json` file in your project:
 
 ```javascript
 {
   "require": {
-      "beakerboy/cashid-library": "0.*"
+      "beakerboy/cashid-library": "0.*",
+      "paillechat/apcu-simple-cache": "*"
   }
 }
 ```
@@ -41,7 +42,7 @@ require_once(__DIR__ . '/vendor/autoload.php');
 Alternatively, use composer on the command line to require and install CashID:
 
 ```
-$ php composer.phar require beakerboy/cashid-library:0.*
+$ php composer.phar require beakerboy/cashid-library:0.* paillechat/apcu-simple-cache:*
 ```
 
 ### Minimum Requirements
@@ -54,13 +55,17 @@ $ php composer.phar require beakerboy/cashid-library:0.*
 ```PHP
 <?php
     use CashID\Services\RequestGenerator;
+    use Paillechat\ApcuSimpleCache\ApcuCache;
 
     // Specify your server details
     $domain = 'mydomain.com';
     $listener_script = '/api/parse.php';
     
+    // Create your cache
+    $cache = new ApcuCache();
+    
     // Create a request generator
-    $generator = new RequestGenerator($domain, $listener_script);
+    $generator = new RequestGenerator($domain, $listener_script, $cache);
 
     // Create a minimal request
     $requestURI = $generator->createRequest();
@@ -77,13 +82,17 @@ $ php composer.phar require beakerboy/cashid-library:0.*
 ```PHP
 <?php
     use CashID\Services\ResponseHandler;
+    use Paillechat\ApcuSimpleCache\ApcuCache;
 
     // Specify your server details
     $domain = 'mydomain.com';
     $listener_script = '/api/parse.php';
 
+    // Create your cache
+    $cache = new ApcuCache();
+
     // Create a response handler
-    $handler = new ResponseHandler($domain, $listener_script);
+    $handler = new ResponseHandler($domain, $listener_script, $cache);
 
     // Capture the response
     $response = file_get_contents('php://input');
