@@ -22,7 +22,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         $cache = new ApcuCache();
         
         // Create a new object
-        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $this->cache);
+        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
 
         // Ensure it is the correct class type
         $this->assertInstanceOf(RequestGenerator::class, $generator);
