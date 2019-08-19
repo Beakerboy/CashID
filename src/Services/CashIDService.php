@@ -22,10 +22,11 @@ abstract class CashIDService
      * @param mixed ...$dependencies
      *   0 or more objects defined in the children classes
      */
-    public function __construct(string $domain, string $path, ...$dependencies)
+    public function __construct(string $domain, string $path, CacheInterface $cache, ...$dependencies)
     {
+        $this->cache          = $cache;
         $this->service_domain = $domain;
-        $this->service_path = $path;
+        $this->service_path   = $path;
         $this->setDependencies($dependencies);
     }
 
