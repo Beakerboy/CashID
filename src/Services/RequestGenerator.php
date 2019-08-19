@@ -16,10 +16,6 @@ use CashID\Exceptions\InternalException;
  */
 class RequestGenerator extends CashIDService
 {
-    protected $defaultDependencies = [
-        'Psr\SimpleCache\CacheInterfacee' => ['name' => 'cache', 'class' => '\Paillechat\ApcuSimpleCache\ApcuCache'],
-    ];
-
     /**
      * Create a request
      *
