@@ -4,6 +4,7 @@ namespace CashID\Tests\CashID;
 
 use CashID\Exceptions\CashIDException;
 use CashID\Services\RequestGenerator;
+use Paillechat\ApcuSimpleCache\ApcuCache;
 
 /**
  * Test the CashIDService class
@@ -19,11 +20,13 @@ class CashIDServiceTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreateRequest($non_dependency)
     {
+        $cache = new ApcuCache();
+
         // The RequestGenerator does not have a dependency for the provided item
         $this->expectException(CashIDException::class);
 
         // We expect it to throw an exception when constructed with an invalid dependency
-        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $non_dependency);
+        $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache, $non_dependency);
     }
 
     public function dataProviderForTestCreateRequest()
