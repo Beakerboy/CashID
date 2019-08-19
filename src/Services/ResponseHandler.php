@@ -3,7 +3,6 @@
 namespace CashID\Services;
 
 use CashID\API;
-use CashID\Cache\RequestCacheInterface;
 use CashID\Exceptions\InternalException;
 use CashID\Exceptions\CashIDException;
 use CashID\Notary\NotaryInterface;
