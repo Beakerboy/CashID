@@ -46,7 +46,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
      */
     public function setUp()
     {
-        $this->cache = new ApcuCache()
+        $this->cache = new ApcuCache();
         $this->generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $this->cache);
         $this->responder = new ResponseGenerator($this->metadata);
         $this->handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $this->cache);
