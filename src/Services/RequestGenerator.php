@@ -18,7 +18,7 @@ class RequestGenerator extends CashIDService
 {
     // Default dependencies
     protected $defaultDependencies = [
-        'Psr\SimpleCache\CacheInterface'       => ['name' => 'notary', 'class' => null],
+        'Psr\SimpleCache\CacheInterface' => ['name' => 'cache', 'class' => null],
     ];
     
     /**
