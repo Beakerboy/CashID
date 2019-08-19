@@ -16,6 +16,11 @@ use CashID\Exceptions\InternalException;
  */
 class RequestGenerator extends CashIDService
 {
+    // Default dependencies
+    protected $defaultDependencies = [
+        'Psr\SimpleCache\CacheInterface'       => ['name' => 'notary', 'class' => null],
+    ];
+    
     /**
      * Create a request
      *
