@@ -127,7 +127,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
         // Create a mock request cache with a store that always returns false
         $cache = $this->createMock(CacheInterface::class);
         
-        $cache->method('store')->willReturn(false);
+        $cache->method('set')->willReturn(false);
 
         // Create a RequestGenerator with the mocked cache
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
