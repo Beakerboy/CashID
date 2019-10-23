@@ -7,6 +7,7 @@ use CashID\Notary\DefaultNotary;
 use CashID\Services\RequestGenerator;
 use CashID\Services\ResponseHandler;
 use CashID\Tests\ResponseGenerator;
+use phpmock\phpunit\PHPMock;
 use Psr\SimpleCache\CacheInterface;
 use Paillechat\ApcuSimpleCache\ApcuCache;
 
@@ -17,7 +18,7 @@ use Paillechat\ApcuSimpleCache\ApcuCache;
  */
 class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
 {
-    use \phpmock\phpunit\PHPMock;
+    use PHPMock;
 
     private $generator;
     private $responder;
