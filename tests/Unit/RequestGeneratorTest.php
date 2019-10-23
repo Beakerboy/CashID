@@ -1,8 +1,10 @@
 <?php
+
 namespace CashID\Tests\CashID;
 
 use CashID\Services\RequestGenerator;
 use Paillechat\ApcuSimpleCache\ApcuCache;
+use phpmock\phpunit\PHPMock;
 use Psr\SimpleCache\CacheInterface;
 
 /**
@@ -12,7 +14,8 @@ use Psr\SimpleCache\CacheInterface;
  */
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 {
-    use \phpmock\phpunit\PHPMock;
+    use PHPMock;
+
     /**
      * Test the class constructor
      *

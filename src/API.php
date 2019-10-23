@@ -4,13 +4,13 @@ namespace CashID;
 
 class API
 {
-   // Define regular expressions to parse request data.
-    const REGEXP_REQUEST = "/(?P<scheme>.*:)(?:[\/]{2})?(?P<domain>[^\/]+)(?P<path>\/[^\?]+)(?P<parameters>\?.+)/";
-    const REGEXP_PARAMETERS = "/(?:(?:[\?\&]a=)(?P<action>[^\&]+))?(?:(?:[\?\&]d=)(?P<data>[^\&]+))?(?:(?:[\?\&]r=)(?P<required>[^\&]+))?(?:(?:[\?\&]o=)(?P<optional>[^\&]+))?(?:(?:[\?\&]x=)(?P<nonce>[^\&]+))?/";
-    const REGEXP_METADATA = "/(i(?P<identification>(?![1-9]+))?(?P<name>1)?(?P<family>2)?(?P<nickname>3)?(?P<age>4)?(?P<gender>5)?(?P<birthdate>6)?(?P<picture>8)?(?P<national>9)?)?(p(?P<position>(?![1-9]+))?(?P<country>1)?(?P<state>2)?(?P<city>3)?(?P<streetname>4)?(?P<streetnumber>5)?(?P<residence>6)?(?P<coordinate>9)?)?(c(?P<contact>(?![1-9]+))?(?P<email>1)?(?P<instant>2)?(?P<social>3)?(?P<mobilephone>4)?(?P<homephone>5)?(?P<workphone>6)?(?P<postlabel>9)?)?/";
+    // Define regular expressions to parse request data.
+    public const REGEXP_REQUEST = "/(?P<scheme>.*:)(?:[\/]{2})?(?P<domain>[^\/]+)(?P<path>\/[^\?]+)(?P<parameters>\?.+)/";
+    public const REGEXP_PARAMETERS = "/(?:(?:[\?\&]a=)(?P<action>[^\&]+))?(?:(?:[\?\&]d=)(?P<data>[^\&]+))?(?:(?:[\?\&]r=)(?P<required>[^\&]+))?(?:(?:[\?\&]o=)(?P<optional>[^\&]+))?(?:(?:[\?\&]x=)(?P<nonce>[^\&]+))?/";
+    public const REGEXP_METADATA = "/(i(?P<identification>(?![1-9]+))?(?P<name>1)?(?P<family>2)?(?P<nickname>3)?(?P<age>4)?(?P<gender>5)?(?P<birthdate>6)?(?P<picture>8)?(?P<national>9)?)?(p(?P<position>(?![1-9]+))?(?P<country>1)?(?P<state>2)?(?P<city>3)?(?P<streetname>4)?(?P<streetnumber>5)?(?P<residence>6)?(?P<coordinate>9)?)?(c(?P<contact>(?![1-9]+))?(?P<email>1)?(?P<instant>2)?(?P<social>3)?(?P<mobilephone>4)?(?P<homephone>5)?(?P<workphone>6)?(?P<postlabel>9)?)?/";
 
     // List of actions that require a valid and recent timestamp as their nonce, instead of a nonce issued by us.
-    const USER_ACTIONS = [
+    public const USER_ACTIONS = [
         'delete',
         'logout',
         'revoke',
@@ -18,7 +18,7 @@ class API
     ];
 
     // List of CashID status codes.
-    const STATUS_CODES = [
+    public const STATUS_CODES = [
         'SUCCESSFUL' => 0,
         'REQUEST_BROKEN' => 100,
         'REQUEST_MISSING_SCHEME' => 111,
@@ -53,7 +53,7 @@ class API
         'SERVICE_INTERNAL_ERROR' => 331
     ];
 
-    const METADATA_NAMES = [
+    public const METADATA_NAMES = [
         'identification' => [
             'name' => 1,
             'family' => 2,

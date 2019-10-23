@@ -1,4 +1,5 @@
 <?php
+
 namespace CashID\Exceptions;
 
 // Create an internal exception type which lets us catch our own exceptions
