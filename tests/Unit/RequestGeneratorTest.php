@@ -1,4 +1,5 @@
 <?php
+
 namespace CashID\Tests\CashID;
 
 use CashID\Services\RequestGenerator;
