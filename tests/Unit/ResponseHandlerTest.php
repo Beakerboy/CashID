@@ -3,6 +3,7 @@
 namespace CashID\Tests\CashID;
 
 use CashID\Cache\RequestCacheInterface;
+use CashID\Notary\DefaultNotary;
 use CashID\Services\RequestGenerator;
 use CashID\Services\ResponseHandler;
 use CashID\Tests\ResponseGenerator;
@@ -452,8 +453,11 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
             }
         ));
 
+        // Create a notary just to test passing it in as a dependency
+        $notary = new DefaultNotary();
+
         // Create a hobbled handler
-        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $cache);
+        $handler = new ResponseHandler("demo.cashid.info", "/api/parse.php", $cache, $notary);
 
         // Generate a request using the fully functional generator
         $json_request = $this->generator->createRequest();
