@@ -13,6 +13,7 @@ use Psr\SimpleCache\CacheInterface;
 class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     use \phpmock\phpunit\PHPMock;
+
     /**
      * Test the class constructor
      *
