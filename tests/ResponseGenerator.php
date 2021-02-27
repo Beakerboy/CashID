@@ -45,17 +45,17 @@ class ResponseGenerator
         // Parse the request string to see what metadata is needed
         // First pull out all parameters
         $response_array = API::parseRequest($request_string);
-        
+
         $meta_keys = $response_array['parameters']['required'];
-        
+
         // Merge together the optional and required parameters
         if ($include_optional) {
             $meta_keys = array_merge($response_array['parameters']['optional'], $meta_keys);
         }
-        
+
         // Initialize the array
         $return_meta = [];
-        
+ 
         // Loop through the optional and required values and save the requested
         // fields.
         foreach ($meta_keys as $key => $value) {
@@ -66,11 +66,11 @@ class ResponseGenerator
             'address' => $this->cashaddr,
             'signature' => $this->signMessage($request_string),
         ];
-        
+
         if (count($return_meta) > 0) {
             $return_array['metadata'] = $return_meta;
         }
-        
+
         return $return_array;
     }
 
