@@ -23,14 +23,14 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     public function testConstructor()
     {
         $cache = new ApcuCache();
-        
+
         // Create a new object
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
 
         // Ensure it is the correct class type
         $this->assertInstanceOf(RequestGenerator::class, $generator);
     }
-    
+
     /**
      * Test the createRequest function
      *
@@ -99,7 +99,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     public function testCreateUserRequest($action, $expected)
     {
         $cache = new ApcuCache();
-        
+
         // Create a RequestGenerator and generate a request given the test data
         $generator = new RequestGenerator("demo.cashid.info", "/api/parse.php", $cache);
         $requestURI = $generator->createRequest($action);
@@ -129,7 +129,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
     {
         // Create a mock request cache with a store that always returns false
         $cache = $this->createMock(CacheInterface::class);
-        
+
         $cache->method('set')->willReturn(false);
 
         // Create a RequestGenerator with the mocked cache
@@ -137,7 +137,7 @@ class RequestGeneratorTest extends \PHPUnit\Framework\TestCase
 
         // Generate a request and ensure it fails
         $request = $generator->createRequest();
-        
+
         $this->assertFalse($request);
     }
 
