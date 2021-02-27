@@ -71,7 +71,7 @@ class ResponseHandler extends CashIDService
             // Validate if the required fields exist.
             foreach ($required_fields as $field => $code_name) {
                 if (!isset($responseObject[$field])) {
-                    $message = "Response data is missing required $field property.";
+                    $message = "Response data is missing required '{$field}' property.";
                     $code = API::STATUS_CODES[$code_name];
                     throw new InternalException($message, $code);
                 }
