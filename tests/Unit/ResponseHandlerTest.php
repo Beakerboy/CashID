@@ -327,7 +327,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         // Alter the request
         // Append the nonce from the original request to the new request
         $new_json_request = $new_request . substr($json_request, -9);
-        
+
         // Create a valid response given the altered request and the default metadata
         $response_array = $this->responder->createResponse($new_json_request);
 
@@ -360,7 +360,6 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
                     'status' => 141,
                     'message' => "The response does not match the request parameters.",
                 ],
-                
             ],
         ];
     }
@@ -473,7 +472,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         $this->expectOutputString('{"status":331,"message":"Internal server error, could not alter request object."}');
         $this->handler->confirmRequest();
     }
-    
+
     /**
      * Expect an exception if headers have been sent prior to confirmation
      *
@@ -484,7 +483,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\Exception::class);
         $this->handler->confirmRequest();
     }
-    
+
     /**
      * Expect an exception if no request was every sent
      *
@@ -529,7 +528,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
 
         // Create the response
         $response_array = $this->responder->createResponse($json_request);
-        
+
         // Validate against today's date and verify failure
         $this->assertFalse($this->handler->validateRequest(json_encode($response_array)));
 
@@ -550,7 +549,7 @@ class ResponseHandlerTest extends \PHPUnit\Framework\TestCase
 
         // Create the response
         $response = $this->responder->createJSONResponse($json_request);
-        
+
         // Validate
         $this->handler->validateRequest($response);
 
