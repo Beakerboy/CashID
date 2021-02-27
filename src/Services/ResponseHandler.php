@@ -63,26 +63,18 @@ class ResponseHandler extends CashIDService
             if ($responseObject === null) {
                 throw new InternalException("Response data is not a valid JSON object.", API::STATUS_CODES['RESPONSE_BROKEN']);
             }
-
-            // Validate if the required field 'request' exists.
-            if (!isset($responseObject['request'])) {
-                $message = "Response data is missing required 'request' property.";
-                $code = API::STATUS_CODES['RESPONSE_MISSING_REQUEST'];
-                throw new InternalException($message, $code);
-            }
-
-            // Validate if the required field 'address' exists.
-            if (!isset($responseObject['address'])) {
-                $message = "Response data is missing required 'address' property.";
-                $code = API::STATUS_CODES['RESPONSE_MISSING_ADDRESS'];
-                throw new InternalException($message, $code);
-            }
-
-            // Validate if the required field 'signature' exists.
-            if (!isset($responseObject['signature'])) {
-                $message = "Response data is missing required 'signature' property.";
-                $code = API::STATUS_CODES['RESPONSE_MISSING_SIGNATURE'];
-                throw new InternalException($message, $code);
+            $required_fields = [
+                'request' => 'RESPONSE_MISSING_REQUEST',
+                'address' => 'RESPONSE_MISSING_ADDRESS',
+                'signature' => 'RESPONSE_MISSING_SIGNATURE',
+            ];
+            // Validate if the required fields exist.
+            foreach ($required_fields as $field => $code_name) {
+                if (!isset($responseObject[$field])) {
+                    $message = "Response data is missing required $field property.";
+                    $code = API::STATUS_CODES[$code_name];
+                    throw new InternalException($message, $code);
+                }
             }
 
             // Parse the request.
