@@ -51,7 +51,7 @@ class CashIDTest extends \PHPUnit\Framework\TestCase
         // Supply the "user" with their metadata
         $this->responder = new ResponseGenerator($this->metadata);
     }
-    
+
     /**
      * Test the complete process
      *
