@@ -21,6 +21,8 @@ jobs:
           php-version: ${{ matrix.php }}
           coverage: xdebug
           tools: composer:v2
+          extensions: apcu
+          ini-values: apc.enabled = 1, apc.enable_cli = 1
 
       - name: Set up Node
         uses: actions/setup-node@v1
@@ -50,7 +52,7 @@ jobs:
           ./vendor/bin/phpunit --version
           ./vendor/bin/phpunit --configuration tests/phpunit.xml --coverage-clover build/logs/clover.xml
       - name: PHP Code Sniffer
-        run: ./vendor/bin/phpcs --ignore=vendor --standard=tests/coding_standard.xml -s .
+        run: ./vendor/bin/phpcs --ignore=vendor --standard=coding_standard.xml -s .
 
       - name: Code Coverage (Coveralls)
         env:
