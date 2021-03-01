@@ -37,6 +37,9 @@ jobs:
       - name: Run Composer
         run: composer install --no-interaction
 
+      - name: Configure Apache
+        run: phpenv config-add install/travis-7.x.ini
+
       - name: PHP Lint
         run: ./vendor/bin/parallel-lint src tests
 
