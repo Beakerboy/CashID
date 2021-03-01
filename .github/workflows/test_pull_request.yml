@@ -18,6 +18,7 @@ jobs:
           coverage: xdebug
           tools: composer:v2
           extensions: apcu
+          ini-values: apc.enabled = 1, apc.enable_cli = 1
 
       - name: Set up Node
         uses: actions/setup-node@v1
