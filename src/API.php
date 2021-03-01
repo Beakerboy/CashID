@@ -87,7 +87,7 @@ class API
      *
      * @param string $request_uri
      *   the full request URI to parse
-     * @return array
+     * @return array<string>
      *   returns a request array populated based on the request_url string
      */
     public static function parseRequest(string $request_uri): array
