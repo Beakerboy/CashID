@@ -20,7 +20,8 @@
     "squizlabs/php_codesniffer": "3.*",
     "suin/phpcs-psr4-sniff": "2.*",
     "php-mock/php-mock-phpunit": ">=2.4.0",
-    "paillechat/apcu-simple-cache": "*"
+    "paillechat/apcu-simple-cache": "*",
+    "php-parallel-lint/php-parallel-lint": "^1.2"
   },
   "autoload-dev": {
     "psr-4": {
